@@ -35,6 +35,8 @@ The requirements are derived from the local research copies in `reseach/` (the d
 ### In scope for the pilot
 
 - One or more schools administered by an ESAO, with strict school data boundaries.
+- A controlled School Directory seeded from the supplied 17-school CSV, with unique SMIS and Ministry of Education codes.
+- Public school-user registration followed by System Admin or authorized ESAO Admin review before any membership or application access is granted.
 - Fiscal years running from 1 October through 30 September and displayed in Buddhist Era where appropriate.
 - Annual Action Plans, Budget Allocations, authorized adjustments, commitments, direct-payment claims, and budget-availability/variance monitoring.
 - Control registries for budget document requests, state income, and non-budgetary funds.
@@ -78,10 +80,14 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 - **School:** An independently managed financial reporting boundary. It is not a tenant or a branch.
 - **Education Service Area Office (ESAO):** Oversight organization that receives school reports and may aggregate results.
 - **Finance Officer:** School user who performs finance work for one school.
-- **School Admin:** School user who administers users and school governance settings.
+- **School Admin:** Approved school user who performs permitted school governance actions but cannot activate or assign memberships.
 - **School Director:** Authenticated school role whose approval is required for selected privileged actions.
+- **ESAO Admin:** ESAO user who reviews registrations and manages memberships only for assigned schools and ESAO roles.
 - **Policy Publisher:** ESAO authority that activates an approved policy version for a school.
-- **System Admin:** Platform-operations role, separate from financial actors and school data ownership.
+- **System Admin:** Platform operations and identity-governance role that manages registrations/memberships across the platform but performs no school financial action.
+- **School Directory:** Controlled list of schools available for registration, identified by unique SMIS and MOE codes.
+- **Registration Application:** Request for one permitted school membership; it is not an active user membership.
+- **Approved Membership:** Active link between an identity, organization, and assigned role after Membership Approval.
 
 ### Financial model
 
@@ -116,8 +122,11 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 
 Access is scoped by organization and role. A user never gains access to another school's financial records merely by knowing an identifier.
 
-| Capability | Finance Officer | School Admin | School Director | ESAO Reviewer/Publisher | System Admin |
+| Capability | Finance Officer | School Admin | School Director | ESAO Roles | System Admin |
 | --- | --- | --- | --- | --- | --- |
+| Submit public registration | Request school role | Request school role | Request school role | Not for privileged ESAO roles | Not for System Admin role |
+| Review school-role registrations | No | No | No | ESAO Admin: assigned schools | All schools |
+| Activate/suspend/assign membership | No | No | No | ESAO Admin: assigned boundary | Platform-wide |
 | Draft and submit financial events | Own school | Own school (if granted) | Review only | No school entry by default | Support only, no business entry |
 | Post routine events | Yes, within policy | Optional delegated permission | No | No | No |
 | Approve director-required actions | No | No | Yes | No, unless separately appointed | No |
@@ -125,13 +134,25 @@ Access is scoped by organization and role. A user never gains access to another 
 | Reconcile and prepare monthly report | Yes | Yes | Review/accept | Review/return | No |
 | Close a month | No | No | Yes or delegated close authority | Review/override under policy | No |
 | Create post-close privileged correction | Propose | Propose | Approve | Review | No |
-| Publish policy version | No | No | No | Yes | No |
+| Publish policy version | No | No | No | Policy Publisher only | No |
 | View a school | Own school | Own school | Own school | Assigned schools/aggregate | Operational diagnostics only |
-| Manage school users | No | Yes | No | No | No |
-| Manage platform users/logs | No | No | No | No | Yes |
+| Manage identity/audit operations | No | No | No | ESAO Admin: assigned membership history | Platform-wide |
 | Export financial data | Allowed categories only | Allowed categories only | Allowed categories only | Allowed scope | Diagnostics only |
 
 Segregation of duties is enforced for approval, inspection, and close. The same person must not silently create, approve, reconcile, and close the same sensitive action when the effective policy prohibits it.
+
+### 5.1 Registration and membership lifecycle
+
+`Submitted -> Pending Review -> Needs Correction (optional) -> Approved | Rejected | Withdrawn`
+
+1. The public form loads School choices from the active School Directory; an applicant cannot create or type an arbitrary school.
+2. The applicant supplies Thai display name, normalized email, password/confirmation, selected School, requested school role, and required policy acknowledgements. SMIS/MOE codes are displayed for disambiguation.
+3. Only permitted school roles can be requested publicly. `SYSTEM_ADMIN`, `ESAO_ADMIN`, reviewer, and Policy Publisher privileges are provisioned by an existing authorized administrator, never self-requested.
+4. Submission validates uniqueness/rate limits, hashes the password with the approved password algorithm, creates the identity in `PENDING_APPROVAL`, and creates a Registration Application. It returns a generic response and creates no NextAuth session.
+5. A System Admin can review all applications; an ESAO Admin can review only applications for assigned schools. The reviewer may approve an equal/lower permitted role, request correction, or reject with a structured reason.
+6. Approval atomically creates the Approved Membership, activates the identity when it has at least one active membership, records approver/scope/time, invalidates stale authorization state, and appends Audit Log entries.
+7. NextAuth sign-in succeeds only for an active identity with an active membership. Suspension, role change, and membership removal take effect on the next protected server check and remain audited.
+8. The first System Admin is created by a one-time operational bootstrap using an environment-identified email and securely supplied password; public registration cannot solve the initial trust problem.
 
 ## 6. Fund Flows and Record Matrix
 
@@ -259,6 +280,12 @@ These rules are enforced in domain services and database constraints, then cover
 18. An Official Advance cannot be settled for more than its outstanding amount; accepted evidence plus returned money must equal the total amount settled.
 19. When policy prohibits concurrent advances, a person with an unsettled advance cannot receive another.
 20. Receipt Book serial ranges cannot overlap within a School, and used/voided numbers are never reused or deleted.
+21. A Registration Applicant has no organization membership, protected session, or financial access before Membership Approval.
+22. Public registration cannot request or grant System Admin, ESAO Admin, reviewer, or Policy Publisher privileges.
+23. Membership Approval is scoped to the approver's permitted organizations and records the assigned role independently from the requested role.
+24. A school choice must reference an active School Directory record; SMIS and MOE codes are unique immutable identifiers.
+25. Middleware route checks never replace server-side membership and organization authorization.
+26. Normalized email is unique, and at most one active/pending Registration Application exists for the same identity and School; public responses do not reveal whether an identity already exists.
 
 ## 9. Core Algorithms
 
@@ -276,20 +303,20 @@ Policy publication rejects overlapping active ranges at the same scope and speci
 
 ### 9.2 Atomic posting
 
-Posting runs in one database transaction at serializable isolation, or with equivalent row locks and conflict detection:
+Posting runs through a Mongoose session and MongoDB multi-document transaction on a replica set or sharded cluster. Use snapshot reads, majority write concern, optimistic revision checks, conditional updates, and retry handling for transient transaction/write-conflict errors:
 
 ```text
 authorize actor and school membership
 return prior result when the idempotency key already succeeded
-lock draft event, fiscal period, numbering sequence, and linked obligation/commitment
+load draft event, fiscal period, numbering sequence, and linked obligation/commitment with expected revisions
 resolve and persist the applicable policy version
 validate state, evidence, approval, amount, date, balance, allocation, and link rules
 allocate the immutable Financial Event Reference and scoped document numbers
 insert canonical registry entry
 insert only the documents and cashbook cross-check allowed/required by the Fund Flow
-update obligation, commitment, and derived balance projections
+conditionally update obligation, commitment, counters, and derived balance projections
 append audit event and enqueue post-commit notifications/outbox messages
-commit; retry serialization conflicts under the same idempotency key
+commit; retry transient MongoDB transaction conflicts under the same idempotency key
 ```
 
 Report generation and notifications never sit inside the financial transaction. They consume the committed source revision and can be retried safely.
@@ -309,7 +336,7 @@ available_budget = revised_allocation
                  - pending_uncommitted_claim
 ```
 
-A pending claim backed by a commitment remains covered by that commitment and is not subtracted twice. Allocation/commitment rows are locked when approving a commitment or posting a claim so concurrent requests cannot overspend. A negative Available Budget is rejected unless the resolved policy contains a specifically authorized exception, which is separately approved and audited.
+A pending claim backed by a commitment remains covered by that commitment and is not subtracted twice. Approving a commitment or posting a claim uses a versioned conditional update inside the transaction (expected revision and sufficient Available Budget); a write conflict is retried from fresh state so concurrent requests cannot overspend. A negative Available Budget is rejected unless the resolved policy contains a specifically authorized exception, which is separately approved and audited.
 
 ### 9.4 Financial and position balances
 
@@ -330,7 +357,7 @@ For each operating day, select canonical entries whose Fund Flow requires a cros
 
 ### 9.6 Linked correction
 
-1. Lock the original event, its Lifecycle Children, related close revision, and current reconciliation/report dependencies.
+1. Load the original event, its Lifecycle Children, related close revision, and current reconciliation/report dependencies and pin their expected revisions for conditional writes.
 2. Reject direct source replacement when a Lifecycle Child would be orphaned or re-parented.
 3. Before close, create an explicitly linked reversal/adjustment and corrected event under the current open revision.
 4. After close, require a Privileged Correction proposal, structured reason, evidence, source close revision, and authenticated Director Approval; post the Adjustment Entry in the permitted open period.
@@ -343,13 +370,15 @@ A Reconciliation Version stores its dependency set: event revisions, cross-check
 
 ## 10. Data Model
 
-Use a relational model with explicit history. IDs are opaque UUIDs; human-facing document numbers are separate fields. `numeric(19,2)` (or an equivalent exact decimal type) is the minimum money representation.
+Use MongoDB through Mongoose with explicit history and referenced collections. Internal IDs are MongoDB ObjectIds; public references and human-facing document numbers remain separate stable fields. Money is stored as BSON `Decimal128` from validated decimal strings and calculated through an exact-decimal library, never JavaScript floating-point arithmetic. Embed small immutable value snapshots only when they improve historical reproducibility; independently governed records remain referenced documents.
 
 ### Tenancy and identity
 
-- `organizations`: school or ESAO, code, Thai/English names, status, parent organization.
-- `users`: identity, display names, active status, authentication metadata.
-- `organization_memberships`: user, organization, role, effective dates.
+- `organizations`: platform, ESAO, or school scope, Thai/English names, immutable `smisCode`/`moeCode` where applicable, status, parent organization reference.
+- `users`: normalized identity/email, display names, password hash, account status, authorization version, authentication metadata.
+- `registration_applications`: applicant, requested school/role, status, reviewer decision, structured reason, timestamps.
+- `organization_memberships`: user, organization, assigned role, effective dates, status, approver, authorization revision.
+- `auth_events`: credential, sign-in, sign-out, recovery, suspension, and session-security evidence separate from financial audit actions where appropriate.
 - `role_permissions`: permission definitions and policy-bound capabilities.
 - `fiscal_years`: Buddhist display year, Gregorian start/end, status, close metadata.
 
@@ -397,12 +426,14 @@ Use a relational model with explicit history. IDs are opaque UUIDs; human-facing
 - `system_logs`: operational diagnostics kept separate from financial audit evidence.
 - `notifications`: due-date, Needs Correction, stale, disagreement, and review alerts.
 
-### Key relational constraints
+### MongoDB integrity controls
 
-- Foreign keys include `organization_id` and `fiscal_year_id` where a cross-tenant or cross-year link would be unsafe.
-- Unique indexes cover event reference, scoped document numbers, policy overlap, and one active close per period.
-- Database checks reject negative amounts, invalid date ranges, and incompatible flow/record combinations.
-- Corrections and child links use explicit `ON DELETE RESTRICT`; financial history is never cascaded away.
+- Every governed document repeats `organizationId` and `fiscalYearId` where needed for deny-by-default scoping and compound indexes; referenced documents are validated to the same scope inside commands/transactions.
+- Unique/partial compound indexes cover normalized email, SMIS/MOE codes, event reference, scoped document numbers, active membership, policy ranges where expressible, Receipt Book serials, idempotency keys, and one active close per period.
+- Mongoose validation and MongoDB collection validators reject malformed money, dates, enums, required scope, and incompatible record shapes; domain services enforce cross-document rules.
+- `optimisticConcurrency`, explicit revision fields, and conditional filters protect approvals, allocations, closes, registrations, and correction dependencies from lost updates.
+- Financial/history documents are never cascade-deleted. References use application-level restrict/archive rules and integrity scans because MongoDB has no foreign keys or `ON DELETE RESTRICT`.
+- Index/model changes use versioned, repeatable migration scripts with preflight validation; application startup does not silently rewrite production indexes.
 
 ## 11. Application Architecture
 
@@ -412,11 +443,11 @@ Start as a modular monolith so posting, policy resolution, reconciliation, and a
 
 **Current baseline:** Next.js 14 App Router, React 18, shadcn/ui, Tailwind CSS, and lucide-react. The existing repository is a UI shell only; persistence and authentication are not implemented.
 
-**Recommended production stack:** TypeScript, PostgreSQL, Prisma (or carefully reviewed SQL), a standards-based authentication provider, object storage for report artifacts, and a background job runner for notifications and long reports. SQLite is acceptable only for an explicitly single-user offline pilot and must not become the multi-school production source.
+**Selected production stack:** TypeScript, MongoDB replica set/sharded cluster, Mongoose, NextAuth with a Credentials provider and password hashing, object storage for report artifacts, and a background job runner for notifications and long reports. `MONGODB_URI`, `MONGODB_DB_NAME`, `NEXTAUTH_URL`, and `NEXTAUTH_SECRET` come from validated environment configuration. Standalone MongoDB is unsupported because financial posting requires multi-document transactions.
 
 ### Modules
 
-1. **Identity and organization:** authentication, memberships, role/scope checks.
+1. **Identity and organization:** School Directory seed, registration, NextAuth authentication, approval, memberships, and role/scope checks.
 2. **Policy:** version publication, scope validation, resolution, and citations.
 3. **Financial events:** flow-specific commands, validation, posting, links, and corrections.
 4. **Registries:** canonical registry projections and running balances.
@@ -432,6 +463,9 @@ Financial mutations use commands that validate policy and write all linked recor
 
 Suggested commands:
 
+- `SubmitRegistrationApplication`
+- `ReviewRegistrationApplication`
+- `ApproveMembership` / `SuspendMembership`
 - `SubmitFinancialEvent`
 - `ApproveFinancialEvent`
 - `PostFinancialEvent`
@@ -448,12 +482,16 @@ Suggested commands:
 
 ## 12. API and Validation Contract
 
-All endpoints are authenticated, organization-scoped, and idempotent for a caller-provided request key.
+Financial and administration endpoints are authenticated, organization-scoped, and idempotent for a caller-provided request key. Public School Directory lookup and Registration Application submission are the only initial unauthenticated business endpoints; they are rate-limited, return non-enumerating responses, and grant no membership.
 
 Example route groups:
 
 ```text
 /api/auth/*
+/api/public/schools
+/api/registration-applications
+/api/admin/registration-applications/*
+/api/admin/memberships/*
 /api/organizations/:organizationId/*
 /api/fiscal-years/*
 /api/action-plans/*
@@ -475,12 +513,16 @@ Example route groups:
 
 Validation must produce field-level errors in Thai for school workspaces and stable machine-readable codes for support. Do not trust client-supplied school IDs, approver names, balances, policy IDs, or report totals; derive or authorize them server-side.
 
+NextAuth middleware performs coarse route gating and redirects. Every route handler, server action, and data query performs authoritative server-side account-status, membership-role, organization-scope, and authorization-version checks; middleware claims alone are insufficient for financial access.
+
 ## 13. User Experience Blueprint
 
 The application opens to the user's permitted workspace and current fiscal year. Thai is the default language for school and ESAO users; technical identifiers and official source-document names may remain in English.
 
 ### Core screens
 
+- **Public registration:** active School search/selection with SMIS/MOE codes, permitted role request, account fields, privacy acknowledgement, and pending-review confirmation.
+- **Registration administration:** System Admin platform queue and ESAO Admin assigned-school queue with approve, correction, reject, suspend, and membership-history views.
 - **Workspace dashboard:** balances by fund flow and money position, due/overdue remittances and deposits, Needs Correction items, stale reconciliations, and recent audit-sensitive actions.
 - **Budget workspace:** Annual Action Plan, revised allocations, commitments, direct-payment claims, confirmed use, available budget, and variance by programme/project.
 - **Financial event intake:** flow-first form with dynamic policy-required fields, document checklist, evidence references, approval path, and posting preview.
@@ -524,6 +566,8 @@ Every report stores the exact filters, source revision, policy resolution, gener
 ## 15. Security, Privacy, and Resilience
 
 - Enforce least privilege, organization scoping, and server-side authorization on every read and write.
+- Use NextAuth middleware for route gating and server-side membership checks for authorization; inactive/pending users never receive protected application access.
+- Hash credentials using the selected memory-hard password algorithm, rate-limit registration/sign-in, prevent account enumeration, and protect registration endpoints against CSRF/automation abuse.
 - Require strong authentication and re-authentication for director approval, close, privileged correction, policy publication, and sensitive export.
 - Encrypt data in transit and at rest; keep evidence references private by default and use expiring access for stored artifacts.
 - Redact personal identifiers in ESAO aggregates and exports unless the export policy allows them.
@@ -539,7 +583,7 @@ Every report stores the exact filters, source revision, policy resolution, gener
 - Unit tests for fiscal-year/date conversion, money arithmetic, policy resolution, due dates, balance calculations, and permission checks.
 - Property tests for allocation/commitment concurrency so two individually valid requests cannot jointly overspend an allocation.
 - Property/invariant tests for posting atomicity, prohibited cashbook rows, immutable history, and correction/link constraints.
-- Integration tests against a real PostgreSQL schema for each Fund Flow and close state.
+- Integration tests against a real MongoDB replica set for registration, membership authorization, every Fund Flow, transaction retry, index enforcement, and close state.
 - Contract tests for report totals and export boundaries.
 - End-to-end tests for receipt, payment, direct-payment claim, remittance, daily inspection, monthly close, privileged correction, and annual assessment.
 - End-to-end tests for advance eligibility/disbursement/partial settlement/overdue closure and Receipt Book issue/use/void/year-end cancellation.
@@ -559,12 +603,15 @@ Maintain deterministic fixtures for at least:
 - A tied/overlapping policy version rejected by resolution.
 - A report becoming stale and being explicitly replaced.
 - A failed export that is visible only within its authorized boundary.
+- An applicant unable to sign in before approval, an ESAO Admin unable to approve an unassigned school, and approval activating exactly one scoped membership.
 
 ### Definition of done for a financial feature
 
 A feature is complete only when its policy, command validation, persistence constraints, audit events, permissions, report impact, Thai errors, migration/backup behavior, tests, and user workflow are documented and verified.
 
 ## 17. Delivery Roadmap
+
+Execution status, task ownership, dependencies, phase gates, and session handoffs are tracked in [`DEVELOPMENT-CHECKLIST.md`](./DEVELOPMENT-CHECKLIST.md).
 
 ### Phase 0: Domain and policy foundation
 
@@ -579,7 +626,8 @@ A feature is complete only when its policy, command validation, persistence cons
 
 - TypeScript and application shell with Thai-first locale.
 - Authentication, organization membership, RBAC, fiscal years, and audit-log infrastructure.
-- PostgreSQL schema, migrations, seed policy, numbering sequences, and backup job.
+- MongoDB/Mongoose schemas, versioned indexes/migrations, the validated School Directory seed, numbering sequences, and backup job.
+- NextAuth sign-in, public registration, System Admin/ESAO approval, membership lifecycle, and first-System-Admin bootstrap.
 
 **Exit:** a user can enter only the permitted school workspace and every privileged action is audited.
 
@@ -637,9 +685,11 @@ A feature is complete only when its policy, command validation, persistence cons
 | --- | --- |
 | Old and new manuals appear to imply different accounting shapes | Bind every pilot school to an approved procedure/policy version; keep universal ledger behavior out of the shared core. |
 | Regulatory deadlines or custody limits change | Effective-dated policy publication with citations and non-overlap validation. |
-| Concurrent posting overspends a fund or allocation | Exact money types, row locks/serializable transactions, idempotency, and concurrency tests. |
+| Concurrent posting overspends a fund or allocation | Decimal128 money, revisioned conditional updates inside MongoDB transactions, idempotency, retry, and concurrency tests. |
 | Users work around the system in spreadsheets | Make required registers/reports faster to produce, import opening balances under approval, and measure unresolved manual adjustments. |
-| Cross-school data exposure | Organization-scoped foreign keys/queries, deny-by-default authorization, export boundaries, and penetration tests. |
+| Cross-school data exposure | Repeated organization scope, compound indexes, reference-scope validation, deny-by-default authorization, export boundaries, and penetration tests. |
+| Standalone/misconfigured MongoDB permits no financial transaction | Startup health check requires transaction capability and majority writes before enabling posting. |
+| Public registration is abused or grants privilege | Rate limiting, non-enumerating responses, restricted requested roles, no session before approval, scoped approvers, and audited activation. |
 | Evidence is lost or cannot be reviewed | Retention policy, integrity metadata, encrypted object storage or controlled external reference, backup and restore drills. |
 | Poor school connectivity interrupts entry | Retry-safe drafts and idempotent submission; decide offline scope before Phase 1 exit. |
 | A correction invalidates an accepted close/report | Dependency tracking, stale propagation, sequenced reconciliation, and explicit replacement reports. |
@@ -655,6 +705,10 @@ A feature is complete only when its policy, command validation, persistence cons
 - Policy versions are effective-dated and published by ESAO; school users cannot override them ad hoc.
 - Corrections are linked and auditable; close is not implemented as destructive freezing.
 - ESAO aggregation is reporting-only and cannot mutate a school's canonical records.
+- MongoDB through Mongoose is the persistence layer; every runtime must support multi-document transactions.
+- NextAuth is the authentication layer, while authoritative authorization is enforced server-side from active memberships.
+- Public registration creates a pending application only; System Admin or scoped ESAO Admin approval is required before access.
+- The repository School Directory seed contains the supplied 17 schools with unique SMIS and MOE codes.
 
 ### Resolve before Phase 1 exit
 
@@ -662,7 +716,8 @@ A feature is complete only when its policy, command validation, persistence cons
 - Which fund flows require cashbook cross-checks, which require Director Approval, and which allow partial settlement?
 - Which Official Advance purposes/funds are permitted, what due dates apply, and which Receipt Book forms/serial rules are currently authoritative?
 - Evidence storage location, retention period, maximum file size, and external-document reference format.
-- Identity provider, hosting boundary, encryption/key ownership, and recovery objectives approved by the sponsoring authority.
+- MongoDB hosting boundary, replica-set topology, encryption/key ownership, backup service, and recovery objectives approved by the sponsoring authority.
+- Registration identity-proof requirements, email verification/recovery channel, password policy, and which school roles applicants may request.
 - Official report templates, Thai terminology review, signature requirements, and export classifications.
 - Whether the pilot needs offline capture or can require a connected deployment.
 

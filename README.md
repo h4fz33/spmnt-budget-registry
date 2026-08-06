@@ -1,4 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# SchoolBanchee
+
+School financial accounting, budget control, registry monitoring, and audit support for Thai subsidiary school units.
+
+## Project Documentation
+
+- [Master blueprint](./BLUEPRINT.md)
+- [Development progression checklist](./DEVELOPMENT-CHECKLIST.md)
+- [Domain context map](./CONTEXT-MAP.md)
+- [Agent working agreement](./AGENTS.md)
+- [Architecture decisions](./docs/adr/)
+
+The application is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Application Baseline
+
+- MongoDB through Mongoose; financial writes require a replica set or sharded cluster with transaction support.
+- NextAuth for credential authentication and middleware route gating.
+- Server-side organization membership and permission checks for authoritative authorization.
+- Public registration remains pending until a System Admin or scoped ESAO Admin approves it.
+- The initial 17-school directory is stored in [`data/schools.csv`](./data/schools.csv).
+
+Runtime secrets and database selection belong in `.env.local` using [`.env.example`](./.env.example) as the contract. Never commit the real MongoDB URI or NextAuth secret.
 
 ## Getting Started
 

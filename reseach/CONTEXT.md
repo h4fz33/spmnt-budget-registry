@@ -15,7 +15,7 @@ _Avoid_: District when referring to the formal OBEC organization
 Thai UI: `สำนักงานเขตพื้นที่การศึกษา (สพท.)`
 
 **School Admin**:
-A school user who administers school users and permitted school-level governance actions.
+A school user who performs permitted school-level governance actions after an authorized ESAO Admin or System Admin grants the membership. The role does not approve, activate, or assign user memberships.
 _Avoid_: Finance officer, system admin
 Thai UI: `ผู้ดูแลระบบระดับสถานศึกษา`
 
@@ -42,9 +42,33 @@ A status for an audited action that requires school follow-up before normal comp
 _Avoid_: Informational warning
 
 **System Admin**:
-A platform operations role for diagnostics and support, separate from school finance and education-area roles.
+A platform operations and identity-governance role that manages Registration Applications and memberships across the platform, diagnostics, and support. It is separate from school finance and education-area financial roles.
 _Avoid_: School admin, finance officer
 Thai UI: `ผู้ดูแลระบบส่วนกลาง`
+
+**ESAO Admin**:
+An Education Service Area Office user authorized to review Registration Applications and manage memberships only for assigned Schools and ESAO roles within the permitted boundary.
+_Avoid_: System admin, school admin, policy publisher
+
+**School Directory**:
+The controlled list of Schools eligible for registration, identified by official SMIS and Ministry of Education codes.
+_Avoid_: Free-text school list, applicant-created school
+
+**Registration Applicant**:
+A person who has submitted a Registration Application but has no SchoolBanchee membership or application access.
+_Avoid_: Active user, school member
+
+**Registration Application**:
+A request from a Registration Applicant for a specific School membership and permitted school role.
+_Avoid_: User account, Approved Membership
+
+**Membership Approval**:
+An authenticated decision by a System Admin or authorized ESAO Admin that assigns an approved role and organization boundary to a Registration Application.
+_Avoid_: Email verification, self-assigned role
+
+**Approved Membership**:
+An active authorization linking a user identity to one School, Education Service Area Office, or platform-operations scope with an assigned role and effective status.
+_Avoid_: Registration Application, login session
 
 ## Interface Language
 
@@ -53,7 +77,7 @@ The user-facing language policy for School and Education Service Area Office wor
 _Avoid_: English-first school workspace
 
 **System Admin Workspace**:
-A dedicated platform-operations workspace for diagnostics and support that is separately accessible from School Admin and Education Service Area Office workspaces. It is the only UI scope allowed to be English-first.
+A dedicated platform-operations workspace for registration and membership governance, diagnostics, and support that is separately accessible from School Admin and Education Service Area Office workspaces. It is the only UI scope allowed to be English-first.
 _Avoid_: School Admin workspace, Education Service Area Office workspace
 
 ## Financial Procedure
