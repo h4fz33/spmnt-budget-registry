@@ -58,6 +58,42 @@ _Avoid_: School Admin workspace, Education Service Area Office workspace
 
 ## Financial Procedure
 
+**Annual Action Plan**:
+The School's approved Fiscal Year plan that organizes Projects and Activities and their authorized funding.
+_Avoid_: Transaction list, informal spending plan
+
+**Budget Allocation**:
+An authorized spending ceiling assigned to a School for a Fiscal Year, budget category, programme, Project, or Activity. It is authority to spend, not cash received by the School.
+_Avoid_: Bank balance, school receipt
+
+**Budget Commitment**:
+An approved obligation that reserves part of a Budget Allocation before direct payment is confirmed.
+_Avoid_: Cash payment, completed expense
+
+**Budget Adjustment**:
+An authorized increase, decrease, or transfer of a Budget Allocation that preserves the previous allocation and its approval history.
+_Avoid_: Edited allocation, cash transfer
+
+**Available Budget**:
+The uncommitted part of a revised Budget Allocation after confirmed use and outstanding Budget Commitments. It is not a cash, bank, or registry balance.
+_Avoid_: Cash balance, fund balance
+
+**Official Advance**:
+Money temporarily disbursed to an eligible person for an approved official activity and controlled until settled by acceptable evidence and return of any unused amount.
+_Avoid_: Personal loan, permanent expense
+
+**Advance Settlement**:
+The controlled discharge of an Official Advance using accepted expense evidence, return of unused money, or both.
+_Avoid_: New receipt, undocumented write-off
+
+**Receipt Book**:
+A controlled physical receipt-number range assigned to a custodian for one Fiscal Year, including used, voided, and unused receipts.
+_Avoid_: Numbering preference, generic document sequence
+
+**Document Held as Money**:
+A controlled document, such as an outstanding Official Advance agreement or cheque, included in the applicable daily money-position evidence until cleared.
+_Avoid_: Generic attachment, cash
+
 **Fiscal Year**:
 The Thai government accounting year, from October 1 through September 30.
 _Avoid_: Calendar year
