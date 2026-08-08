@@ -6,6 +6,7 @@
 **Status:** Proposed product and domain baseline
 **Version:** 1.0
 **Last updated:** 2026-08-08
+**Pilot authority:** [SESAO Narathiwat Pilot Governance Charter](./docs/governance/pilot-charter.md)
 
 ## 1. Purpose
 

@@ -4,7 +4,7 @@
 **Domain language:** [`reseach/CONTEXT.md`](./reseach/CONTEXT.md)
 **Architecture decisions:** [`docs/adr/`](./docs/adr/)
 **Current phase:** Phase 0 - Domain and policy foundation
-**Last updated:** 2026-08-07
+**Last updated:** 2026-08-08
 
 This is the shared execution ledger for all development agents and sessions. Stable task IDs, dependency checks, explicit ownership, and completion evidence are mandatory so work can be resumed without reconstructing prior context.
 
@@ -41,11 +41,12 @@ Only `[DONE]` tasks use a checked box. Do not use percentage-complete states.
 
 | ID | Affected tasks | Raised | Owner | Required decision/input | Status/resolution |
 | --- | --- | --- | --- | --- | --- |
+| `BLK-001` | `P1-14` | 2026-08-08 | Product owner | Supply the official ESAO code or approve a stable internal code for the parent organization referenced by `SCHOOL_SEED_ESAO_CODE`. | Resolved 2026-08-08: official ESAO code `1000960001` supplied by product owner; use it as the parent organization seed code. |
 <!-- Use BLK-001, BLK-002, ... for blockers and link an ADR when a hard-to-reverse decision is made. -->
 
 ## Phase 0: Domain and Policy Foundation
 
-- [ ] [TODO] `P0-01` Confirm sponsor, product owner, Policy Publishers, pilot schools, and accountable reviewer. Dependencies: none. Done when named owners and school scope are approved in a repository document.
+- [x] [DONE] `P0-01` Confirm sponsor, product owner, Policy Publishers, pilot schools, and accountable reviewer. Dependencies: none. Done when named owners and school scope are approved in a repository document. Evidence: `docs/progress/sessions/2026-08-08_1331_codex_P0-01.md`.
 - [ ] [TODO] `P0-02` Identify the exact OBEC/ESAO procedure and effective source revision for every pilot school. Dependencies: `P0-01`. Done when each school has one unambiguous procedure baseline and citations.
 - [ ] [TODO] `P0-03` Approve the Fund Flow and record matrix, including cashbook inclusion, documents, approvals, partial settlements, and due dates. Dependencies: `P0-02`. Done when policy owners sign off all pilot flows.
 - [ ] [TODO] `P0-04` Approve roles, school/ESAO data boundaries, registration/membership authority, and segregation-of-duties rules. Dependencies: `P0-01`. Done when every privileged command and membership action has an actor, approver, reviewer, and prohibited combination.
@@ -187,3 +188,4 @@ Session notes are durable handoff evidence, not a narrative transcript. Record i
 
 - [x] [DONE] `X-01` Record MongoDB/Mongoose, NextAuth, controlled registration approval, and the supplied school seed dataset in the domain/architecture baseline. Dependencies: none. Done when the blueprint, glossary, ADRs, checklist, environment contract, and validated repository seed file agree. Evidence: `docs/progress/sessions/2026-08-07_0115_codex_X-01.md`.
 - [x] [DONE] `X-02` Supersede MongoDB/Mongoose with Prisma/PostgreSQL while retaining NextAuth, approval-gated registration, the School Directory seed, and all financial-domain rules. Dependencies: none. Done when the current blueprint, ADRs, checklist, environment contract, README, and handoff evidence name Prisma/PostgreSQL consistently and preserve the prior MongoDB decision as superseded history. Evidence: `docs/progress/sessions/2026-08-08_1304_codex_X-02.md`.
+- [x] [DONE] `X-03` Record the official ESAO Narathiwat code in governance and School Directory seed configuration. Dependencies: `P0-01`. Done when the code `1000960001` appears consistently in the pilot charter, environment contract, seed-data documentation, and blocker history. Evidence: `docs/progress/sessions/2026-08-08_1419_codex_X-03.md`.

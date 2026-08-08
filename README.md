@@ -6,6 +6,7 @@ School financial accounting, budget control, registry monitoring, and audit supp
 
 - [Master blueprint](./BLUEPRINT.md)
 - [Development progression checklist](./DEVELOPMENT-CHECKLIST.md)
+- [Pilot governance charter](./docs/governance/pilot-charter.md)
 - [Domain context map](./CONTEXT-MAP.md)
 - [Agent working agreement](./AGENTS.md)
 - [Architecture decisions](./docs/adr/)
