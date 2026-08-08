@@ -5,7 +5,7 @@
 **Audience:** Product owners, school finance teams, Education Service Area Office (ESAO) supervisors, auditors, and the implementation team
 **Status:** Proposed product and domain baseline
 **Version:** 1.0
-**Last updated:** 2026-08-07
+**Last updated:** 2026-08-08
 
 ## 1. Purpose
 
@@ -303,20 +303,20 @@ Policy publication rejects overlapping active ranges at the same scope and speci
 
 ### 9.2 Atomic posting
 
-Posting runs through a Mongoose session and MongoDB multi-document transaction on a replica set or sharded cluster. Use snapshot reads, majority write concern, optimistic revision checks, conditional updates, and retry handling for transient transaction/write-conflict errors:
+Posting runs through a Prisma interactive transaction at `SERIALIZABLE` isolation. Where balance, allocation, or sequence rows need explicit mutual exclusion, use carefully reviewed parameterized `SELECT ... FOR UPDATE` statements inside that transaction; retry PostgreSQL serialization failures under the same idempotency key:
 
 ```text
 authorize actor and school membership
 return prior result when the idempotency key already succeeded
-load draft event, fiscal period, numbering sequence, and linked obligation/commitment with expected revisions
+lock draft event, fiscal period, numbering sequence, and linked obligation/commitment
 resolve and persist the applicable policy version
 validate state, evidence, approval, amount, date, balance, allocation, and link rules
 allocate the immutable Financial Event Reference and scoped document numbers
 insert canonical registry entry
 insert only the documents and cashbook cross-check allowed/required by the Fund Flow
-conditionally update obligation, commitment, counters, and derived balance projections
+update obligation, commitment, counters, and derived balance projections
 append audit event and enqueue post-commit notifications/outbox messages
-commit; retry transient MongoDB transaction conflicts under the same idempotency key
+commit; retry serialization conflicts under the same idempotency key
 ```
 
 Report generation and notifications never sit inside the financial transaction. They consume the committed source revision and can be retried safely.
@@ -336,7 +336,7 @@ available_budget = revised_allocation
                  - pending_uncommitted_claim
 ```
 
-A pending claim backed by a commitment remains covered by that commitment and is not subtracted twice. Approving a commitment or posting a claim uses a versioned conditional update inside the transaction (expected revision and sufficient Available Budget); a write conflict is retried from fresh state so concurrent requests cannot overspend. A negative Available Budget is rejected unless the resolved policy contains a specifically authorized exception, which is separately approved and audited.
+A pending claim backed by a commitment remains covered by that commitment and is not subtracted twice. Approving a commitment or posting a claim locks the allocation/commitment rows inside the serializable transaction, then recalculates from current canonical values so concurrent requests cannot overspend. A negative Available Budget is rejected unless the resolved policy contains a specifically authorized exception, which is separately approved and audited.
 
 ### 9.4 Financial and position balances
 
@@ -357,7 +357,7 @@ For each operating day, select canonical entries whose Fund Flow requires a cros
 
 ### 9.6 Linked correction
 
-1. Load the original event, its Lifecycle Children, related close revision, and current reconciliation/report dependencies and pin their expected revisions for conditional writes.
+1. Lock the original event, its Lifecycle Children, related close revision, and current reconciliation/report dependencies.
 2. Reject direct source replacement when a Lifecycle Child would be orphaned or re-parented.
 3. Before close, create an explicitly linked reversal/adjustment and corrected event under the current open revision.
 4. After close, require a Privileged Correction proposal, structured reason, evidence, source close revision, and authenticated Director Approval; post the Adjustment Entry in the permitted open period.
@@ -370,14 +370,14 @@ A Reconciliation Version stores its dependency set: event revisions, cross-check
 
 ## 10. Data Model
 
-Use MongoDB through Mongoose with explicit history and referenced collections. Internal IDs are MongoDB ObjectIds; public references and human-facing document numbers remain separate stable fields. Money is stored as BSON `Decimal128` from validated decimal strings and calculated through an exact-decimal library, never JavaScript floating-point arithmetic. Embed small immutable value snapshots only when they improve historical reproducibility; independently governed records remain referenced documents.
+Use PostgreSQL through Prisma with explicit history and normalized relations. Internal IDs are opaque UUIDs; public references and human-facing document numbers remain separate stable fields. Money is stored in `numeric(19,2)` (or an equivalent exact decimal type) and calculated without JavaScript floating-point arithmetic. Immutable report/configuration snapshots are stored only where they improve historical reproducibility; independently governed records remain relational records.
 
 ### Tenancy and identity
 
-- `organizations`: platform, ESAO, or school scope, Thai/English names, immutable `smisCode`/`moeCode` where applicable, status, parent organization reference.
+- `organizations`: platform, ESAO, or school scope, Thai/English names, immutable `smis_code`/`moe_code` where applicable, status, parent organization ID.
 - `users`: normalized identity/email, display names, password hash, account status, authorization version, authentication metadata.
-- `registration_applications`: applicant, requested school/role, status, reviewer decision, structured reason, timestamps.
-- `organization_memberships`: user, organization, assigned role, effective dates, status, approver, authorization revision.
+- `registration_applications`: applicant ID, requested school/role, status, reviewer decision, structured reason, timestamps.
+- `organization_memberships`: user ID, organization ID, assigned role, effective dates, status, approver ID, authorization revision.
 - `auth_events`: credential, sign-in, sign-out, recovery, suspension, and session-security evidence separate from financial audit actions where appropriate.
 - `role_permissions`: permission definitions and policy-bound capabilities.
 - `fiscal_years`: Buddhist display year, Gregorian start/end, status, close metadata.
@@ -426,14 +426,14 @@ Use MongoDB through Mongoose with explicit history and referenced collections. I
 - `system_logs`: operational diagnostics kept separate from financial audit evidence.
 - `notifications`: due-date, Needs Correction, stale, disagreement, and review alerts.
 
-### MongoDB integrity controls
+### Relational integrity controls
 
-- Every governed document repeats `organizationId` and `fiscalYearId` where needed for deny-by-default scoping and compound indexes; referenced documents are validated to the same scope inside commands/transactions.
-- Unique/partial compound indexes cover normalized email, SMIS/MOE codes, event reference, scoped document numbers, active membership, policy ranges where expressible, Receipt Book serials, idempotency keys, and one active close per period.
-- Mongoose validation and MongoDB collection validators reject malformed money, dates, enums, required scope, and incompatible record shapes; domain services enforce cross-document rules.
-- `optimisticConcurrency`, explicit revision fields, and conditional filters protect approvals, allocations, closes, registrations, and correction dependencies from lost updates.
-- Financial/history documents are never cascade-deleted. References use application-level restrict/archive rules and integrity scans because MongoDB has no foreign keys or `ON DELETE RESTRICT`.
-- Index/model changes use versioned, repeatable migration scripts with preflight validation; application startup does not silently rewrite production indexes.
+- Foreign keys include `organization_id` and `fiscal_year_id` where a cross-school or cross-year link would be unsafe. Command services also validate that linked records share the permitted scope.
+- Unique/partial indexes cover normalized email, SMIS/MOE codes, event reference, scoped document numbers, active membership, Registration Applications, Receipt Book serials, idempotency keys, policy overlap constraints, and one active close per period.
+- Prisma validation, PostgreSQL `CHECK` constraints, enums, and required relations reject malformed money, dates, state values, required scope, and incompatible record shapes; domain services enforce procedure-specific cross-record rules.
+- `SERIALIZABLE` transactions and locked rows protect approvals, allocations, closes, numbering, registrations, and correction dependencies from lost updates.
+- Financial/history records are never cascade-deleted. Relations use `ON DELETE RESTRICT` or archival paths, preserving the controlled correction and audit history.
+- Schema/index changes use reviewed Prisma migrations with preflight validation; application startup does not silently change the production schema.
 
 ## 11. Application Architecture
 
@@ -443,7 +443,7 @@ Start as a modular monolith so posting, policy resolution, reconciliation, and a
 
 **Current baseline:** Next.js 14 App Router, React 18, shadcn/ui, Tailwind CSS, and lucide-react. The existing repository is a UI shell only; persistence and authentication are not implemented.
 
-**Selected production stack:** TypeScript, MongoDB replica set/sharded cluster, Mongoose, NextAuth with a Credentials provider and password hashing, object storage for report artifacts, and a background job runner for notifications and long reports. `MONGODB_URI`, `MONGODB_DB_NAME`, `NEXTAUTH_URL`, and `NEXTAUTH_SECRET` come from validated environment configuration. Standalone MongoDB is unsupported because financial posting requires multi-document transactions.
+**Selected production stack:** TypeScript, PostgreSQL, Prisma, NextAuth with a Credentials provider and password hashing, object storage for report artifacts, and a background job runner for notifications and long reports. `DATABASE_URL`, `NEXTAUTH_URL`, and `NEXTAUTH_SECRET` come from validated environment configuration. PostgreSQL is the multi-school production source of truth; SQLite is not an acceptable substitute for the shared deployment.
 
 ### Modules
 
@@ -583,7 +583,7 @@ Every report stores the exact filters, source revision, policy resolution, gener
 - Unit tests for fiscal-year/date conversion, money arithmetic, policy resolution, due dates, balance calculations, and permission checks.
 - Property tests for allocation/commitment concurrency so two individually valid requests cannot jointly overspend an allocation.
 - Property/invariant tests for posting atomicity, prohibited cashbook rows, immutable history, and correction/link constraints.
-- Integration tests against a real MongoDB replica set for registration, membership authorization, every Fund Flow, transaction retry, index enforcement, and close state.
+- Integration tests against a real PostgreSQL database for registration, membership authorization, every Fund Flow, serializable transaction retry, constraint enforcement, and close state.
 - Contract tests for report totals and export boundaries.
 - End-to-end tests for receipt, payment, direct-payment claim, remittance, daily inspection, monthly close, privileged correction, and annual assessment.
 - End-to-end tests for advance eligibility/disbursement/partial settlement/overdue closure and Receipt Book issue/use/void/year-end cancellation.
@@ -626,7 +626,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 
 - TypeScript and application shell with Thai-first locale.
 - Authentication, organization membership, RBAC, fiscal years, and audit-log infrastructure.
-- MongoDB/Mongoose schemas, versioned indexes/migrations, the validated School Directory seed, numbering sequences, and backup job.
+- PostgreSQL/Prisma schema, reviewed migrations, the validated School Directory seed, numbering sequences, and backup job.
 - NextAuth sign-in, public registration, System Admin/ESAO approval, membership lifecycle, and first-System-Admin bootstrap.
 
 **Exit:** a user can enter only the permitted school workspace and every privileged action is audited.
@@ -685,10 +685,10 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 | --- | --- |
 | Old and new manuals appear to imply different accounting shapes | Bind every pilot school to an approved procedure/policy version; keep universal ledger behavior out of the shared core. |
 | Regulatory deadlines or custody limits change | Effective-dated policy publication with citations and non-overlap validation. |
-| Concurrent posting overspends a fund or allocation | Decimal128 money, revisioned conditional updates inside MongoDB transactions, idempotency, retry, and concurrency tests. |
+| Concurrent posting overspends a fund or allocation | Exact numeric money, serializable PostgreSQL transactions, locked allocation rows, idempotency, retry, and concurrency tests. |
 | Users work around the system in spreadsheets | Make required registers/reports faster to produce, import opening balances under approval, and measure unresolved manual adjustments. |
-| Cross-school data exposure | Repeated organization scope, compound indexes, reference-scope validation, deny-by-default authorization, export boundaries, and penetration tests. |
-| Standalone/misconfigured MongoDB permits no financial transaction | Startup health check requires transaction capability and majority writes before enabling posting. |
+| Cross-school data exposure | Organization-scoped foreign keys/queries, deny-by-default authorization, export boundaries, and penetration tests. |
+| Misconfigured PostgreSQL isolation permits inconsistent posting | Startup and integration checks require migrations, transactional connectivity, and serializable retry behavior before enabling posting. |
 | Public registration is abused or grants privilege | Rate limiting, non-enumerating responses, restricted requested roles, no session before approval, scoped approvers, and audited activation. |
 | Evidence is lost or cannot be reviewed | Retention policy, integrity metadata, encrypted object storage or controlled external reference, backup and restore drills. |
 | Poor school connectivity interrupts entry | Retry-safe drafts and idempotent submission; decide offline scope before Phase 1 exit. |
@@ -705,7 +705,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - Policy versions are effective-dated and published by ESAO; school users cannot override them ad hoc.
 - Corrections are linked and auditable; close is not implemented as destructive freezing.
 - ESAO aggregation is reporting-only and cannot mutate a school's canonical records.
-- MongoDB through Mongoose is the persistence layer; every runtime must support multi-document transactions.
+- PostgreSQL through Prisma is the persistence layer; financial commands run in serializable transactions with database-enforced relations and constraints.
 - NextAuth is the authentication layer, while authoritative authorization is enforced server-side from active memberships.
 - Public registration creates a pending application only; System Admin or scoped ESAO Admin approval is required before access.
 - The repository School Directory seed contains the supplied 17 schools with unique SMIS and MOE codes.
@@ -716,7 +716,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - Which fund flows require cashbook cross-checks, which require Director Approval, and which allow partial settlement?
 - Which Official Advance purposes/funds are permitted, what due dates apply, and which Receipt Book forms/serial rules are currently authoritative?
 - Evidence storage location, retention period, maximum file size, and external-document reference format.
-- MongoDB hosting boundary, replica-set topology, encryption/key ownership, backup service, and recovery objectives approved by the sponsoring authority.
+- PostgreSQL hosting boundary, encryption/key ownership, backup service, and recovery objectives approved by the sponsoring authority.
 - Registration identity-proof requirements, email verification/recovery channel, password policy, and which school roles applicants may request.
 - Official report templates, Thai terminology review, signature requirements, and export classifications.
 - Whether the pilot needs offline capture or can require a connected deployment.
