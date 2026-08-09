@@ -8,5 +8,5 @@ SchoolBanchee currently has one domain context. Its canonical glossary is mainta
 
 ## Relationships
 
-- **SchoolBanchee -> research sources:** `reseach/manual_2515.md` and `reseach/manual_2544.md` are historical/regulatory inputs. They inform policy versions but are not runtime data and do not override the glossary.
+- **SchoolBanchee -> research sources:** `reseach/manual_2515.md` and `reseach/manual_2544.md` are historical/regulatory inputs. `reseach/audit-operation-manual.md` is a partial SESAO operational-audit reference for the school financial-accounting assessment workflow. These sources inform policy versions and audit-instrument versions but are not runtime data and do not override the glossary.
 - **SchoolBanchee -> BLUEPRINT:** [`BLUEPRINT.md`](./BLUEPRINT.md) defines product scope and implementation decisions using the glossary.

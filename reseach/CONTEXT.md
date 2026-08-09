@@ -100,6 +100,10 @@ _Avoid_: School Admin workspace, Education Service Area Office workspace
 The School's approved Fiscal Year plan that organizes Projects and Activities and their authorized funding.
 _Avoid_: Transaction list, informal spending plan
 
+**Annual Self-Assessment**:
+A School-submitted fiscal-year review against the versioned ten control dimensions, with evidence, findings, corrective actions, and Director/ESAO review. It is not an independent School Financial Accounting Audit.
+_Avoid_: External audit, final audit result
+
 **Budget Allocation**:
 An authorized spending ceiling assigned to a School for a Fiscal Year, budget category, programme, Project, or Activity. It is authority to spend, not cash received by the School.
 _Avoid_: Bank balance, school receipt
@@ -333,6 +337,42 @@ _Avoid_: Deletion, purge
 **Audit Review Report**:
 A review surface for audit-sensitive financial and governance actions.
 _Avoid_: Debug report, activity log
+
+**School Financial Accounting Audit**:
+A SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period. It tests approved criteria using linked workpapers and evidence, then produces a scored and reportable result without mutating canonical financial records.
+_Avoid_: Annual Self-Assessment, Audit Review Report, general ledger
+
+**Audit Assessment Cycle**:
+A versioned instance of a School Financial Accounting Audit for one School and audit period, with an assigned auditor, applicable Policy Version, Audit Checklist Version, workpapers, findings, result, report, acceptance, and follow-up history.
+_Avoid_: Assessment item, report filter
+
+**Audit Checklist Version**:
+The effective-dated, source-cited set of audit topics, criteria, test methods, required evidence, scoring weights, and result-level rules used by an Audit Assessment Cycle. It preserves any mapping where examination topics and scoring categories differ.
+_Avoid_: Mutable checklist setting, self-assessment form
+
+**Audit Workpaper**:
+A structured record of one audit test or review step, including the criterion, method, observation, evidence references, conclusion, and responsible reviewer.
+_Avoid_: Generic attachment, Audit Log entry
+
+**Audit Finding**:
+A documented audit conclusion or exception linked to an Audit Workpaper and its evidence, with severity, owner, due date, corrective action, response, and verification state.
+_Avoid_: Informational warning, Needs Correction status only
+
+**Audit Score**:
+A reproducible weighted result calculated from an Audit Checklist Version and the completed workpapers. It remains a snapshot of the audit and never replaces the underlying findings or evidence.
+_Avoid_: Mutable grade, self-reported total
+
+**Audit Result Level**:
+A policy-defined classification of an Audit Score and/or specified critical findings for an Audit Assessment Cycle. Level names, bands, and any override rules come from the applicable version rather than being hard-coded.
+_Avoid_: Universal pass/fail, color-only status
+
+**School Financial Accounting Audit Report**:
+The finalized per-School report for an Audit Assessment Cycle, preserving its scope, criteria/checklist and policy revisions, workpaper conclusions, findings, score, result level, acceptance history, and corrective-action state.
+_Avoid_: Annual Self-Assessment report, overwritten reprint
+
+**ESAO Audit Summary**:
+An authorized aggregate report over finalized School Financial Accounting Audit Reports. It may include result distributions or ranking only when the applicable policy and scope permit it, and it cannot mutate a School's canonical records.
+_Avoid_: Consolidated accounting source, unrestricted school ranking
 
 **Stale Report**:
 A previously produced report that may no longer represent active financial records.

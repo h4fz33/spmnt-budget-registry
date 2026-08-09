@@ -4,8 +4,8 @@
 **Working name:** SchoolBanchee
 **Audience:** Product owners, school finance teams, Education Service Area Office (ESAO) supervisors, auditors, and the implementation team
 **Status:** Proposed product and domain baseline
-**Version:** 1.0
-**Last updated:** 2026-08-08
+**Version:** 1.1
+**Last updated:** 2026-08-09
 **Pilot authority:** [SESAO Narathiwat Pilot Governance Charter](./docs/governance/pilot-charter.md)
 
 ## 1. Purpose
@@ -30,6 +30,7 @@ The requirements are derived from the local research copies in `reseach/` (the d
 | --- | --- |
 | `reseach/manual_2515.md` | Subsidiary-unit accounting model, three fund classes, supporting books/registers, daily/monthly/year-end reports, daily inspection, receipt-book control, borrowing/advance control, and the ten annual self-assessment dimensions. |
 | `reseach/manual_2544.md` | Simplified financial-control model for schools, direct payment of budget claims by the paying authority, state-revenue remittance, non-budgetary fund handling, required registers, evidence, and monthly submission expectations. |
+| `reseach/audit-operation-manual.md` | Partial SESAO operational-audit reference: school financial-accounting audit objectives, nine examination topics, criterion-level procedures and workpapers, per-school reporting, weighted scoring, result levels, ranking, and an ESAO summary. It is a candidate audit-instrument source, not an automatic replacement for the common B.E. 2515 baseline or a blanket current OBEC rule. |
 | `reseach/CONTEXT.md` | Canonical project vocabulary and pilot boundaries, including the control registry, selected cashbook cross-check overlay, policy resolution, close/correction, evidence, and export terminology. |
 | `reseach/คู่มือปฏิบัติงานการเงินการบัญชีและการพัสดุ.md` | Same operational guide in the research set; use as a cross-check when the two English-named copies are ambiguous. |
 
@@ -48,6 +49,7 @@ The requirements are derived from the local research copies in `reseach/` (the d
 - Required documentary evidence, approval evidence, due-date controls, and audit history.
 - Daily balance reporting, registry/cashbook agreement, bank reconciliation references, monthly reconciliation, monthly financial reporting, and annual school-revenue reporting.
 - Annual school self-assessment across the ten control dimensions from the 2515 guide.
+- SESAO-led School Financial Accounting Audit Assessment cycles with versioned criteria, workpapers, findings, corrective follow-up, per-school reports, and authorized ESAO summaries.
 - Thai-first school and ESAO workspaces; a separate English-capable system-admin workspace.
 - Controlled exports with a recorded boundary, acknowledgement where required, and failed-export diagnostics.
 
@@ -71,6 +73,7 @@ The requirements are derived from the local research copies in `reseach/` (the d
 6. **Close preserves accountability.** Monthly close limits ordinary changes but keeps an authorized linked-correction path open.
 7. **Auditability is a user feature.** The reason, actor, time, source revision, and evidence for a change must be visible to permitted reviewers.
 8. **Thai-first, accessible, and printable.** Screens and reports use Thai operational language, clear Buddhist/Gregorian date handling, keyboard support, and print-safe layouts.
+9. **Assessment types are explicit.** Daily inspection, Annual Self-Assessment, School Financial Accounting Audit, and Audit Review Report have different owners, evidence, conclusions, and authority boundaries.
 
 ## 4. Ubiquitous Language
 
@@ -121,6 +124,19 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 - **Audit Log:** Immutable history of meaningful financial and governance actions.
 - **Effective Financial Policy / Policy Version:** Versioned rules selected by scope and event effective date.
 
+### Assessment and audit
+
+- **Annual Self-Assessment:** School-submitted fiscal-year review against a versioned ten-dimension checklist, with evidence, findings, corrective actions, and Director/ESAO review. It is not an independent external audit result.
+- **School Financial Accounting Audit:** SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period, using approved criteria, workpapers, and evidence without mutating canonical financial records.
+- **Audit Assessment Cycle:** Versioned instance of a School Financial Accounting Audit for one School and period, including assigned auditor, policy/checklist revisions, workpapers, findings, score/result, report, acceptance, and follow-up.
+- **Audit Checklist Version:** Effective-dated set of audit topics, criteria, test methods, required evidence, scoring weights, and result-level rules, with source citation, publisher, scope, and applicability. Examination-topic and scoring-category mappings are stored explicitly when they differ.
+- **Audit Workpaper:** Structured record of one audit test or review step, including criterion, method, observation, evidence references, conclusion, and responsible reviewer.
+- **Audit Finding:** Documented audit conclusion or exception linked to a workpaper and evidence, with severity, owner, due date, corrective action, response, and verification state.
+- **Audit Score:** Reproducible weighted result calculated from a checklist version and completed workpapers; it is a historical snapshot and never replaces findings or evidence.
+- **Audit Result Level:** Policy-defined classification of an audit score and/or specified critical findings. Names, bands, and override rules are policy data, not hard-coded assumptions.
+- **School Financial Accounting Audit Report:** Finalized per-school report preserving audit scope, source revisions, workpaper conclusions, findings, score/result, acceptance history, and corrective-action state.
+- **ESAO Audit Summary:** Authorized aggregate report over finalized school audit reports; result distributions or ranking are included only when policy and scope permit them.
+
 ## 5. Actors and Permission Boundary
 
 Access is scoped by organization and role. A user never gains access to another school's financial records merely by knowing an identifier.
@@ -134,6 +150,11 @@ Access is scoped by organization and role. A user never gains access to another 
 | Post routine events | Yes, within policy | Optional delegated permission | No | No | No | No |
 | Approve director-required actions | No | No | Yes | No, unless separately appointed | No | No |
 | Perform daily inspection | Assigned inspector | Yes | Yes | Review | No | No |
+| Start/assign accounting audit | No | No | No | Appointed SESAO Auditor: assigned schools | No | No |
+| Perform audit workpapers | No | No | No | Assigned auditor: assigned schools | No | No |
+| Submit audit finding response | Own school | Own school if granted | Own school | Review | No | No |
+| Finalize/accept audit assessment | No | No | No | Policy-defined audit authority | No | No |
+| View audit result/ranking | Own school's finalized report | Own school's finalized report | Own school's finalized report | Assigned schools/authorized aggregate | No | No |
 | Reconcile and prepare monthly report | Yes | Yes | Review/accept | Review/return | No | No |
 | Close a month | No | No | Yes or delegated close authority | Review/override under policy | No | No |
 | Create post-close privileged correction | Propose | Propose | Approve | Review | No | No |
@@ -145,6 +166,8 @@ Access is scoped by organization and role. A user never gains access to another 
 A SESAO Policy Publisher may activate an evidence-backed Policy Version without a second-person approval or pre-activation review. The activation remains attributable to the named publisher and recorded in the Audit Log. This exception applies only to policy activation and does not relax segregation of duties for financial, close, or membership actions.
 
 Segregation of duties is enforced for approval, inspection, and close. The same person must not silently create, approve, reconcile, and close the same sensitive action when the effective policy prohibits it.
+
+Audit-assessment assignment, final acceptance, independent review, and ranking visibility remain subject to the approved Policy Version and the unresolved P0-04 authorization scope. The audit workflow is read/review oriented and cannot mutate a School's canonical financial records; any financial correction uses the normal linked-correction commands.
 
 ### 5.1 Registration and membership lifecycle
 
@@ -261,6 +284,37 @@ Each school completes one assessment per fiscal year against these ten control d
 
 Each dimension has a versioned checklist, evidence references, finding severity, owner, due date, corrective action, and Director submission/acceptance. ESAO reviewers can compare risk across assigned schools without changing school records.
 
+### 7.9 School financial accounting audit assessment
+
+The section 3 audit in `reseach/audit-operation-manual.md` is a substantive, SESAO-led examination of a School's accounting controls. It verifies that the Annual Action Plan covers every fund transparently, actual balances and custody controls are complete and compliant, and accounting/register/reporting records are current and correct. It is a fourth workflow alongside Daily Inspection, Annual Self-Assessment, and Audit Review Report. It is not a second way to post or correct financial records.
+
+`Planned -> Assigned -> Fieldwork -> Findings Draft -> Management Response -> Review -> Finalized -> Follow-up -> Closed`
+
+1. Start an Audit Assessment Cycle for one School and a defined fiscal/audit period. Persist the applicable Policy Version, Audit Checklist Version, source revision, scope, as-of date, and assigned auditor before fieldwork begins.
+2. Execute the versioned criteria through criterion-level Audit Workpapers. A workpaper records the assertion, test method, population or sample where applicable, observation, evidence references (including external cash-custody and bank evidence), conclusion, preparer, reviewer, and timestamps.
+3. Cover the nine examination topics named by the reference: Annual Action Plan; remaining balances; cash custody; receipts and payments; accounting/register maintenance; financial reports; daily receipt/payment inspection; advances/loan debtors; and Receipt Books.
+4. Preserve the source's detailed subtests, including plan preparation/execution/follow-up, physical and bank/passbook balance checks, custody appointments and limits, receipt/payment authorization and evidence, register-to-source tie-outs, report completeness/submission, daily sign-offs, advance aging/settlement, and serial-range custody and year-end reporting.
+
+| Examination topic | Minimum versioned audit assertions and evidence |
+| --- | --- |
+| Annual Action Plan | Responsible preparation, mission/OBEC alignment, all funding sources, project/activity timing-budget-owner, required plan/change approvals, publication, semester monitoring, and annual results reporting. |
+| Remaining balances | Cash, bank/passbook, and drawing-agency deposit balances exist at the audit cut-off and reconcile by fund/register to the Daily Balance Report. |
+| Cash custody | External appointment/count/storage/signature evidence, policy-controlled custody limits, and remittance/deposit exceptions or aging. |
+| Receipts and payments | Written finance assignment; receipt-form/serial control; authorized purpose and payee; source/procurement/approval/payment evidence; and receipt/payment voucher, register, cheque/bank, and approval tie-outs. |
+| Accounting/register maintenance | Required state-income, non-budgetary, deposit, request, and drawing-agency registers are current, complete, and traceable to source documents and balances. |
+| Financial reports | Daily balance report completeness and required signatures; monthly package, bank comparison, submission evidence, and required other-report timing or exception reasons. |
+| Daily receipt/payment inspection | End-of-day receipt totals, payment-voucher/register comparison, assigned-inspector evidence, and required sign-off. |
+| Advances/loan debtors | Eligibility, approval, agreement/estimate/purpose evidence, due-date control, debtor ledger completeness, prior-unsettled restriction, settlement evidence, and overdue follow-up. |
+| Receipt Books | Fiscal-year use, parallel-book rationale, custodian/register issue evidence, serial/count reconciliation, void/unused cancellation and retention, and annual usage-report evidence. |
+
+5. Convert failed or qualified tests into Audit Findings linked to the workpaper and source evidence. Each finding has severity, condition, cause/effect or rationale, owner, due date, corrective action, management response, verification/re-test, and closure or accepted-exception state.
+6. Produce a per-School School Financial Accounting Audit Report from the completed workpapers and summary forms. The report includes objectives, scope, criteria/checklist and policy revisions, exceptions, recommendations, score/result, signatures or acceptance events required by policy, issue date, and report revision metadata.
+7. Calculate an Audit Score only from the versioned rubric. The reference document's example has ten weighted score categories totaling 100 points (5/20/5/10/20/20/5/5/5/5), even though its examination list has nine topics because receipts and payments are scored separately. Store that mapping, any N/A/rounding/critical-finding rules, and result-band cutoffs as policy data; the reference names four result levels but does not provide verified current cutoff ranges.
+8. Generate an ESAO Audit Summary over finalized reports only. Result distributions and school ranking are permitted only when the applicable Policy Version authorizes them, the cohort uses a comparable checklist/rubric, and the requesting actor's assigned-school boundary permits the view. Ties, incomplete cycles, and suppressed personal identifiers are explicit outcomes.
+9. Keep the final cycle, workpapers, findings, score, rank snapshot, acceptance history, and reports immutable. A correction to an underlying financial record or a revision to a stored audit dependency follows the linked-correction path or audit revision path and marks dependent audit artifacts Stale; a replacement report or re-opened follow-up preserves the original history.
+
+The reference workpaper pack includes balance-count, cash, bank, bank-reconciliation, drawing-agency-deposit, non-budgetary-custody, state-income-custody, receipt-use/recording, payment-evidence/recording, advance-debtor, receipt-book-count/control, and note workpapers, plus annual-plan and financial-control summary forms. These are configurable instrument templates and are not hard-coded as current B.E. 2544 law.
+
 ## 8. Domain Invariants
 
 These rules are enforced in domain services and database constraints, then covered by automated tests.
@@ -291,6 +345,12 @@ These rules are enforced in domain services and database constraints, then cover
 24. A school choice must reference an active School Directory record; SMIS and MOE codes are unique immutable identifiers.
 25. Middleware route checks never replace server-side membership and organization authorization.
 26. Normalized email is unique, and at most one active/pending Registration Application exists for the same identity and School; public responses do not reveal whether an identity already exists.
+27. An Annual Self-Assessment, a School Financial Accounting Audit, a Daily Inspection, and an Audit Review Report are distinct record types with distinct actors and lifecycles; one cannot be silently substituted for another.
+28. Every Audit Workpaper belongs to one Audit Assessment Cycle and one Audit Checklist Version, records its test outcome and evidence references, and cannot be finalized while a required criterion is missing unless the policy records an authorized exception or N/A rationale.
+29. Finalized audit cycles, workpapers, findings, score snapshots, rank snapshots, and reports are immutable. A correction to a stored audit dependency creates a Stale dependency and an explicit replacement or follow-up revision; a later unrelated policy publication does not re-resolve historical audit results.
+30. Audit Scores and any result level or ranking are reproducible from the stored checklist/rubric version, completed workpapers, source revisions, and authorized cohort; a score never hides an unresolved finding.
+31. Audit-assessment commands may create review, finding, report, and follow-up records, but cannot mutate a School's canonical financial records or bypass linked-correction and authorization rules.
+32. An Audit Assessment Cycle resolves exactly one published Audit Checklist Version by School scope and audit/as-of date. Missing or tied versions fail closed, and a finalized cycle never re-resolves merely because a later checklist is published.
 
 ## 9. Core Algorithms
 
@@ -305,6 +365,18 @@ For a given School, Fund Flow, and effective date:
 5. Never re-resolve a posted historical event merely because a newer policy is published.
 
 Policy publication rejects overlapping active ranges at the same scope and specificity. A user cannot bypass a missing/ambiguous policy by choosing a version in the event form.
+
+### 9.1.1 Audit checklist resolution
+
+For a given School and audit/as-of date:
+
+1. Select published Audit Checklist Versions whose effective range includes the date and whose organization scope contains the School.
+2. Rank candidates by declared specificity: school-specific, then ESAO-wide, then approved national/default scope.
+3. Require exactly one candidate at the highest applicable rank. Zero candidates means `AUDIT_CHECKLIST_NOT_FOUND`; multiple candidates mean `AUDIT_CHECKLIST_AMBIGUOUS`.
+4. Persist the selected checklist version, source citation, rubric, and resolution inputs on the Audit Assessment Cycle before workpapers are created.
+5. Never re-resolve a finalized historical cycle merely because a newer checklist is published. A correction to a stored checklist dependency uses the explicit stale/replacement path.
+
+Audit Checklist publication rejects overlapping active ranges at the same scope and specificity. An auditor cannot bypass a missing or ambiguous checklist by selecting a version in the audit form.
 
 ### 9.2 Atomic posting
 
@@ -399,6 +471,8 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 - `receipt_book_numbers`: book, serial, status, linked Receipt Record, void reason, audit revision.
 - `policy_versions`: scope, effective start/end, status, publisher, source citation, immutable rule payload.
 - `policy_resolution_records`: event, selected policy version, resolution inputs, and result.
+- `audit_checklist_versions`: source citation, publisher, scope, effective range, status, topics, criteria, test methods, required evidence, scoring weights, and result-level rules.
+- `audit_checklist_items`: checklist version, examination topic, criterion, scoring category, maximum points, applicability, and required workpaper fields.
 - `numbering_sequences`: per-school/fiscal-year/register document sequence and gap/void controls.
 
 ### Financial records
@@ -422,6 +496,10 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 - `monthly_closes`: period, close revision, closed by, closed at, report package, reopen/exception policy.
 - `annual_assessment_cycles`: school, fiscal year, checklist version, status, submission and acceptance.
 - `assessment_items`: dimension, finding, severity, evidence, owner, due date, corrective action.
+- `audit_assessment_cycles`: School, fiscal/audit period, as-of date, checklist/policy/source revisions, assigned auditor, status, submission/review/finalization/closure events, and report references.
+- `audit_workpapers`: cycle, checklist item, procedure, population/sample, observed result, evidence references, conclusion, preparer/reviewer, and verification history.
+- `audit_findings`: cycle/workpaper, control topic, severity, rationale, owner, due date, corrective action, management response, verification/re-test, and closure or accepted-exception state.
+- `audit_score_snapshots`: cycle, rubric revision, per-category awarded/max points, total, result level, cohort/rank snapshot, tie/incomplete handling, and calculation timestamp.
 - `reports`: type, scope, filters, source revisions, policy versions, status, generated artifact metadata, stale/replacement link.
 
 ### Audit and operations
@@ -435,6 +513,7 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 
 - Foreign keys include `organization_id` and `fiscal_year_id` where a cross-school or cross-year link would be unsafe. Command services also validate that linked records share the permitted scope.
 - Unique/partial indexes cover normalized email, SMIS/MOE codes, event reference, scoped document numbers, active membership, Registration Applications, Receipt Book serials, idempotency keys, policy overlap constraints, and one active close per period.
+- Audit Checklist Versions reject overlapping published effective ranges at the same scope and specificity; a cycle persists one resolved checklist/rubric version and reports persist their authorized cohort/rank snapshot.
 - Prisma validation, PostgreSQL `CHECK` constraints, enums, and required relations reject malformed money, dates, state values, required scope, and incompatible record shapes; domain services enforce procedure-specific cross-record rules.
 - `SERIALIZABLE` transactions and locked rows protect approvals, allocations, closes, numbering, registrations, and correction dependencies from lost updates.
 - Financial/history records are never cascade-deleted. Relations use `ON DELETE RESTRICT` or archival paths, preserving the controlled correction and audit history.
@@ -458,7 +537,7 @@ Start as a modular monolith so posting, policy resolution, reconciliation, and a
 4. **Registries:** canonical registry projections and running balances.
 5. **Cross-check and custody:** cashbook overlay, daily inspection, external evidence references.
 6. **Reconciliation and close:** daily/monthly reconciliation, stale detection, close revisions.
-7. **Assessment:** annual ten-dimension self-assessment and corrective actions.
+7. **Assessment:** annual ten-dimension self-assessment plus SESAO school accounting audit assessment, versioned workpapers, findings, scoring, and corrective actions.
 8. **Reporting and exports:** reproducible report queries, print/PDF/CSV/XLSX boundaries.
 9. **Audit and operations:** append-only audit history, system logs, export diagnostics, backups.
 
@@ -482,8 +561,11 @@ Suggested commands:
 - `CloseMonth`
 - `ProposeLinkedCorrection` / `ApprovePrivilegedCorrection`
 - `StartAssessmentCycle` / `SubmitAssessment` / `AcceptAssessment`
+- `StartAuditAssessment` / `AssignAuditAssessment`
+- `RecordAuditWorkpaper` / `SubmitAuditAssessment`
+- `FinalizeAuditAssessment` / `VerifyAuditFinding`
 - `PublishPolicyVersion`
-- `GenerateReport` / `ExportReport`
+- `GenerateReport` / `GenerateAuditSummary` / `ExportReport`
 
 ## 12. API and Validation Contract
 
@@ -511,12 +593,15 @@ Example route groups:
 /api/reconciliations/*
 /api/monthly-closes/*
 /api/assessments/*
+/api/audit-assessments/*
 /api/reports/*
 /api/exports/*
 /api/audit/*
 ```
 
 Validation must produce field-level errors in Thai for school workspaces and stable machine-readable codes for support. Do not trust client-supplied school IDs, approver names, balances, policy IDs, or report totals; derive or authorize them server-side.
+
+Audit-assessment endpoints resolve the assigned School scope, Audit Checklist Version, and applicable Policy Version server-side. Workpaper completion, finding verification, finalization, aggregate summaries, and ranking visibility fail closed when required evidence, authorization, comparable rubric data, or the policy-defined acceptance path is missing.
 
 NextAuth middleware performs coarse route gating and redirects. Every route handler, server action, and data query performs authoritative server-side account-status, membership-role, organization-scope, and authorization-version checks; middleware claims alone are insufficient for financial access.
 
@@ -539,6 +624,8 @@ The application opens to the user's permitted workspace and current fiscal year.
 - **Reconciliation:** versioned daily/monthly reconciliation, bank comparison fields, outstanding items, report package, and stale indicators.
 - **Monthly close:** close readiness checklist, unresolved exceptions, report submission, close revision, and permitted correction path.
 - **Annual self-assessment:** ten dimensions, evidence, findings, corrective actions, and Director/ESAO review.
+- **School financial accounting audit:** assigned-auditor queue, versioned criteria and workpapers, evidence and external-evidence references, findings, management responses, verification, score/result, and final report history.
+- **ESAO audit summary:** authorized assigned-school audit status, overdue finding follow-up, comparable result distributions, and policy-permitted ranking with clear scope and cohort filters.
 - **Reports and exports:** reproducible filters, Thai fiscal dates, print-safe templates, export category boundary, and replacement history.
 - **Administration:** school users, fiscal years, numbering sequences, and fund-flow configuration for authorized school/ESAO users; policy publication is reserved for appointed SESAO Policy Publisher(s) acting on unchanged OBEC policy evidence.
 
@@ -565,17 +652,22 @@ The application opens to the user's permitted workspace and current fiscal year.
 8. Budget Allocation/Commitment/Use/Availability and variance reports by plan, programme, Project/Activity, category, and fiscal period.
 9. Outstanding/Overdue Official Advance and settlement report by recipient, fund, due date, and corrective status.
 10. Receipt Book custody, serial usage/gap/void, and fiscal-year usage report.
+11. School Financial Accounting Audit Report with audit scope, checklist/policy revisions, workpaper conclusions, findings/recommendations, management responses, verified corrective actions, score/result, and required acceptance/signature history.
+12. ESAO Audit Summary for an authorized comparable cohort, with assessment completion, finding status, result distribution, and policy-permitted ranking.
 
-Every report stores the exact filters, source revision, policy resolution, generator, and generation timestamp. When related data changes, the report is Stale and a Replacement Report is generated rather than silently overwriting it.
+The Audit Review Report in item 7 is a review of audit-sensitive system actions. It is not the School Financial Accounting Audit Report in item 11.
+
+Every report stores the exact filters, source revision, policy resolution, generator, and generation timestamp. Audit summaries additionally store the finalized-cycle cohort, checklist/rubric revision, ranking/tie rules, and authorization scope. When related data changes, the report is Stale and a Replacement Report is generated rather than silently overwriting it.
 
 ## 15. Security, Privacy, and Resilience
 
 - Enforce least privilege, organization scoping, and server-side authorization on every read and write.
 - Use NextAuth middleware for route gating and server-side membership checks for authorization; inactive/pending users never receive protected application access.
 - Hash credentials using the selected memory-hard password algorithm, rate-limit registration/sign-in, prevent account enumeration, and protect registration endpoints against CSRF/automation abuse.
-- Require strong authentication and re-authentication for director approval, close, privileged correction, policy publication, and sensitive export.
+- Require strong authentication and re-authentication for director approval, close, privileged correction, policy publication, audit finalization, and sensitive export.
 - Encrypt data in transit and at rest; keep evidence references private by default and use expiring access for stored artifacts.
 - Redact personal identifiers in ESAO aggregates and exports unless the export policy allows them.
+- Restrict audit workpapers, findings, scores, result levels, and rankings to the assigned School/ESAO boundary; school users can access only their School's authorized report and response workflow.
 - Keep audit logs append-only, separately permissioned, and retained according to the applicable records policy.
 - Back up the database and report metadata daily, test restoration quarterly, and record backup health.
 - Define recovery objectives before production: target RPO <= 24 hours and RTO <= 4 hours for the pilot unless the sponsoring authority sets stricter values.
@@ -592,6 +684,8 @@ Every report stores the exact filters, source revision, policy resolution, gener
 - Contract tests for report totals and export boundaries.
 - End-to-end tests for receipt, payment, direct-payment claim, remittance, daily inspection, monthly close, privileged correction, and annual assessment.
 - End-to-end tests for advance eligibility/disbursement/partial settlement/overdue closure and Receipt Book issue/use/void/year-end cancellation.
+- Unit and integration tests for Audit Checklist Version resolution, topic-to-score-category mapping, workpaper completeness, score/result calculation, tie/incomplete handling, finding verification, immutable finalization, stale/replacement behavior, and assigned-school authorization.
+- End-to-end tests for auditor assignment, fieldwork, management response, final audit report, authorized ESAO summary, and corrective-action re-test without canonical-record mutation.
 
 ### Audit acceptance fixtures
 
@@ -609,6 +703,10 @@ Maintain deterministic fixtures for at least:
 - A report becoming stale and being explicitly replaced.
 - A failed export that is visible only within its authorized boundary.
 - An applicant unable to sign in before approval, an ESAO Admin unable to approve an unassigned school, and approval activating exactly one scoped membership.
+- A School Financial Accounting Audit with all required workpapers, nine examination topics, ten policy-configured score categories, findings, a finalized report, and an authorized ESAO summary.
+- An incomplete workpaper pack, unresolved required finding, or missing policy result band that blocks audit finalization.
+- Two comparable finalized audit cycles with a policy-defined tie/rank outcome, plus an incompatible checklist or out-of-scope school excluded from the ESAO ranking view.
+- A post-finalization financial correction or verified finding update that marks the affected audit report and summary Stale and produces an explicit replacement.
 
 ### Definition of done for a financial feature
 
@@ -655,13 +753,14 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 
 **Exit:** a school can complete an auditable month and a reviewer can reproduce its close package.
 
-### Phase 4: Reporting and self-assessment
+### Phase 4: Reporting, assessment, and SESAO audit
 
 - Monthly and annual report packages, print/PDF/CSV exports, stale/replacement behavior.
 - Ten-dimension annual self-assessment and corrective-action tracking.
+- SESAO School Financial Accounting Audit Assessment with workpapers, findings, policy-controlled scores/result levels, final reports, and authorized aggregate summaries.
 - ESAO review and aggregate risk views.
 
-**Exit:** ESAO can receive, review, and trace school reports without changing canonical school records.
+**Exit:** ESAO can receive, review, and trace school reports and finalized accounting audits without changing canonical school records.
 
 ### Phase 5: Pilot hardening and rollout
 
@@ -681,6 +780,8 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - All overdue Official Advances and unexplained Receipt Book gaps are visible with an owner and corrective status.
 - Daily and monthly report totals reproduce from the registry without manual spreadsheet repair.
 - Annual self-assessment completion and corrective-action closure are measurable per school.
+- 100% of finalized School Financial Accounting Audits identify their audit period, assigned scope, checklist/rubric and policy revisions, completed workpapers, findings, score/result, and report history.
+- ESAO audit summaries and any authorized ranking reproduce from comparable finalized audit cycles without exposing unassigned schools or hiding incomplete cycles.
 - Typical event entry is under two minutes after configuration; routine reports render in under five seconds for a pilot school.
 - Restoration drills meet the agreed RPO/RTO and no cross-school data is exposed in authorization tests.
 
@@ -698,6 +799,8 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 | Evidence is lost or cannot be reviewed | Retention policy, integrity metadata, encrypted object storage or controlled external reference, backup and restore drills. |
 | Poor school connectivity interrupts entry | Retry-safe drafts and idempotent submission; decide offline scope before Phase 1 exit. |
 | A correction invalidates an accepted close/report | Dependency tracking, stale propagation, sequenced reconciliation, and explicit replacement reports. |
+| Self-assessment, daily inspection, and final audit are conflated | Separate aggregates, commands, evidence, reports, and permissions; no assessment record can mutate canonical financial records. |
+| Historical audit weights or ranking rules are treated as current | Versioned audit checklist/rubric with source citation, scope, effective range, explicit topic-to-score mapping, and policy-controlled result bands/ranking. |
 | Pilot shortcuts become production liabilities | Phase exit criteria, migration tests, documented exceptions, and production security/restore review before rollout. |
 
 ## 20. Decisions and Open Questions
@@ -724,8 +827,9 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - PostgreSQL hosting boundary, encryption/key ownership, backup service, and recovery objectives approved by the sponsoring authority.
 - Registration identity-proof requirements, email verification/recovery channel, password policy, and which school roles applicants may request.
 - Official report templates, Thai terminology review, signature requirements, and export classifications.
+- Which section 3 audit criteria, workpaper templates, weights, topic-to-score-category mapping, result-level cutoffs, ranking cohort/tie rules, signatures, and finding-response deadlines are currently applicable to SESAO schools.
 - Whether the pilot needs offline capture or can require a connected deployment.
 
 ## 21. Traceability Rule
 
-Every implemented rule must point to a policy version and research citation. Every research-derived report field must point back to the event, registry entry, document, reconciliation, or assessment item that produced it. When a regulation changes, publish a new Policy Version, update tests and forms for future events, and preserve the old resolution for historical events.
+Every implemented rule must point to a policy version and research citation. Every research-derived report field must point back to the event, registry entry, document, reconciliation, assessment item, Audit Workpaper, or Audit Finding that produced it. When a regulation changes, publish a new Policy Version, update tests and forms for future events, and preserve the old resolution for historical events.
