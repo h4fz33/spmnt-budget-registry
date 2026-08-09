@@ -61,7 +61,7 @@ The PDFs are preserved as user-supplied evidence in `reseach/`. SHA-256 hashes w
 1. The original B.E. 2515 manual's publication/commencement record, amendment history, and document number are not stored in the repository. The current pilot baseline is nevertheless unambiguous through `S5` plus `S8`; retain this as archival provenance work and revisit it before any future baseline replacement.
 2. The B.E. 2562 Ministry of Finance overlay is effective from 14 May 2562. P0-03 must enumerate the exact flow-level controls and exceptions; it does not reopen the B.E. 2515 baseline selection.
 3. No EEF fund flow is evidenced for any pilot School. `S7` is explicitly excluded from the universal baseline and must be resolved only if an EEF flow enters the pilot scope.
-4. A future change must be supported by an OBEC-issued source and activated by an authorized SESAO Policy Publisher with the required SESAO review evidence; it may not silently replace the B.E. 2515 baseline.
+4. A future change must be supported by an OBEC-issued source and activated by an authorized SESAO Policy Publisher with required source and audit evidence; it may not silently replace the B.E. 2515 baseline. Pre-activation second-person review is not required, while P0-04 still requires formal appointment evidence for the current Policy Publisher holder and alternate.
 
 ## Pilot-School Source Matrix
 
@@ -100,7 +100,7 @@ Source-supported controls to take into P0-03 for policy-owner approval:
 
 ### P0-04: Roles And Segregation Of Duties
 
-The research shows source-level roles such as School Director/head or written delegate, responsible finance officer, daily inspector, and money-custody committee. It does not select the application-level actor/approver/reviewer matrix. The P0-04 research handoff identified named appointments, delegate boundaries, staff-shortage exceptions, and dual-review requirements as decisions for SESAO Narathiwat.
+The research shows source-level roles such as School Director/head or written delegate, responsible finance officer, daily inspector, and money-custody committee. It does not select the application-level actor/approver/reviewer matrix. The final application authorization decisions are recorded in the [P0-04 BLK-003 Resolution Record](<../research/P0-04 — BLK-003 Resolution Record.md>); remaining P0-04 inputs are limited to the explicitly documented appointment evidence and `OPEN` authorization values.
 
 ### P0-05: Form And Signature Samples
 

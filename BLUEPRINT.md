@@ -38,7 +38,7 @@ The requirements are derived from the local research copies in `reseach/` (the d
 
 - One or more schools administered by an ESAO, with strict school data boundaries.
 - A controlled School Directory seeded from the supplied 17-school CSV, with unique SMIS and Ministry of Education codes.
-- Public school-user registration followed by System Admin or authorized ESAO Admin review before any membership or application access is granted.
+- Public school-user registration with System Admin platform account/registration lifecycle support and ESAO Admin organization-membership administration before any membership or application access is granted.
 - Fiscal years running from 1 October through 30 September and displayed in Buddhist Era where appropriate.
 - Annual Action Plans, Budget Allocations, authorized adjustments, commitments, direct-payment claims, and budget-availability/variance monitoring.
 - Control registries for budget document requests, state income, and non-budgetary funds.
@@ -49,7 +49,6 @@ The requirements are derived from the local research copies in `reseach/` (the d
 - Required documentary evidence, approval evidence, due-date controls, and audit history.
 - Daily balance reporting, registry/cashbook agreement, bank reconciliation references, monthly reconciliation, monthly financial reporting, and annual school-revenue reporting.
 - Annual school self-assessment across the ten control dimensions from the 2515 guide.
-- SESAO-led School Financial Accounting Audit Assessment cycles with versioned criteria, workpapers, findings, corrective follow-up, per-school reports, and authorized ESAO summaries.
 - Thai-first school and ESAO workspaces; a separate English-capable system-admin workspace.
 - Controlled exports with a recorded boundary, acknowledgement where required, and failed-export diagnostics.
 
@@ -62,6 +61,10 @@ The requirements are derived from the local research copies in `reseach/` (the d
 - Silent editing or deletion of posted financial records.
 - Cross-school consolidation as an accounting source of truth. ESAO aggregation is a read/reporting capability only.
 - OCR, machine learning, predictive spending, native mobile applications, and external-system integrations until the pilot controls are proven.
+
+### Deferred from the initial pilot
+
+- ESAO Reviewer access, cross-school comparison, ranking, and aggregate summaries. The SESAO Auditor audit-assessment model remains in pilot scope but is gated by explicit command-level authorization decisions.
 
 ## 3. Product Principles
 
@@ -85,15 +88,16 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 - **Office of Basic Education Committee (OBEC):** Sponsor and accountable organization for the pilot, and the external Governing Policy Authority whose issued policy evidence is used by the application. OBEC does not directly operate an in-application Policy Publisher account.
 - **Education Service Area Office (ESAO):** Oversight organization that receives school reports and may aggregate results.
 - **Finance Officer:** School user who performs finance work for one school.
-- **School Admin:** Approved school user who performs permitted school governance actions but cannot activate or assign memberships.
-- **School Director:** Authenticated school role whose approval is required for selected privileged actions.
-- **ESAO Admin:** ESAO user who reviews registrations and manages memberships only for assigned schools and ESAO roles.
-- **SESAO Auditor:** Highest operational governance and oversight role in the application hierarchy. An appointed SESAO Auditor may be granted the separate Policy Publisher permission, while remaining unable to silently mutate a School's canonical financial records.
-- **Policy Publisher:** Appointed SESAO Narathiwat authority that registers unchanged OBEC policy evidence, sets School scope and effective date, and activates an approved Policy Version. It does not change the original source text or grant financial-record mutation authority.
-- **System Admin:** Platform operations and identity-governance role that manages registrations/memberships across the platform but performs no school financial action.
+- **School Admin:** Additive School Role Assignment that may coexist with Finance Officer on the same Approved Membership and performs permitted school governance actions. It cannot activate or assign memberships and does not imply Daily Balance Verifier.
+- **School Director:** The single active authenticated School role whose approval is required for selected privileged actions. ESAO Admin assigns or replaces the holder from formal external appointment evidence; without an active holder, every Director-required command is denied.
+- **ESAO Admin:** Formally appointed ESAO user who administers organization memberships, School assignment, and School-level roles across all 17 SESAO Narathiwat pilot Schools. The initial pilot has no per-admin School subset, financial authority, privileged-capability assignment, self-administration, or delegation.
+- **ESAO Reviewer:** Read/review/compare/report capability with no canonical financial-record mutation, financial approval, membership administration, correction execution, or policy publication authority. It is excluded and denied in the initial pilot; any later assigned-School or aggregate-reporting scope requires a new approved matrix decision.
+- **SESAO Auditor:** Highest operational governance and oversight role in the application hierarchy. A SESAO Auditor may be granted the separate Policy Publisher capability, while remaining unable to silently mutate a School's canonical financial records.
+- **Policy Publisher:** A capability granted to an appointed SESAO Auditor to register unchanged OBEC policy evidence, set School scope and effective date, and activate/supersede an approved Policy Version. P0-04 closure requires formal appointment evidence for the current holder and alternate; this baseline supplies no names.
+- **System Admin:** Platform operations and identity-governance role that owns platform account/registration lifecycle, diagnostics, and support. It cannot decide or originate organization authority, but may technically apply exact evidence-backed ESAO Admin, SESAO Auditor, and Policy Publisher primary/alternate appointment records issued by the SESAO Product Owner/accountable reviewer without selecting the person or altering approved scope. It performs no school financial action.
 - **School Directory:** Controlled list of schools available for registration, identified by unique SMIS and MOE codes.
 - **Registration Application:** Request for one permitted school membership; it is not an active user membership.
-- **Approved Membership:** Active link between an identity, organization, and assigned role after Membership Approval.
+- **Approved Membership:** Active link between an identity and one organization boundary with one or more effective Role Assignments after Membership Approval. Finance Officer and School Admin may coexist for the same School, subject to person-level segregation of duties.
 
 ### Financial model
 
@@ -120,7 +124,7 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 - **Monthly Reconciliation:** End-of-month reconciliation and report-preparation procedure.
 - **Monthly Close:** Marking a month as reported while preserving approved linked corrections.
 - **Linked Correction:** Audited correction linked to the original event and affected records; it replaces nothing silently.
-- **Privileged Correction:** Post-close linked correction requiring the close policy's approval and evidence.
+- **Privileged Correction:** Post-close linked correction requiring authenticated School Director Approval before execution, with the proposer/preparer barred from self-approval. The initial pilot requires no separate independent pre-execution reviewer; immutable evidence is retained for later approved oversight access.
 - **Audit Log:** Immutable history of meaningful financial and governance actions.
 - **Effective Financial Policy / Policy Version:** Versioned rules selected by scope and event effective date.
 
@@ -141,31 +145,43 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 
 Access is scoped by organization and role. A user never gains access to another school's financial records merely by knowing an identifier.
 
-| Capability | Finance Officer | School Admin | School Director | ESAO Roles | SESAO Policy Publisher | System Admin |
+| Capability | Finance Officer | School Admin | School Director | ESAO Admin | ESAO Reviewer | SESAO Auditor / Policy Publisher capability | System Admin |
 | --- | --- | --- | --- | --- | --- | --- |
-| Submit public registration | Request school role | Request school role | Request school role | Not for privileged ESAO roles | No | Not for System Admin role |
-| Review school-role registrations | No | No | No | ESAO Admin: assigned schools | No | All schools |
-| Activate/suspend/assign membership | No | No | No | ESAO Admin: assigned boundary | No | Platform-wide |
-| Draft and submit financial events | Own school | Own school (if granted) | Review only | No school entry by default | No | Support only, no business entry |
-| Post routine events | Yes, within policy | Optional delegated permission | No | No | No | No |
-| Approve director-required actions | No | No | Yes | No, unless separately appointed | No | No |
-| Perform daily inspection | Assigned inspector | Yes | Yes | Review | No | No |
-| Start/assign accounting audit | No | No | No | Appointed SESAO Auditor: assigned schools | No | No |
-| Perform audit workpapers | No | No | No | Assigned auditor: assigned schools | No | No |
-| Submit audit finding response | Own school | Own school if granted | Own school | Review | No | No |
-| Finalize/accept audit assessment | No | No | No | Policy-defined audit authority | No | No |
-| View audit result/ranking | Own school's finalized report | Own school's finalized report | Own school's finalized report | Assigned schools/authorized aggregate | No | No |
-| Reconcile and prepare monthly report | Yes | Yes | Review/accept | Review/return | No | No |
-| Close a month | No | No | Yes or delegated close authority | Review/override under policy | No | No |
-| Create post-close privileged correction | Propose | Propose | Approve | Review | No | No |
-| Publish policy version | No | No | No | No | Policy Publisher only | No |
-| View a school | Own school | Own school | Own school | Assigned schools/aggregate | Authorized policy scope only | Operational diagnostics only |
-| Manage identity/audit operations | No | No | No | ESAO Admin: assigned membership history | Policy publication audit only | Platform-wide |
-| Export financial data | Allowed categories only | Allowed categories only | Allowed categories only | Allowed scope | No | Diagnostics only |
+| Submit public registration | Request Finance Officer | Not publicly requestable; ESAO Admin may add after approval | Not publicly requestable | Not publicly requestable | Not publicly requestable | Not publicly requestable | Not publicly requestable |
+| Platform account/registration lifecycle | No | No | No | No organization-membership decision | No | No | Platform-wide only |
+| Administer organization membership, School assignment, or School-level role | No | No | No | Authorized organizational boundary | No | No | No |
+| Draft and submit financial events | Own school | Own school if granted | Review only | No school entry | No school entry | No school entry | Support only, no business entry |
+| Post routine events | Yes, within policy | Valid routine-posting delegation only | No | No | No | No | No |
+| Prepare Daily Balance | Yes | No | No | No | No | No | No |
+| Verify Daily Balance | No self-verification | No role inferred | Approves after verification | No role inferred | No role inferred | No role inferred | No |
+| Approve/sign Daily Balance | No | No | Authenticated approval/signature after verification | No | No | No | No |
+| Approve director-required actions | No | No | Yes | No | No | No | No |
+| Start/assign accounting audit | No | No | No | No | No | Appointed auditor: assigned schools | No |
+| Perform audit workpapers | No | No | No | No | No | Assigned auditor: assigned schools | No |
+| Submit audit finding response | Own school | Own school if granted | Own school | No | Read/review/compare/report only | Review only | No |
+| Finalize/accept audit assessment | No | No | No | No authority inferred | No authority inferred | Different appointed SESAO Auditor from the working auditor | No |
+| View audit result/ranking | Own school's finalized report | Own school's finalized report | Own school's finalized report | Authorized membership history only | Deferred and denied in initial pilot | Assigned Audit Assessment Cycle only; ranking denied | Operational diagnostics only |
+| Reconcile and prepare monthly report | Yes | Yes | Review only | No | Read/review/compare/report only; no return/acceptance authority | No | No |
+| Close a month | No | No | Yes, after accepting the prepared reconciliation; no delegation | No | Deferred and denied | No | No |
+| Create post-close Privileged Correction | Propose if authorized | Propose if authorized | Approve before execution | No | No correction or review authority inferred | No | No |
+| Publish or supersede Policy Version | No | No | No | No | No | Policy Publisher capability only | No |
+| View a school | Own school | Own school | Own school | Membership-administration boundary only | Deferred and denied in initial pilot | Assigned Policy/Audit scope only | Operational diagnostics only |
+| Manage identity/audit operations | No | No | No | Assigned membership history | Permitted review/report evidence only | Policy-publication audit only | Platform-wide account/registration lifecycle only |
+| Export financial data | Allowed categories only | Allowed categories only | Allowed categories only | Membership-administration evidence only | Deferred and denied in initial pilot | Assigned Audit Assessment evidence only where later export policy permits | Diagnostics only |
 
-A SESAO Policy Publisher may activate an evidence-backed Policy Version without a second-person approval or pre-activation review. The activation remains attributable to the named publisher and recorded in the Audit Log. This exception applies only to policy activation and does not relax segregation of duties for financial, close, or membership actions.
+System Admin owns platform account and registration lifecycle only. ESAO Admin is authoritative for organization membership approval/rejection, suspension/removal, School assignment, and School-level role assignment; platform administration cannot bypass that boundary.
 
-Segregation of duties is enforced for approval, inspection, and close. The same person must not silently create, approve, reconcile, and close the same sensitive action when the effective policy prohibits it.
+SESAO Product Owner/accountable reviewer is the external appointment authority for ESAO Admin. System Admin may technically apply or revoke only the exact appointment evidence with fresh re-authentication and complete audit attribution; it cannot originate the appointment, select the person, alter the all-17-School scope, or use this path for ordinary membership or another privileged capability.
+
+SESAO Product Owner/accountable reviewer also externally appoints or revokes SESAO Auditors. Multiple holders may have organization-wide eligibility across all 17 Schools, but appointment alone grants no School evidence access; access begins only through an assigned Audit Assessment Cycle. System Admin again acts only as the evidence-bound technical executor.
+
+A SESAO Policy Publisher may activate an evidence-backed Policy Version without a second-person approval or pre-activation review. Activation remains attributable and audited. P0-04 cannot close until formal appointment evidence records the current Policy Publisher holder and alternate; no names are supplied in this baseline.
+
+The Product Owner/accountable reviewer selects both from active SESAO Auditors. Exactly one current holder has publication authority; the alternate is standby and cannot publish until external replacement evidence is technically applied, atomically activating the alternate and removing the prior holder. No delegation or fixed expiry is required.
+
+Temporary Director Approval remains a constrained future mechanism but is excluded and denied in the initial pilot. When no authenticated School Director is active, every Director-required command is denied; later activation requires a new approved matrix decision for issuer, command scope, duration, reviewer, evidence, and segregation-of-duties restrictions.
+
+Segregation of duties is enforced for approval, verification, inspection, and close. The same person must not silently create, approve, reconcile, and close the same sensitive action when the effective policy prohibits it. For Daily Balance, Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, and School Director approval/signature are separate ordered controls.
 
 Audit-assessment assignment, final acceptance, independent review, and ranking visibility remain subject to the approved Policy Version and the unresolved P0-04 authorization scope. The audit workflow is read/review oriented and cannot mutate a School's canonical financial records; any financial correction uses the normal linked-correction commands.
 
@@ -175,12 +191,13 @@ Audit-assessment assignment, final acceptance, independent review, and ranking v
 
 1. The public form loads School choices from the active School Directory; an applicant cannot create or type an arbitrary school.
 2. The applicant supplies Thai display name, normalized email, password/confirmation, selected School, requested school role, and required policy acknowledgements. SMIS/MOE codes are displayed for disambiguation.
-3. Only permitted school roles can be requested publicly. `SYSTEM_ADMIN`, `ESAO_ADMIN`, reviewer, and Policy Publisher privileges are provisioned by an existing authorized administrator, never self-requested.
+3. Only Finance Officer can be requested publicly. School Admin may be added by ESAO Admin to the same School membership at approval or later without replacing Finance Officer; School Director, System Admin, ESAO Admin, ESAO Reviewer, SESAO Auditor, and Policy Publisher are never publicly requestable. No generic privileged-capability administration command exists; each permitted privileged appointment requires its own enumerated evidence-backed command.
 4. Submission validates uniqueness/rate limits, hashes the password with the approved password algorithm, creates the identity in `PENDING_APPROVAL`, and creates a Registration Application. It returns a generic response and creates no NextAuth session.
-5. A System Admin can review all applications; an ESAO Admin can review only applications for assigned schools. The reviewer may approve an equal/lower permitted role, request correction, or reject with a structured reason.
-6. Approval atomically creates the Approved Membership, activates the identity when it has at least one active membership, records approver/scope/time, invalidates stale authorization state, and appends Audit Log entries.
-7. NextAuth sign-in succeeds only for an active identity with an active membership. Suspension, role change, and membership removal take effect on the next protected server check and remain audited.
+5. System Admin manages the platform account/registration lifecycle and cannot make an organization-membership decision. A formally appointed ESAO Admin may review applications across all 17 SESAO Narathiwat pilot Schools and is the sole decision maker with no second reviewer. Queue viewing requires an authenticated session; approve, reject, request correction, suspend, remove, School-assignment change, and School-role add/remove require fresh re-authentication.
+6. ESAO Admin approval atomically creates the Approved Membership with Finance Officer and activates the identity when it has at least one active membership. ESAO Admin may add or remove School Admin at approval or later without replacing Finance Officer. Rejection, correction, suspension, removal, assignment change, and role change require a structured reason; every decision records actor, subject, School, requested/assigned roles, previous/new state, reason, time, outcome, and Audit Log evidence. Suspension, removal, assignment change, and role change immediately invalidate the subject's authorization revision.
+7. NextAuth sign-in succeeds only for an active identity with an active membership. ESAO Admin suspension, School assignment/role change, and membership removal take effect on the next protected server check and remain audited.
 8. The first System Admin is created by a one-time operational bootstrap using an environment-identified email and securely supplied password; public registration cannot solve the initial trust problem.
+9. ESAO Admin assigns, replaces, or revokes exactly one active School Director per School from formal external appointment evidence. The command requires fresh re-authentication, has no second reviewer, atomically replaces the prior holder, invalidates affected authorization revisions, and records actor, School, old/new Director, evidence, reason, effective time, and outcome.
 
 ## 6. Fund Flows and Record Matrix
 
@@ -254,15 +271,18 @@ Budget categories such as personnel, operating, investment, subsidy, and other e
 
 ### 7.6 Daily inspection and reconciliation
 
-- At end of each operating day with activity, the assigned inspector compares cash, documents held as money, bank-position records, applicable cashbook cross-checks, and canonical registries.
-- The resulting Daily Balance Report records opening balance, receipts, payments/position changes, closing balance, external evidence references, inspector, and acceptance.
+- Finance Officer prepares the Daily Balance Report for each operating day with activity from cash, documents held as money, bank-position records, applicable cashbook cross-checks, and canonical registries.
+- A different authenticated School Admin or Finance Officer holding the School-scoped `Daily Balance Verifier` capability verifies the prepared report. The capability cannot be inferred from daily inspection; the verifier cannot prepare, approve/sign, solely reconcile, or close the same report.
+- After independent verification, an authenticated School Director formally approves/signs the report. The preparer cannot approve/sign the same report.
+- The report records opening balance, receipts, payments/position changes, closing balance, external evidence references, preparer identity/time, verifier identity/time/evidence, and School Director approval/signature identity/time.
+- Daily inspection remains a separate comparison control. It may record its own inspector and acceptance/Needs Correction result, but does not substitute for the independent-verifier capability.
 - A disagreement creates a Registry/Cashbook Disagreement and blocks normal close until resolved or explicitly accepted under policy.
 - At month end, the Monthly Reconciliation includes the final daily report, bank reconciliation reference, outstanding remittances/deposits, unresolved exceptions, and report package.
 
 ### 7.7 Receipt-book control
 
 - Register each physical book's book number and non-overlapping serial range before issue.
-- Record custodian, approval, handover, fiscal year, and the used/voided/unused status of each controlled receipt number.
+- A Finance Officer may issue a Receipt Book without a mandatory second-person authorization. Record custodian, issuance/handover evidence, fiscal year, and the used/voided/unused status of each controlled receipt number; the former "approval" label means custody/issuance evidence.
 - A void keeps both the number and reason; a number is never reused or deleted.
 - A book is not issued across fiscal years. Unused numbers at year end are cancelled under policy and included in the annual usage report.
 - Reconcile system Receipt Records to issued serials during daily inspection and include gaps/duplicates in Needs Correction.
@@ -282,15 +302,17 @@ Each school completes one assessment per fiscal year against these ten control d
 9. Advance/loan control
 10. Receipt-book control
 
-Each dimension has a versioned checklist, evidence references, finding severity, owner, due date, corrective action, and Director submission/acceptance. ESAO reviewers can compare risk across assigned schools without changing school records.
+Each dimension has a versioned checklist, evidence references, finding severity, owner, due date, corrective action, and Director submission/acceptance. ESAO Reviewer comparison is excluded and denied in the initial pilot; any later assigned-School or aggregate scope requires a new approved matrix decision and cannot change school records.
 
 ### 7.9 School financial accounting audit assessment
 
 The section 3 audit in `reseach/audit-operation-manual.md` is a substantive, SESAO-led examination of a School's accounting controls. It verifies that the Annual Action Plan covers every fund transparently, actual balances and custody controls are complete and compliant, and accounting/register/reporting records are current and correct. It is a fourth workflow alongside Daily Inspection, Annual Self-Assessment, and Audit Review Report. It is not a second way to post or correct financial records.
 
+One appointed SESAO Auditor performs and submits an explicitly assigned Audit Assessment Cycle; a different holder of the same SESAO Auditor role independently verifies findings and finalizes/accepts it with strong re-authentication. Neither may mutate School canonical records. Appointment and cycle-assignment authority remain subject to explicit decisions; ESAO Reviewer access, cross-school comparison, ranking, and aggregate summaries are excluded and denied in the initial pilot.
+
 `Planned -> Assigned -> Fieldwork -> Findings Draft -> Management Response -> Review -> Finalized -> Follow-up -> Closed`
 
-1. Start an Audit Assessment Cycle for one School and a defined fiscal/audit period. Persist the applicable Policy Version, Audit Checklist Version, source revision, scope, as-of date, and assigned auditor before fieldwork begins.
+1. Any appointed SESAO Auditor may start an Audit Assessment Cycle for one School and a defined fiscal/audit period, then assign one working and one different finalizing SESAO Auditor; the creator may occupy either position, never both. Create/assign/reassign requires fresh re-authentication, grants evidence access only for that Cycle/School, preserves all assignment history, and blocks the Cycle if revocation leaves either position vacant. Persist the applicable Policy Version, Audit Checklist Version, source revision, scope, as-of date, and both assigned auditors before fieldwork begins.
 2. Execute the versioned criteria through criterion-level Audit Workpapers. A workpaper records the assertion, test method, population or sample where applicable, observation, evidence references (including external cash-custody and bank evidence), conclusion, preparer, reviewer, and timestamps.
 3. Cover the nine examination topics named by the reference: Annual Action Plan; remaining balances; cash custody; receipts and payments; accounting/register maintenance; financial reports; daily receipt/payment inspection; advances/loan debtors; and Receipt Books.
 4. Preserve the source's detailed subtests, including plan preparation/execution/follow-up, physical and bank/passbook balance checks, custody appointments and limits, receipt/payment authorization and evidence, register-to-source tie-outs, report completeness/submission, daily sign-offs, advance aging/settlement, and serial-range custody and year-end reporting.
@@ -329,7 +351,7 @@ These rules are enforced in domain services and database constraints, then cover
 8. A Financial Event Reference is unique within the platform and all linked records use it rather than copied descriptions.
 9. Receipt numbers, payment-voucher numbers, claim numbers, deposit references, and remittance references are unique within their configured school/fiscal-year/register scope.
 10. A posted record is immutable. Corrections are linked, reasoned, permission-checked, and auditable.
-11. A closed month rejects ordinary backdated posting. A privileged correction requires the source close revision, structured reason category, evidence, and approval.
+11. A closed month rejects ordinary backdated posting. A Privileged Correction requires the source close revision, structured reason category, evidence, and authenticated School Director Approval before execution; the proposer/preparer cannot self-approve, no separate independent pre-execution reviewer is required in the initial pilot, and immutable evidence is retained for later approved oversight access.
 12. A source event with a Lifecycle Child cannot be directly replaced or re-parented.
 13. A reconciliation becomes Stale whenever a related posted event, correction, policy result, or evidence reference changes.
 14. A report is reproducible from its stored filter, policy, data revision, and generation time. A stale report remains retained and is replaced explicitly.
@@ -341,7 +363,7 @@ These rules are enforced in domain services and database constraints, then cover
 20. Receipt Book serial ranges cannot overlap within a School, and used/voided numbers are never reused or deleted.
 21. A Registration Applicant has no organization membership, protected session, or financial access before Membership Approval.
 22. Public registration cannot request or grant System Admin, ESAO Admin, reviewer, or Policy Publisher privileges.
-23. Membership Approval is scoped to the approver's permitted organizations and records the assigned role independently from the requested role.
+23. ESAO Admin organization-membership administration records additive School Role Assignments independently from the public Finance Officer request. Finance Officer and School Admin may coexist for one School, but role union cannot imply Daily Balance Verifier or bypass person-level segregation of duties; System Admin platform authority cannot bypass the boundary.
 24. A school choice must reference an active School Directory record; SMIS and MOE codes are unique immutable identifiers.
 25. Middleware route checks never replace server-side membership and organization authorization.
 26. Normalized email is unique, and at most one active/pending Registration Application exists for the same identity and School; public responses do not reveal whether an identity already exists.
@@ -351,6 +373,8 @@ These rules are enforced in domain services and database constraints, then cover
 30. Audit Scores and any result level or ranking are reproducible from the stored checklist/rubric version, completed workpapers, source revisions, and authorized cohort; a score never hides an unresolved finding.
 31. Audit-assessment commands may create review, finding, report, and follow-up records, but cannot mutate a School's canonical financial records or bypass linked-correction and authorization rules.
 32. An Audit Assessment Cycle resolves exactly one published Audit Checklist Version by School scope and audit/as-of date. Missing or tied versions fail closed, and a finalized cycle never re-resolves merely because a later checklist is published.
+33. A Daily Balance Report records Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, then authenticated School Director approval/signature in that order. The verifier cannot prepare, approve/sign, solely reconcile, or close the same report.
+34. A Policy Version becomes inactive only when a newer activated Policy Version supersedes it. Historical policy resolution remains immutable, and no separate retirement/deactivation command exists.
 
 ## 9. Core Algorithms
 
@@ -365,6 +389,8 @@ For a given School, Fund Flow, and effective date:
 5. Never re-resolve a posted historical event merely because a newer policy is published.
 
 Policy publication rejects overlapping active ranges at the same scope and specificity. A user cannot bypass a missing/ambiguous policy by choosing a version in the event form.
+
+Activating a newer Policy Version supersedes the prior active version for future applicability. There is no separate Policy Version retirement/deactivation transition, and historical events retain their originally resolved version.
 
 ### 9.1.1 Audit checklist resolution
 
@@ -437,7 +463,7 @@ For each operating day, select canonical entries whose Fund Flow requires a cros
 1. Lock the original event, its Lifecycle Children, related close revision, and current reconciliation/report dependencies.
 2. Reject direct source replacement when a Lifecycle Child would be orphaned or re-parented.
 3. Before close, create an explicitly linked reversal/adjustment and corrected event under the current open revision.
-4. After close, require a Privileged Correction proposal, structured reason, evidence, source close revision, and authenticated Director Approval; post the Adjustment Entry in the permitted open period.
+4. After close, require a Privileged Correction proposal, structured reason, evidence, source close revision, and authenticated School Director Approval before execution; reject any proposal where the proposer/preparer is the approver. No separate independent pre-execution reviewer is required in the initial pilot; immutable evidence is retained for later approved oversight access. Post the Adjustment Entry in the permitted open period.
 5. Recalculate affected projections and mark dependent reconciliations/reports Stale in the same transaction.
 6. Keep the original, correction chain, approvals, and replacement reports queryable as one audit history.
 
@@ -454,7 +480,9 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 - `organizations`: platform, ESAO, or school scope, Thai/English names, immutable `smis_code`/`moe_code` where applicable, status, parent organization ID.
 - `users`: normalized identity/email, display names, password hash, account status, authorization version, authentication metadata.
 - `registration_applications`: applicant ID, requested school/role, status, reviewer decision, structured reason, timestamps.
-- `organization_memberships`: user ID, organization ID, assigned role, effective dates, status, approver ID, authorization revision.
+- `organization_memberships`: user ID, organization ID, effective dates, status, approver ID, authorization revision.
+- `membership_role_assignments`: membership ID, role, effective dates, status, grant/revocation actor, reason, evidence reference, and timestamps; Finance Officer and School Admin may coexist for one School, while exactly one School Director assignment may be active per School.
+- `privileged_appointments`: appointment type, external authority, evidence reference, subject, fixed scope, effective/revocation information, technical executor, outcome, and timestamps.
 - `auth_events`: credential, sign-in, sign-out, recovery, suspension, and session-security evidence separate from financial audit actions where appropriate.
 - `role_permissions`: permission definitions and policy-bound capabilities.
 - `fiscal_years`: Buddhist display year, Gregorian start/end, status, close metadata.
@@ -467,9 +495,9 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 - `budget_allocations`: plan dimension, original amount, revised amount, authority reference, source revision.
 - `budget_adjustments`: allocation, direction/transfer, amount, effective date, reason, approval.
 - `budget_commitments`: allocation, counterparty/purpose, committed amount, applied amount, status, approval.
-- `receipt_books`: school, fiscal year, book number, serial range, custodian, issue/return approval, status.
+- `receipt_books`: school, fiscal year, book number, serial range, custodian, issuance/handover evidence, return evidence, status. These evidence fields are not a mandatory second-person authorization.
 - `receipt_book_numbers`: book, serial, status, linked Receipt Record, void reason, audit revision.
-- `policy_versions`: scope, effective start/end, status, publisher, source citation, immutable rule payload.
+- `policy_versions`: scope, effective start/end, status, publisher, superseded-by version where applicable, source citation, immutable rule payload. Inactivity is represented only by supersession.
 - `policy_resolution_records`: event, selected policy version, resolution inputs, and result.
 - `audit_checklist_versions`: source citation, publisher, scope, effective range, status, topics, criteria, test methods, required evidence, scoring weights, and result-level rules.
 - `audit_checklist_items`: checklist version, examination topic, criterion, scoring category, maximum points, applicability, and required workpaper fields.
@@ -490,7 +518,7 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 ### Control and reporting
 
 - `daily_inspections`: operating date, inspector, source revisions, result, discrepancy reason, acceptance event.
-- `daily_balance_reports`: report date, money-position balances, supporting inspection, generation revision.
+- `daily_balance_reports`: report date, money-position balances, supporting inspection reference, preparer identity/time, `Daily Balance Verifier` identity/time/evidence, School Director approval/signature identity/time, discrepancy state, generation revision.
 - `bank_reconciliations`: period, external statement reference, book balance, statement balance, outstanding items, result.
 - `monthly_reconciliations`: fiscal period, version, status, linked daily/bank records, exceptions, acceptance event.
 - `monthly_closes`: period, close revision, closed by, closed at, report package, reopen/exception policy.
@@ -557,6 +585,7 @@ Suggested commands:
 - `RecordRemittance` / `RecordDepositReturn`
 - `RecordCashToBankTransfer`
 - `InspectDailyRecords`
+- `PrepareDailyBalance` / `VerifyDailyBalance` / `ApproveDailyBalance`
 - `CreateReconciliationVersion` / `AcceptReconciliation`
 - `CloseMonth`
 - `ProposeLinkedCorrection` / `ApprovePrivilegedCorrection`
@@ -612,7 +641,7 @@ The application opens to the user's permitted workspace and current fiscal year.
 ### Core screens
 
 - **Public registration:** active School search/selection with SMIS/MOE codes, permitted role request, account fields, privacy acknowledgement, and pending-review confirmation.
-- **Registration administration:** System Admin platform queue and ESAO Admin assigned-school queue with approve, correction, reject, suspend, and membership-history views.
+- **Registration administration:** System Admin platform account/registration-lifecycle queue and ESAO Admin organization-membership queue within the authorized boundary. ESAO Admin, not System Admin, provides approve, correction, reject, suspend, School-assignment, School-role, and membership-history views.
 - **Workspace dashboard:** balances by fund flow and money position, due/overdue remittances and deposits, Needs Correction items, stale reconciliations, and recent audit-sensitive actions.
 - **Budget workspace:** Annual Action Plan, revised allocations, commitments, direct-payment claims, confirmed use, available budget, and variance by programme/project.
 - **Financial event intake:** flow-first form with dynamic policy-required fields, document checklist, evidence references, approval path, and posting preview.
@@ -620,14 +649,14 @@ The application opens to the user's permitted workspace and current fiscal year.
 - **Receipt-book control:** serial-range inventory, custodian handover, issued/used/void/unused reconciliation, and annual report.
 - **Registry views:** document-request, state-income, non-budgetary, deposit, and configured fund registers with running totals and scope filters.
 - **Cashbook cross-check:** only applicable entries, with agreement/disagreement state and link back to canonical event.
-- **Daily inspection:** checklist, counted balances, external evidence references, discrepancy workflow, and signature/acceptance event.
+- **Daily Balance and inspection:** Finance Officer preparation, assigned `Daily Balance Verifier` verification, and School Director approval/signature states, plus the separate inspection checklist, counted balances, external evidence references, discrepancy workflow, and inspection acceptance event.
 - **Reconciliation:** versioned daily/monthly reconciliation, bank comparison fields, outstanding items, report package, and stale indicators.
 - **Monthly close:** close readiness checklist, unresolved exceptions, report submission, close revision, and permitted correction path.
 - **Annual self-assessment:** ten dimensions, evidence, findings, corrective actions, and Director/ESAO review.
 - **School financial accounting audit:** assigned-auditor queue, versioned criteria and workpapers, evidence and external-evidence references, findings, management responses, verification, score/result, and final report history.
 - **ESAO audit summary:** authorized assigned-school audit status, overdue finding follow-up, comparable result distributions, and policy-permitted ranking with clear scope and cohort filters.
 - **Reports and exports:** reproducible filters, Thai fiscal dates, print-safe templates, export category boundary, and replacement history.
-- **Administration:** school users, fiscal years, numbering sequences, and fund-flow configuration for authorized school/ESAO users; policy publication is reserved for appointed SESAO Policy Publisher(s) acting on unchanged OBEC policy evidence.
+- **Administration:** school users, fiscal years, numbering sequences, and fund-flow configuration for authorized school/ESAO users; organization membership administration is reserved for ESAO Admin, platform account/registration lifecycle for System Admin, and policy publication for appointed SESAO Policy Publisher capability holders acting on unchanged OBEC policy evidence.
 
 ### Interaction and accessibility requirements
 
@@ -730,7 +759,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - TypeScript and application shell with Thai-first locale.
 - Authentication, organization membership, RBAC, fiscal years, and audit-log infrastructure.
 - PostgreSQL/Prisma schema, reviewed migrations, the validated School Directory seed, numbering sequences, and backup job.
-- NextAuth sign-in, public registration, System Admin/ESAO approval, membership lifecycle, and first-System-Admin bootstrap.
+- NextAuth sign-in, public registration, System Admin platform account/registration lifecycle, ESAO Admin organization-membership lifecycle, and first-System-Admin bootstrap.
 
 **Exit:** a user can enter only the permitted school workspace and every privileged action is audited.
 
@@ -810,12 +839,12 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - The Control Registry is the financial source of truth; the cashbook is a deliberate cross-check overlay.
 - Budget Allocations and Commitments measure authority and reservation, not school cash.
 - Financial events are posted as controlled domain records, not as automatic universal double-entry journal rows.
-- Policy versions are effective-dated and published by appointed SESAO Policy Publisher(s) from unchanged OBEC policy evidence; school users and other ESAO roles cannot override them ad hoc.
+- Policy versions are effective-dated and published by appointed SESAO Policy Publisher capability holders from unchanged OBEC policy evidence. A newer activation supersedes the prior version; school users and other ESAO roles cannot retire, deactivate, or override versions ad hoc.
 - Corrections are linked and auditable; close is not implemented as destructive freezing.
 - ESAO aggregation is reporting-only and cannot mutate a school's canonical records.
 - PostgreSQL through Prisma is the persistence layer; financial commands run in serializable transactions with database-enforced relations and constraints.
 - NextAuth is the authentication layer, while authoritative authorization is enforced server-side from active memberships.
-- Public registration creates a pending application only; System Admin or scoped ESAO Admin approval is required before access.
+- Public registration creates a pending application only; ESAO Admin membership approval within the permitted organizational boundary is required before access, while System Admin remains limited to platform account/registration lifecycle.
 - The repository School Directory seed contains the supplied 17 schools with unique SMIS and MOE codes.
 
 ### Resolve before Phase 1 exit

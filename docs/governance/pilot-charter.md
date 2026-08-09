@@ -18,7 +18,7 @@
 | ESAO English name | Secondary Educational Service Area Office Narathiwat |
 | ESAO code | `1000960001` |
 
-The Office of Basic Education Committee owns sponsorship/accountability and external governance-policy authority for the pilot. The Secondary Educational Service Area Office Narathiwat owns product delivery, accountable audit/oversight review, and the in-application Policy Publisher function for unchanged OBEC policies across the complete 17-school population. A named SESAO Auditor with the Policy Publisher permission may register the source, set scope/effective date, and activate a Policy Version; that function does not permit source-text changes or School financial-record mutation. Operational actions must be performed by named, authenticated users appointed to the applicable organizational role. An organization label, typed name, or shared account is not approval evidence.
+The Office of Basic Education Committee owns sponsorship/accountability and external governance-policy authority for the pilot. The Secondary Educational Service Area Office Narathiwat owns product delivery, accountable audit/oversight review, and the in-application Policy Publisher function for unchanged OBEC policies across the complete 17-school population. A SESAO Auditor granted the Policy Publisher capability may register the source, set scope/effective date, and activate a Policy Version; that function does not permit source-text changes or School financial-record mutation. P0-04 cannot close until formal appointment evidence records the current Policy Publisher holder and alternate; this charter does not supply their names. Operational actions must be performed by named, authenticated users appointed to the applicable organizational role. An organization label, typed name, or shared account is not approval evidence.
 
 ## School-User Population Boundary
 
@@ -53,7 +53,7 @@ Adding or removing a School from the pilot and actual school-user population req
 This charter establishes organization-level accountability and the actual school-user population scope. It does not complete these later controls:
 
 - `P0-02`: bind each pilot School to the exact effective OBEC/ESAO financial procedure and citations.
-- `P0-04`: appoint named users to ESAO roles and approve the authorization/segregation-of-duties matrix.
+- `P0-04`: record formal appointment evidence for the current Policy Publisher holder and alternate, establish the remaining `OPEN` authorization values, and approve the authorization/segregation-of-duties matrix.
 - `P0-08`: approve PostgreSQL hosting, backup, recovery, connectivity, and key ownership.
 - `P0-10`: approve registration identity proof, requestable roles, account recovery, and membership-review policy.
 

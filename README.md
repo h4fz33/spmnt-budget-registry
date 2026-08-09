@@ -18,7 +18,7 @@ The application is a [Next.js](https://nextjs.org/) project bootstrapped with [`
 - PostgreSQL through Prisma; financial writes use serializable transactions and database-enforced relations.
 - NextAuth for credential authentication and middleware route gating.
 - Server-side organization membership and permission checks for authoritative authorization.
-- Public registration remains pending until a System Admin or scoped ESAO Admin approves it.
+- Public registration remains pending until an authorized ESAO Admin approves the organization membership; System Admin owns platform account/registration lifecycle only and cannot bypass that boundary.
 - The initial 17-school directory is stored in [`data/schools.csv`](./data/schools.csv).
 
 Runtime secrets and database selection belong in `.env.local` using [`.env.example`](./.env.example) as the contract. Never commit the real PostgreSQL connection URL or NextAuth secret.

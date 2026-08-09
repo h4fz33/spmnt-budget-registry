@@ -25,7 +25,7 @@ _Avoid_: District when referring to the formal OBEC organization, Policy Publish
 Thai UI: `สำนักงานเขตพื้นที่การศึกษา (สพท.)`
 
 **School Admin**:
-A school user who performs permitted school-level governance actions after an authorized ESAO Admin or System Admin grants the membership. The role does not approve, activate, or assign user memberships.
+A School Role Assignment for permitted school-level governance actions that may coexist with Finance Officer on the same Approved Membership. It does not approve, activate, or assign memberships and does not imply Daily Balance Verifier.
 _Avoid_: Finance officer, system admin
 Thai UI: `ผู้ดูแลระบบระดับสถานศึกษา`
 
@@ -35,7 +35,7 @@ _Avoid_: Accountant when referring to the operational finance role
 Thai UI: `เจ้าหน้าที่การเงิน`
 
 **School Director**:
-The school role whose approval is required for selected privileged financial actions.
+The single active School role whose approval is required for selected privileged financial actions at one School. ESAO Admin assigns or replaces the holder from formal external appointment evidence; without an active holder, every Director-required command is denied.
 _Avoid_: Typed approver name, checkbox approval
 Thai UI: `ผู้อำนวยการสถานศึกษา`
 
@@ -44,24 +44,44 @@ Approval made by an authenticated School Director for a director-required action
 _Avoid_: Reassigned approval identity
 
 **Temporary Director Approval**:
-A documented temporary approval used when no authenticated School Director is active, subject to audit review.
-_Avoid_: Director Approval, external approver
+A constrained future alternate authorization that could apply only when no authenticated School Director is active. It is excluded and denied in the initial pilot; later activation requires a new approved matrix decision for issuer, command scope, duration, reviewer, evidence, and segregation-of-duties restrictions.
+_Avoid_: Director Approval, automatic shortage exception, external approver
+
+**Routine Posting Delegation**:
+An explicit, capability-specific delegation that permits routine posting within the delegate's compatible role and the same School/organizational scope. It has explicit revocation, becomes invalid when the delegator loses the underlying authority, cannot be re-delegated, and grants no approval authority.
+_Avoid_: Automatic permission, approval delegation, role transfer
+
+**Daily Balance Verifier**:
+A dedicated School-scoped capability held by an authenticated School Admin or Finance Officer who independently verifies a Daily Balance Report prepared by another person before School Director approval. The authenticated School Director for that School assigns or prospectively revokes the capability but cannot assign it to themselves; the holder cannot prepare, approve/sign, solely reconcile, or close the same report and cannot delegate the capability in the initial pilot.
+_Avoid_: Daily inspector by implication, report preparer, Director approver
+
+**Deferred Privileged Command**:
+An applicable privileged command whose required authorization values have not been approved and which is excluded from the current pilot and denied until a later approved policy or P0-04 matrix decision brings it into scope.
+_Avoid_: Broad-role fallback, implied authorization, temporary permissive default
 
 **Needs Correction**:
 A status for an audited action that requires school follow-up before normal completion or an authorized exception.
 _Avoid_: Informational warning
 
 **System Admin**:
-A platform operations and identity-governance role that manages Registration Applications and memberships across the platform, diagnostics, and support. It is separate from school finance and education-area financial roles.
-_Avoid_: School admin, finance officer
+A platform operations and identity-governance role that owns platform account and registration lifecycle, diagnostics, and support. It cannot decide or originate organization authority, but may technically apply exact evidence-backed ESAO Admin, SESAO Auditor, and Policy Publisher primary/alternate appointment records issued by the SESAO Product Owner/accountable reviewer without selecting the person or changing approved scope.
+_Avoid_: Organization membership administrator, school admin, finance officer
 Thai UI: `ผู้ดูแลระบบส่วนกลาง`
 
 **ESAO Admin**:
-An Education Service Area Office user authorized to review Registration Applications and manage memberships only for assigned Schools and ESAO roles within the permitted boundary.
+An Education Service Area Office user authorized to approve/reject, suspend/remove, and otherwise administer organization memberships, School assignments, and School-level roles across all 17 SESAO Narathiwat pilot Schools. The role has no per-admin School subset, financial authority, privileged-capability assignment, self-administration, or delegation in the initial pilot.
 _Avoid_: System admin, school admin, policy publisher
 
+**Privileged Appointment Evidence**:
+An attributable external record from the SESAO Product Owner/accountable reviewer that names an ESAO Admin, SESAO Auditor, or Policy Publisher primary/alternate appointment, its approved scope, and effective information. System Admin may technically apply the record but cannot originate, select, or alter its authority.
+_Avoid_: System Admin decision, self-appointment, generic admin grant
+
+**ESAO Reviewer**:
+An Education Service Area Office capability limited to reading, reviewing, comparing, and reporting permitted School information, and recording permitted review/report evidence. It is excluded and denied in the initial pilot; any later assigned-School or aggregate-reporting scope requires an approved matrix decision and cannot add mutation, approval, membership, correction, policy-publication, acceptance, rejection, return, or override authority by implication.
+_Avoid_: ESAO Admin, financial approver, correction reviewer by default
+
 **SESAO Auditor**:
-The highest operational governance and oversight role in the SchoolBanchee hierarchy. A named SESAO Auditor may receive the separate Policy Publisher permission, but is not a financial-record superuser and cannot silently mutate a School's canonical financial records.
+The single highest operational governance and oversight role in the SchoolBanchee hierarchy, which may be held by multiple appointed people. One holder performs and submits an assigned Audit Assessment Cycle and a different holder of the same role independently verifies findings and finalizes/accepts it; the role does not imply ESAO Reviewer, generic aggregate access, or financial-record mutation authority, while Policy Publisher remains a separate capability.
 _Avoid_: System Admin, unrestricted financial-record editor
 
 **School Directory**:
@@ -73,16 +93,20 @@ A person who has submitted a Registration Application but has no SchoolBanchee m
 _Avoid_: Active user, school member
 
 **Registration Application**:
-A request from a Registration Applicant for a specific School membership and permitted school role.
+A request from a Registration Applicant for Finance Officer membership at one specific School. No other role is publicly requestable in the initial pilot.
 _Avoid_: User account, Approved Membership
 
 **Membership Approval**:
-An authenticated decision by a System Admin or authorized ESAO Admin that assigns an approved role and organization boundary to a Registration Application.
+An authenticated ESAO Admin decision within the permitted organizational boundary that assigns an approved role and organization boundary to a Registration Application. System Admin platform authority cannot bypass this boundary.
 _Avoid_: Email verification, self-assigned role
 
 **Approved Membership**:
-An active authorization linking a user identity to one School, Education Service Area Office, or platform-operations scope with an assigned role and effective status.
+A scoped active authorization linking a user identity to one School, Education Service Area Office, or platform-operations boundary with one or more effective Role Assignments. School Role Assignments may be additive but remain subject to person-level segregation of duties.
 _Avoid_: Registration Application, login session
+
+**School Role Assignment**:
+An effective role attached to an Approved Membership for one School. Finance Officer may coexist with School Admin, but role union does not create a combined role, imply Daily Balance Verifier, or bypass person-level segregation of duties.
+_Avoid_: Replacement role, combined finance-admin role, implicit capability
 
 ## Interface Language
 
@@ -91,8 +115,8 @@ The user-facing language policy for School and Education Service Area Office wor
 _Avoid_: English-first school workspace
 
 **System Admin Workspace**:
-A dedicated platform-operations workspace for registration and membership governance, diagnostics, and support that is separately accessible from School Admin and Education Service Area Office workspaces. It is the only UI scope allowed to be English-first.
-_Avoid_: School Admin workspace, Education Service Area Office workspace
+A dedicated platform-operations workspace for platform account/registration lifecycle, diagnostics, and support that is separately accessible from School Admin and Education Service Area Office workspaces. Organization membership administration belongs to ESAO Admin. It is the only UI scope allowed to be English-first.
+_Avoid_: Organization membership administration, School Admin workspace, Education Service Area Office workspace
 
 ## Financial Procedure
 
@@ -129,8 +153,8 @@ The controlled discharge of an Official Advance using accepted expense evidence,
 _Avoid_: New receipt, undocumented write-off
 
 **Receipt Book**:
-A controlled physical receipt-number range assigned to a custodian for one Fiscal Year, including used, voided, and unused receipts.
-_Avoid_: Numbering preference, generic document sequence
+A controlled physical receipt-number range assigned to a custodian for one Fiscal Year, including used, voided, and unused receipts. Its issuance/handover record is custody evidence, not a mandatory second-person authorization.
+_Avoid_: Numbering preference, generic document sequence, second-person approval gate
 
 **Document Held as Money**:
 A controlled document, such as an outstanding Official Advance agreement or cheque, included in the applicable daily money-position evidence until cleared.
@@ -225,12 +249,12 @@ _Avoid_: Current setting without history, hard-coded procedure
 Thai UI: `ระเบียบการเงินที่มีผลบังคับใช้`
 
 **Policy Version**:
-An auditable, effective-dated version of the Effective Financial Policy. A later version changes future applicability without rewriting the rule used by an earlier Financial Event.
-_Avoid_: Edited-in-place policy
+An auditable, effective-dated version of the Effective Financial Policy. A later activated version supersedes the active version for future applicability without rewriting the rule used by an earlier Financial Event. There is no separate retirement/deactivation command.
+_Avoid_: Edited-in-place policy, retire command, deactivate command
 
 **Policy Publisher**:
-An appointed Secondary Educational Service Area Office Narathiwat authority that registers unchanged OBEC policy evidence, sets the School scope and effective date, and activates an approved, auditable Policy Version. Activation does not require a second-person approval or pre-activation review. It cannot alter the OBEC source text, invent a source revision, or mutate a School's canonical financial records.
-_Avoid_: External policy issuer, mutable school setting, finance-officer override
+An appointed Secondary Educational Service Area Office Narathiwat authority that registers unchanged OBEC policy evidence, sets the School scope and effective date, and activates an approved, auditable Policy Version. Activation does not require a second-person approval or pre-activation review. P0-04 closure requires formal appointment evidence for the current holder and alternate. It cannot alter the OBEC source text, invent a source revision, or mutate a School's canonical financial records.
+_Avoid_: External policy issuer, mutable school setting, finance-officer override, unappointed capability holder
 
 **Policy Resolution**:
 The selection of the applicable Policy Version for a Financial Event by policy scope and effective date. It rejects unresolved ties rather than allowing a user to choose an ad hoc rule.
@@ -243,8 +267,8 @@ The daily agreement between applicable cashbook cross-check balances and the cor
 _Avoid_: Cashbook source-of-truth check
 
 **Daily Balance Report**:
-The daily report of balances by money position used for finance control and cash-custody checking.
-_Avoid_: Cashbook total only
+The daily report of balances by money position used for finance control and cash-custody checking. A Finance Officer prepares it, a different School Admin or Finance Officer holding `Daily Balance Verifier` verifies it, and an authenticated School Director then formally approves/signs it.
+_Avoid_: Cashbook total only, preparer self-verification, unsigned acknowledgement
 
 **External Cash-Custody Evidence**:
 Appointment, handover, count, storage, and signature evidence maintained outside SchoolBanchee for cash kept in custody.
@@ -299,12 +323,12 @@ A corrective entry linked to an original posted record after the relevant month 
 _Avoid_: Edit, overwrite
 
 **Privileged Correction**:
-A post-close Linked Correction made with the approval and audit evidence required by the close policy.
-_Avoid_: Admin edit, direct fix
+A post-close Linked Correction made only after authenticated School Director Approval and the required audit evidence. The proposer/preparer cannot self-approve, and the initial pilot requires no separate independent pre-execution reviewer; immutable evidence is retained for later approved oversight access.
+_Avoid_: Admin edit, direct fix, self-approved correction
 
 **Post-Close Correction Approval**:
-The structured Director Approval recorded on a Privileged Correction, including its reason category, evidence reference, approving identity, time, and source close revision.
-_Avoid_: Client-supplied approver, free-text approval checkbox
+The structured authenticated School Director Approval recorded before a Privileged Correction executes, including its reason category, evidence reference, approving identity, time, and source close revision. It cannot be supplied by the proposer/preparer and requires no separate independent pre-execution reviewer in the initial pilot.
+_Avoid_: Client-supplied approver, free-text approval checkbox, self-approval
 
 **Lifecycle Child**:
 A posted Remittance or Refund linked to its State Income receipt or Refundable Deposit receipt. A source with a Lifecycle Child is not directly correctable because replacing it would invalidate the child's controlled source relationship.
@@ -339,11 +363,11 @@ A review surface for audit-sensitive financial and governance actions.
 _Avoid_: Debug report, activity log
 
 **School Financial Accounting Audit**:
-A SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period. It tests approved criteria using linked workpapers and evidence, then produces a scored and reportable result without mutating canonical financial records.
+A SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period. An appointed SESAO Auditor may operate an assigned cycle once its command-level authority is approved; ESAO Reviewer access, cross-school comparison, ranking, and aggregate summaries remain excluded and denied in the initial pilot.
 _Avoid_: Annual Self-Assessment, Audit Review Report, general ledger
 
 **Audit Assessment Cycle**:
-A versioned instance of a School Financial Accounting Audit for one School and audit period, with an assigned auditor, applicable Policy Version, Audit Checklist Version, workpapers, findings, result, report, acceptance, and follow-up history.
+A versioned instance of a School Financial Accounting Audit for one School and audit period, with different working and finalizing SESAO Auditors, applicable Policy Version, Audit Checklist Version, workpapers, findings, result, report, acceptance, and follow-up history. Any appointed SESAO Auditor may create and assign the two positions but may occupy at most one of them.
 _Avoid_: Assessment item, report filter
 
 **Audit Checklist Version**:
