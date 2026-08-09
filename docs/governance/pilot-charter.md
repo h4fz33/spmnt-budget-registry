@@ -18,7 +18,7 @@
 | ESAO English name | Secondary Educational Service Area Office Narathiwat |
 | ESAO code | `1000960001` |
 
-The Office of Basic Education Committee owns sponsorship/accountability and external governance-policy authority for the pilot. The Secondary Educational Service Area Office Narathiwat owns product delivery, accountable audit/oversight review, and the in-application Policy Publisher function for unchanged OBEC policies across the complete 17-school population. A SESAO Auditor granted the Policy Publisher capability may register the source, set scope/effective date, and activate a Policy Version; that function does not permit source-text changes or School financial-record mutation. P0-04 cannot close until formal appointment evidence records the current Policy Publisher holder and alternate; this charter does not supply their names. Operational actions must be performed by named, authenticated users appointed to the applicable organizational role. An organization label, typed name, or shared account is not approval evidence.
+The Office of Basic Education Committee owns sponsorship/accountability and external governance-policy authority for the pilot. The Secondary Educational Service Area Office Narathiwat owns product delivery, accountable audit/oversight review, and the in-application Policy Publisher function for unchanged OBEC policies across the complete 17-school population. Current official Internal Audit position/assignment evidence under Order 452/2568 establishes Policy Publisher eligibility; the approved Authorization Matrix designates the current holder and standby alternate. The separately approved 17-school application publication scope is not attributed to Order 452/2568. A designated current holder may register the source, set scope/effective date, and activate a Policy Version; that function does not permit source-text changes or School financial-record mutation. P0-04 cannot close until current-status verification, approved designation, publication scope, remaining `OPEN` values, and final matrix approval are recorded. Operational actions must be performed by named, authenticated users. An organization label, typed name, or shared account is not approval evidence.
 
 ## School-User Population Boundary
 
@@ -53,7 +53,7 @@ Adding or removing a School from the pilot and actual school-user population req
 This charter establishes organization-level accountability and the actual school-user population scope. It does not complete these later controls:
 
 - `P0-02`: bind each pilot School to the exact effective OBEC/ESAO financial procedure and citations.
-- `P0-04`: record formal appointment evidence for the current Policy Publisher holder and alternate, establish the remaining `OPEN` authorization values, and approve the authorization/segregation-of-duties matrix.
+- `P0-04`: verify current status under Order 452/2568, record the approved Policy Publisher designation and separately approved application publication scope, establish the remaining `OPEN` authorization values, and approve the authorization/segregation-of-duties matrix.
 - `P0-08`: approve PostgreSQL hosting, backup, recovery, connectivity, and key ownership.
 - `P0-10`: approve registration identity proof, requestable roles, account recovery, and membership-review policy.
 

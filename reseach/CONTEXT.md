@@ -8,7 +8,7 @@ SchoolBanchee is a school-finance context for Thai OBEC procedures. This is the 
 The sponsor and accountable organization for the pilot, and the external Governing Policy Authority whose issued policy is the source for an Effective Financial Policy. OBEC does not directly operate the in-application Policy Publisher role.
 Thai name: `สำนักงานคณะกรรมการการศึกษาขั้นพื้นฐาน`
 
-_Avoid_: Treating OBEC as the operational publisher, or assuming an ESAO user has Policy Publisher permission without an appointment
+_Avoid_: Treating OBEC as the operational publisher, or assuming an ESAO user has Policy Publisher permission without approved eligibility and designation
 
 **School**:
 A school whose financial records are managed independently for reporting and audit purposes.
@@ -64,7 +64,7 @@ A status for an audited action that requires school follow-up before normal comp
 _Avoid_: Informational warning
 
 **System Admin**:
-A platform operations and identity-governance role that owns platform account and registration lifecycle, diagnostics, and support. It cannot decide or originate organization authority, but may technically apply exact evidence-backed ESAO Admin, SESAO Auditor, and Policy Publisher primary/alternate appointment records issued by the SESAO Product Owner/accountable reviewer without selecting the person or changing approved scope.
+A platform operations and identity-governance role that owns platform account and registration lifecycle, diagnostics, and support. It cannot decide or originate organization authority. It may technically apply the exact Product Owner/accountable-reviewer-approved Policy Publisher designation and evidence without selecting the person, changing approved scope, modifying the designation, or self-granting authority.
 _Avoid_: Organization membership administrator, school admin, finance officer
 Thai UI: `ผู้ดูแลระบบส่วนกลาง`
 
@@ -73,7 +73,7 @@ An Education Service Area Office user authorized to approve/reject, suspend/remo
 _Avoid_: System admin, school admin, policy publisher
 
 **Privileged Appointment Evidence**:
-An attributable external record from the SESAO Product Owner/accountable reviewer that names an ESAO Admin, SESAO Auditor, or Policy Publisher primary/alternate appointment, its approved scope, and effective information. System Admin may technically apply the record but cannot originate, select, or alter its authority.
+An attributable external record that names an ESAO Admin or SESAO Auditor appointment, its approved scope, and effective information. For Policy Publisher, the authoritative organizational eligibility evidence and the approved Authorization Matrix designation are retained together. System Admin may technically apply evidence or designation but cannot originate, select, or alter its authority.
 _Avoid_: System Admin decision, self-appointment, generic admin grant
 
 **ESAO Reviewer**:
@@ -253,7 +253,7 @@ An auditable, effective-dated version of the Effective Financial Policy. A later
 _Avoid_: Edited-in-place policy, retire command, deactivate command
 
 **Policy Publisher**:
-An appointed Secondary Educational Service Area Office Narathiwat authority that registers unchanged OBEC policy evidence, sets the School scope and effective date, and activates an approved, auditable Policy Version. Activation does not require a second-person approval or pre-activation review. P0-04 closure requires formal appointment evidence for the current holder and alternate. It cannot alter the OBEC source text, invent a source revision, or mutate a School's canonical financial records.
+An in-application capability within the SESAO Internal Audit authorization model that registers unchanged OBEC policy evidence, sets the separately approved School scope and effective date, and activates an approved, auditable Policy Version. Current official Internal Audit position/assignment evidence establishes eligibility; the approved Authorization Matrix designates one current holder and one standby alternate. Activation does not require a second-person approval or pre-activation review. It cannot alter the OBEC source text, invent a source revision, or mutate a School's canonical financial records.
 _Avoid_: External policy issuer, mutable school setting, finance-officer override, unappointed capability holder
 
 **Policy Resolution**:

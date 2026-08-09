@@ -61,7 +61,7 @@ The PDFs are preserved as user-supplied evidence in `reseach/`. SHA-256 hashes w
 1. The original B.E. 2515 manual's publication/commencement record, amendment history, and document number are not stored in the repository. The current pilot baseline is nevertheless unambiguous through `S5` plus `S8`; retain this as archival provenance work and revisit it before any future baseline replacement.
 2. The B.E. 2562 Ministry of Finance overlay is effective from 14 May 2562. P0-03 must enumerate the exact flow-level controls and exceptions; it does not reopen the B.E. 2515 baseline selection.
 3. No EEF fund flow is evidenced for any pilot School. `S7` is explicitly excluded from the universal baseline and must be resolved only if an EEF flow enters the pilot scope.
-4. A future change must be supported by an OBEC-issued source and activated by an authorized SESAO Policy Publisher with required source and audit evidence; it may not silently replace the B.E. 2515 baseline. Pre-activation second-person review is not required, while P0-04 still requires formal appointment evidence for the current Policy Publisher holder and alternate.
+4. A future change must be supported by an OBEC-issued source and activated by an authorized SESAO Policy Publisher with required source and audit evidence; it may not silently replace the B.E. 2515 baseline. Pre-activation second-person review is not required, while P0-04 requires Order 452/2568 current-status verification, approved Policy Publisher designation, and separately approved publication scope.
 
 ## Pilot-School Source Matrix
 

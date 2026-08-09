@@ -57,22 +57,29 @@ The following principles apply to all decisions in this record:
 
 ### Decision
 
-**Named appointment is required for P0-04 completion.**
+**Authoritative organizational assignment evidence establishes Policy Publisher eligibility.**
 
 The authorization architecture remains role/capability based:
 
 ```text
-SESAO Auditor
+SESAO Internal Audit position/assignment
     |
     +-- Policy Publisher capability
 ```
 
-However, P0-04 cannot be closed until formal appointment evidence identifies:
+Order 452/2568 establishes the organizational eligibility evidence for:
 
-- the current named Policy Publisher holder; and
-- the designated alternate.
+- `นางบังอร วันริโก`, `นักวิชาการตรวจสอบภายในชำนาญการพิเศษ`, `ผู้อำนวยการหน่วยตรวจสอบภายใน`;
+- `นายอานุงรุสลัน ดาโวะ`, `นักวิชาการตรวจสอบภายในชำนาญการ`, expressly assigned Internal Audit duties.
 
-The appointment evidence must be attributable and auditable.
+The approved Authorization Matrix is the designation record for exactly one current Policy Publisher and one standby alternate:
+
+- Current holder: `นางบังอร วันริโก`;
+- Standby alternate: `นายอานุงรุสลัน ดาโวะ`.
+
+A separate Policy Publisher Appointment Memorandum and separate SESAO Auditor appointment document are not required. Order 452/2568 establishes eligibility, not Policy Publisher designation or the application publication scope. Current-status verification is required before designation or privileged publication. The application publication scope must be established separately from the order's organizational scope.
+
+The evidence and designation record must be attributable and auditable.
 
 Personnel names must not be invented by the system design or by Codex.
 
@@ -80,7 +87,7 @@ Personnel names must not be invented by the system design or by Codex.
 
 The Policy Publisher capability remains a role/capability definition in the architecture.
 
-The named holder and alternate are recorded as operational appointment evidence associated with P0-04.
+The named holder and alternate are recorded in the approved Authorization Matrix associated with P0-04.
 
 The Policy Publisher may activate an evidence-backed Policy Version without second-person approval or pre-activation review, consistent with ADR-0006.
 
@@ -426,7 +433,7 @@ The following interpretations are superseded for the current application authori
 
 | Previous interpretation | Current decision |
 | --- | --- |
-| Named Policy Publisher is optional configuration for P0-04 | Appointment evidence is required for P0-04 closure |
+| Named Policy Publisher is optional configuration for P0-04 | Order 452/2568 organizational evidence plus approved Matrix designation are required for Policy Publisher eligibility/designation |
 | System Admin has unrestricted organizational membership authority | System Admin is platform-scoped; ESAO Admin owns organizational membership |
 | Director absence always blocks Director-required operations | Controlled Temporary Director Approval remains available |
 | Receipt Book `approval` implies second-person authorization | Approval is custody/issuance evidence |
@@ -446,14 +453,17 @@ Historical manuals, dated research notes, previous session notes, and earlier ar
 
 The nine human decisions are resolved, but the following authorization values still prevent P0-04 closure.
 
-## 5.1 Policy Publisher appointment
+## 5.1 Policy Publisher organizational evidence and designation
 
 Required:
 
 - named current holder;
 - named alternate;
-- appointment evidence;
-- effective appointment information;
+- authoritative organizational evidence;
+- official Internal Audit position and assignment;
+- effective/current status verification;
+- approved Authorization Matrix designation;
+- separately approved application publication scope;
 - attributable record.
 
 **Status: OPEN**
@@ -568,7 +578,7 @@ P0-04 may be marked `[DONE]` only when:
 8. delegation scope and invalidation rules are explicit;
 9. membership lifecycle authority is explicit;
 10. privileged capability grant/revocation authority is explicit;
-11. required named appointment evidence has been recorded;
+11. required named appointment or authoritative organizational evidence applicable to each command has been recorded;
 12. no unresolved conflict remains that can alter authorization behavior;
 13. the final Authorization Matrix has received the required human approval/sign-off.
 
@@ -631,7 +641,7 @@ Codex should:
 
 | ID | Decision | Status |
 | --- | --- | --- |
-| BLK-003-01 | Named Policy Publisher holder + alternate required for P0-04 closure | **RESOLVED** |
+| BLK-003-01 | Policy Publisher eligibility from Order 452/2568 organizational evidence; approved Matrix designation for one current holder and one standby alternate | **RESOLVED IN PRINCIPLE; RECONCILIATION REQUIRED** |
 | BLK-003-02 | System Admin platform lifecycle; ESAO Admin organizational membership | **RESOLVED** |
 | BLK-003-03 | Temporary Director Approval retained as controlled alternate | **RESOLVED** |
 | BLK-003-04 | Receipt Book approval = custody/issuance evidence | **RESOLVED** |
@@ -647,7 +657,7 @@ Codex should:
 
 ### Overall P0-04 status
 
-**BLOCKED — AUTHORIZATION MATRIX AND APPOINTMENT/SCOPE EVIDENCE STILL REQUIRED**
+**BLOCKED — AUTHORIZATION MATRIX AND REQUIRED EVIDENCE/SCOPE STILL REQUIRED**
 
 ### No implementation authorization code should be written from this record alone.
 
