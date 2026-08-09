@@ -1,17 +1,27 @@
 # SchoolBanchee
 
-SchoolBanchee is a school-finance context for Thai OBEC procedures. This is the sole live glossary for the target pilot procedure; current-code gaps belong in the blueprint and historical research copies are pointers only. `research/school-banchee-plan/context-thai-pronouns.md` supplies the Thai display vocabulary and formal operational register without changing the definitions below.
+SchoolBanchee is a school-finance context for Thai OBEC procedures. This is the sole live glossary for the target procedure and complete school-user population; current-code gaps belong in the blueprint and historical research copies are pointers only. `research/school-banchee-plan/context-thai-pronouns.md` supplies the Thai display vocabulary and formal operational register without changing the definitions below.
 
 ## Organizations And Roles
+
+**Office of Basic Education Committee (OBEC)**:
+The sponsor and accountable organization for the pilot, and the external Governing Policy Authority whose issued policy is the source for an Effective Financial Policy. OBEC does not directly operate the in-application Policy Publisher role.
+Thai name: `สำนักงานคณะกรรมการการศึกษาขั้นพื้นฐาน`
+
+_Avoid_: Treating OBEC as the operational publisher, or assuming an ESAO user has Policy Publisher permission without an appointment
 
 **School**:
 A school whose financial records are managed independently for reporting and audit purposes.
 _Avoid_: Tenant, branch
 Thai UI: `สถานศึกษา`
 
+**Actual School-User Population**:
+The complete set of Schools that use SchoolBanchee in the current approved scope. It is not a sample subset. The current population is the 17 Schools under SESAO Narathiwat identified in the Pilot Governance Charter.
+_Avoid_: Pilot-only subset, optional sample schools
+
 **Education Service Area Office**:
-The oversight organization that receives school financial reports and may aggregate school-level results.
-_Avoid_: District when referring to the formal OBEC organization
+The auditing and oversight organization for its assigned school-user population. It receives and reviews school financial reports and may aggregate school-level results, but it does not own a School's canonical financial records or become the Policy Publisher by virtue of that oversight.
+_Avoid_: District when referring to the formal OBEC organization, Policy Publisher, canonical-record owner
 Thai UI: `สำนักงานเขตพื้นที่การศึกษา (สพท.)`
 
 **School Admin**:
@@ -49,6 +59,10 @@ Thai UI: `ผู้ดูแลระบบส่วนกลาง`
 **ESAO Admin**:
 An Education Service Area Office user authorized to review Registration Applications and manage memberships only for assigned Schools and ESAO roles within the permitted boundary.
 _Avoid_: System admin, school admin, policy publisher
+
+**SESAO Auditor**:
+The highest operational governance and oversight role in the SchoolBanchee hierarchy. A named SESAO Auditor may receive the separate Policy Publisher permission, but is not a financial-record superuser and cannot silently mutate a School's canonical financial records.
+_Avoid_: System Admin, unrestricted financial-record editor
 
 **School Directory**:
 The controlled list of Schools eligible for registration, identified by official SMIS and Ministry of Education codes.
@@ -211,8 +225,8 @@ An auditable, effective-dated version of the Effective Financial Policy. A later
 _Avoid_: Edited-in-place policy
 
 **Policy Publisher**:
-The Education Service Area Office authority that activates an approved, auditable Policy Version for a school. School users may supply evidence but do not activate the policy.
-_Avoid_: Mutable school setting, finance-officer override
+An appointed Secondary Educational Service Area Office Narathiwat authority that registers unchanged OBEC policy evidence, sets the School scope and effective date, and activates an approved, auditable Policy Version. Activation does not require a second-person approval or pre-activation review. It cannot alter the OBEC source text, invent a source revision, or mutate a School's canonical financial records.
+_Avoid_: External policy issuer, mutable school setting, finance-officer override
 
 **Policy Resolution**:
 The selection of the applicable Policy Version for a Financial Event by policy scope and effective date. It rejects unresolved ties rather than allowing a user to choose an ad hoc rule.

@@ -79,12 +79,14 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 ### Organizations and roles
 
 - **School:** An independently managed financial reporting boundary. It is not a tenant or a branch.
+- **Office of Basic Education Committee (OBEC):** Sponsor and accountable organization for the pilot, and the external Governing Policy Authority whose issued policy evidence is used by the application. OBEC does not directly operate an in-application Policy Publisher account.
 - **Education Service Area Office (ESAO):** Oversight organization that receives school reports and may aggregate results.
 - **Finance Officer:** School user who performs finance work for one school.
 - **School Admin:** Approved school user who performs permitted school governance actions but cannot activate or assign memberships.
 - **School Director:** Authenticated school role whose approval is required for selected privileged actions.
 - **ESAO Admin:** ESAO user who reviews registrations and manages memberships only for assigned schools and ESAO roles.
-- **Policy Publisher:** ESAO authority that activates an approved policy version for a school.
+- **SESAO Auditor:** Highest operational governance and oversight role in the application hierarchy. An appointed SESAO Auditor may be granted the separate Policy Publisher permission, while remaining unable to silently mutate a School's canonical financial records.
+- **Policy Publisher:** Appointed SESAO Narathiwat authority that registers unchanged OBEC policy evidence, sets School scope and effective date, and activates an approved Policy Version. It does not change the original source text or grant financial-record mutation authority.
 - **System Admin:** Platform operations and identity-governance role that manages registrations/memberships across the platform but performs no school financial action.
 - **School Directory:** Controlled list of schools available for registration, identified by unique SMIS and MOE codes.
 - **Registration Application:** Request for one permitted school membership; it is not an active user membership.
@@ -123,22 +125,24 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 
 Access is scoped by organization and role. A user never gains access to another school's financial records merely by knowing an identifier.
 
-| Capability | Finance Officer | School Admin | School Director | ESAO Roles | System Admin |
-| --- | --- | --- | --- | --- | --- |
-| Submit public registration | Request school role | Request school role | Request school role | Not for privileged ESAO roles | Not for System Admin role |
-| Review school-role registrations | No | No | No | ESAO Admin: assigned schools | All schools |
-| Activate/suspend/assign membership | No | No | No | ESAO Admin: assigned boundary | Platform-wide |
-| Draft and submit financial events | Own school | Own school (if granted) | Review only | No school entry by default | Support only, no business entry |
-| Post routine events | Yes, within policy | Optional delegated permission | No | No | No |
-| Approve director-required actions | No | No | Yes | No, unless separately appointed | No |
-| Perform daily inspection | Assigned inspector | Yes | Yes | Review | No |
-| Reconcile and prepare monthly report | Yes | Yes | Review/accept | Review/return | No |
-| Close a month | No | No | Yes or delegated close authority | Review/override under policy | No |
-| Create post-close privileged correction | Propose | Propose | Approve | Review | No |
-| Publish policy version | No | No | No | Policy Publisher only | No |
-| View a school | Own school | Own school | Own school | Assigned schools/aggregate | Operational diagnostics only |
-| Manage identity/audit operations | No | No | No | ESAO Admin: assigned membership history | Platform-wide |
-| Export financial data | Allowed categories only | Allowed categories only | Allowed categories only | Allowed scope | Diagnostics only |
+| Capability | Finance Officer | School Admin | School Director | ESAO Roles | SESAO Policy Publisher | System Admin |
+| --- | --- | --- | --- | --- | --- | --- |
+| Submit public registration | Request school role | Request school role | Request school role | Not for privileged ESAO roles | No | Not for System Admin role |
+| Review school-role registrations | No | No | No | ESAO Admin: assigned schools | No | All schools |
+| Activate/suspend/assign membership | No | No | No | ESAO Admin: assigned boundary | No | Platform-wide |
+| Draft and submit financial events | Own school | Own school (if granted) | Review only | No school entry by default | No | Support only, no business entry |
+| Post routine events | Yes, within policy | Optional delegated permission | No | No | No | No |
+| Approve director-required actions | No | No | Yes | No, unless separately appointed | No | No |
+| Perform daily inspection | Assigned inspector | Yes | Yes | Review | No | No |
+| Reconcile and prepare monthly report | Yes | Yes | Review/accept | Review/return | No | No |
+| Close a month | No | No | Yes or delegated close authority | Review/override under policy | No | No |
+| Create post-close privileged correction | Propose | Propose | Approve | Review | No | No |
+| Publish policy version | No | No | No | No | Policy Publisher only | No |
+| View a school | Own school | Own school | Own school | Assigned schools/aggregate | Authorized policy scope only | Operational diagnostics only |
+| Manage identity/audit operations | No | No | No | ESAO Admin: assigned membership history | Policy publication audit only | Platform-wide |
+| Export financial data | Allowed categories only | Allowed categories only | Allowed categories only | Allowed scope | No | Diagnostics only |
+
+A SESAO Policy Publisher may activate an evidence-backed Policy Version without a second-person approval or pre-activation review. The activation remains attributable to the named publisher and recorded in the Audit Log. This exception applies only to policy activation and does not relax segregation of duties for financial, close, or membership actions.
 
 Segregation of duties is enforced for approval, inspection, and close. The same person must not silently create, approve, reconcile, and close the same sensitive action when the effective policy prohibits it.
 
@@ -536,7 +540,7 @@ The application opens to the user's permitted workspace and current fiscal year.
 - **Monthly close:** close readiness checklist, unresolved exceptions, report submission, close revision, and permitted correction path.
 - **Annual self-assessment:** ten dimensions, evidence, findings, corrective actions, and Director/ESAO review.
 - **Reports and exports:** reproducible filters, Thai fiscal dates, print-safe templates, export category boundary, and replacement history.
-- **Administration:** school users, fiscal years, numbering sequences, fund-flow configuration, and policy publication for authorized ESAO users.
+- **Administration:** school users, fiscal years, numbering sequences, and fund-flow configuration for authorized school/ESAO users; policy publication is reserved for appointed SESAO Policy Publisher(s) acting on unchanged OBEC policy evidence.
 
 ### Interaction and accessibility requirements
 
@@ -703,7 +707,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - The Control Registry is the financial source of truth; the cashbook is a deliberate cross-check overlay.
 - Budget Allocations and Commitments measure authority and reservation, not school cash.
 - Financial events are posted as controlled domain records, not as automatic universal double-entry journal rows.
-- Policy versions are effective-dated and published by ESAO; school users cannot override them ad hoc.
+- Policy versions are effective-dated and published by appointed SESAO Policy Publisher(s) from unchanged OBEC policy evidence; school users and other ESAO roles cannot override them ad hoc.
 - Corrections are linked and auditable; close is not implemented as destructive freezing.
 - ESAO aggregation is reporting-only and cannot mutate a school's canonical records.
 - PostgreSQL through Prisma is the persistence layer; financial commands run in serializable transactions with database-enforced relations and constraints.
