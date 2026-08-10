@@ -23,7 +23,7 @@ Generic role names do not grant authority. An operation not enumerated by the Ma
 7. **Daily Balance:** Finance Officer prepares; a different same-School holder of the `Daily Balance Verifier` capability verifies; School Director approves/signs. School Director alone grants/revokes the verifier capability and cannot assign themselves.
 8. **Policy lifecycle:** A new activation supersedes the prior Policy Version. No retirement/deactivation command exists.
 9. **ESAO Reviewer:** No initial-pilot access or command exists. Assigned-School review, comparison, aggregation, acceptance, return, and override remain deferred and denied.
-10. **Audit Assessment:** Appointed SESAO Auditors operate School/period-scoped Cycles with different working and finalizing holders and immutable reassignment/finalization evidence.
+10. **Audit Assessment:** Any number of SESAO Auditor accounts may be configured. An authenticated Auditor creates an Assessment and atomically becomes its initial active Auditor; ESAO Admin controls later assignment, atomic reassignment, and revocation. Exactly one Auditor is active per Assessment and operates it end to end through creation, performance, finding modification, finalization, and responsible-Auditor result acceptance, with no additional Auditor participant or review step. Completed Assessments permit no further Auditor command.
 11. **Generic privilege:** No generic ESAO/platform grant, emergency access, or override exists.
 
 ## Evidence Summary
@@ -35,6 +35,7 @@ Generic role names do not grant authority. An operation not enumerated by the Ma
 - Publication-scope source: `https://www.sesaonara.go.th/about-us/`, inspected 2026-08-10. It states SESAO Narathiwat has 17 affiliated secondary schools.
 - Product Owner final-Matrix sign-off: recorded 2026-08-10 in the BLK-003 record and P0-04 session evidence.
 - Order signatory personal name: unverified and deliberately not propagated.
+- Initial SESAO Auditor configuration: sealed application bootstrap using authenticated identity, person name, role, and organizational scope; no appointment-document upload, evidence hash, external verification, or second-person in-application approval.
 
 ## Remaining Blockers
 

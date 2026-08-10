@@ -164,7 +164,7 @@ It is not a general or automatic staff-shortage bypass.
 
 ### Approved controls
 
-- An authenticated SESAO Product Owner/accountable reviewer or SESAO Auditor independently issues, activates, or revokes the approval under strong authentication.
+- An authenticated SESAO Product Owner/accountable reviewer issues, activates, or revokes the approval under strong authentication. SESAO Auditor has no authority under this command.
 - The approval is limited to one named School and only the specific Director-required commands listed in its evidence record.
 - It has fixed start and expiry timestamps, no automatic renewal, and is immediately revoked when a permanent School Director is appointed.
 - No separate independent reviewer is required.
@@ -419,6 +419,34 @@ The terms `accept`, `reject`, `return`, and `override` must not automatically be
 
 ---
 
+## Decision 10 — Single Active End-to-End SESAO Auditor
+
+### Decision
+
+Any number of named authenticated SESAO Auditor accounts may be configured. Each Audit Assessment has exactly one active Auditor at a time, and that active Auditor owns the complete workflow: create the Assessment, perform it, modify findings, finalize it, and approve/accept its result as the responsible audit operator.
+
+Creation atomically establishes the authenticated creator as the initial active Auditor. After creation, ESAO Admin alone assigns, atomically reassigns, or revokes the active assignment and gains no Assessment content or review authority from doing so. Completion ends executable Auditor authority for that Assessment.
+
+No additional Auditor participant, verification, approval, review, or specialized Auditor role is required. The active Auditor is limited to the exact Assessment, School, audit period, and approved checklist/policy versions and cannot mutate canonical School financial records.
+
+Initial Auditor accounts use the sealed application bootstrap with authenticated identity, person name, role, and organizational scope. Bootstrap requires no appointment-document upload, evidence hash, external verification, or second-person in-application approval and does not constitute an external governmental appointment.
+
+### Authorization effect
+
+- `AUTH-25`: ESAO Admin assignment/reassignment/revocation.
+- `AUTH-26`: Auditor creation with atomic initial assignment.
+- `AUTH-27`: active-Auditor performance.
+- `AUTH-31`: active-Auditor finding modification.
+- `AUTH-32`: active-Auditor finalization.
+- `AUTH-33`: same active Auditor approves/accepts the result and completes the Assessment.
+- SESAO Auditor is removed from `AUTH-14` Temporary Director Approval issuance.
+
+### Status
+
+**RESOLVED — approved by the Product Owner on 2026-08-10.**
+
+---
+
 # 4. Superseded Interpretations
 
 The following interpretations are superseded for the current application authorization model:
@@ -434,6 +462,8 @@ The following interpretations are superseded for the current application authori
 | Director daily signature is merely acknowledgement/evidence | Director signature is formal approval |
 | Policy Version can have a separate retirement/deactivation command | Supersession is the only inactive transition |
 | ESAO Reviewer may have generic acceptance/return/override authority | ESAO Reviewer is review/compare/report only |
+| Audit Assessment requires distinct working and finalizing Auditors | One active Auditor operates the Assessment end to end |
+| SESAO Auditor may administer Assessment assignments or Temporary Director Approval | ESAO Admin administers Assessment assignments; SESAO Auditor has only the five approved Assessment actions |
 
 These supersessions apply to the **current application authorization model**.
 
@@ -455,6 +485,7 @@ The Product Owner approved the following final-Matrix inputs on 2026-08-10:
 - Temporary Director Approval uses the approved controls in Decision 3, but recipient eligibility and required subject evidence remain `OPEN`; issuance and use fail closed.
 - Privileged Correction requires School Director approval, with no separate independent pre-execution reviewer; the proposer/preparer cannot self-approve.
 - The Daily Balance Verifier, SESAO Auditor assessment, membership, School Director, and ESAO Reviewer limits are those explicitly enumerated by the live Authorization Matrix.
+- The SESAO Auditor workflow uses one active Auditor per Assessment, atomic creator assignment, ESAO Admin-controlled later assignment changes, and the five approved end-to-end Auditor commands without an additional Auditor review step.
 - The Product Owner approved the final Authorization Matrix, subject to durable recording of this decision and operational evidence.
 
 Temporary Director Approval recipient eligibility and subject evidence remain `OPEN`. Every other unsupported or unlisted operation is explicitly denied, and every command fails closed when its command-specific evidence is missing or invalid.
@@ -551,6 +582,7 @@ Codex should:
 | BLK-003-07 | School Director signature = formal Daily Balance approval | **RESOLVED** |
 | BLK-003-08 | Supersession only; no Policy Version retirement command | **RESOLVED** |
 | BLK-003-09 | ESAO Reviewer = review/compare/report only | **RESOLVED** |
+| BLK-003-10 | Single active end-to-end SESAO Auditor; ESAO Admin controls later assignment changes | **RESOLVED** |
 
 ### Overall BLK-003 status
 

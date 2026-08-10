@@ -1,0 +1,5 @@
+# Single Active End-To-End SESAO Auditor
+
+**Status:** accepted
+
+Any number of SESAO Auditor accounts may be configured, but each Audit Assessment has exactly one active Auditor at a time. The authenticated creator becomes the initial active Auditor atomically and owns creation, performance, finding modification, finalization, and responsible-Auditor result acceptance; no additional Auditor participant or review step exists. After creation, ESAO Admin alone assigns, atomically reassigns, or revokes the active assignment without gaining Assessment content or review authority. The active Auditor is limited to the exact Assessment, School, period, and resolved checklist/policy versions, cannot mutate canonical School financial records, and loses executable authority when replaced, revoked, or when the Assessment completes. Initial Auditor accounts use the sealed evidence-free application bootstrap described by ADR-0010, while Policy Publisher remains a separate capability and ESAO Reviewer remains excluded and denied in the initial pilot.

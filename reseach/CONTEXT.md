@@ -64,16 +64,20 @@ A status for an audited action that requires school follow-up before normal comp
 _Avoid_: Informational warning
 
 **System Admin**:
-A platform operations and identity-governance role that owns platform account and registration lifecycle, diagnostics, and support. It cannot decide or originate organization authority. It may technically apply the exact Product Owner/accountable-reviewer-approved Policy Publisher designation and evidence without selecting the person, changing approved scope, modifying the designation, or self-granting authority.
+A platform operations and identity-governance role that owns platform account and registration lifecycle, diagnostics, support, and the sealed Initial Authorization Bootstrap. Outside that allowlisted bootstrap, it cannot decide or originate organization authority and may technically apply only exact approved appointment or designation records without selection, scope, or self-grant discretion.
 _Avoid_: Organization membership administrator, school admin, finance officer
 Thai UI: `ผู้ดูแลระบบส่วนกลาง`
 
 **ESAO Admin**:
-An Education Service Area Office user authorized to approve/reject, suspend/remove, and otherwise administer organization memberships, School assignments, and School-level roles across all 17 SESAO Narathiwat pilot Schools. The role has no per-admin School subset, financial authority, privileged-capability assignment, self-administration, or delegation in the initial pilot.
+An Education Service Area Office user authorized to administer organization memberships, School assignments, School-level roles, and active Auditor assignments across all 17 SESAO Narathiwat pilot Schools. Auditor assignment administration does not grant Audit Assessment content access or the SESAO Auditor role; the role has no per-admin School subset, financial authority, self-administration, or delegation in the initial pilot.
 _Avoid_: System admin, school admin, policy publisher
 
+**Initial Authorization Bootstrap**:
+The sealed one-time application configuration that binds named authenticated identities to the approved initial role and organizational-scope allowlist. It creates application authority and an immutable configuration history but is not an external governmental appointment or organizational evidence verification.
+_Avoid_: Appointment, generic System Admin grant, reusable privilege bootstrap
+
 **Privileged Appointment Evidence**:
-An attributable external record that names an ESAO Admin or SESAO Auditor appointment, its approved scope, and effective information. For Policy Publisher, the authoritative organizational eligibility evidence and the approved Authorization Matrix designation are retained together. System Admin may technically apply evidence or designation but cannot originate, select, or alter its authority.
+An attributable post-bootstrap external record that names an ESAO Admin or SESAO Auditor appointment, its approved scope, and effective information. Initial Authorization Bootstrap records are configuration provenance, not Privileged Appointment Evidence. For Policy Publisher, authoritative organizational eligibility evidence and the approved Authorization Matrix designation are retained together.
 _Avoid_: System Admin decision, self-appointment, generic admin grant
 
 **ESAO Reviewer**:
@@ -81,8 +85,12 @@ An Education Service Area Office capability limited to reading, reviewing, compa
 _Avoid_: ESAO Admin, financial approver, correction reviewer by default
 
 **SESAO Auditor**:
-The single highest operational governance and oversight role in the SchoolBanchee hierarchy, which may be held by multiple appointed people. One holder performs and submits an assigned Audit Assessment Cycle and a different holder of the same role independently verifies findings and finalizes/accepts it; the role does not imply ESAO Reviewer, generic aggregate access, or financial-record mutation authority, while Policy Publisher remains a separate capability.
+The end-to-end Audit Assessment operator role, which may be held by any number of named authenticated accounts. An authenticated configured Auditor creates an Assessment and atomically becomes its initial active Auditor; the active Auditor then performs, modifies findings for, finalizes, and approves/accepts the result. The role does not imply ESAO Reviewer, generic aggregate access, financial-record mutation, or Policy Publisher authority.
 _Avoid_: System Admin, unrestricted financial-record editor
+
+**Active Auditor Assignment**:
+The single effective link between one SESAO Auditor and one Audit Assessment that authorizes the Auditor's end-to-end Assessment actions. Creation establishes the initial assignment, later ESAO Admin replacement is atomic, and completion ends executable authority while preserving assignment history.
+_Avoid_: Auditor team, reviewer assignment, concurrent Auditor access
 
 **School Directory**:
 The controlled list of Schools eligible for registration, identified by official SMIS and Ministry of Education codes.
@@ -363,11 +371,11 @@ A review surface for audit-sensitive financial and governance actions.
 _Avoid_: Debug report, activity log
 
 **School Financial Accounting Audit**:
-A SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period. An appointed SESAO Auditor may operate an assigned cycle once its command-level authority is approved; ESAO Reviewer access, cross-school comparison, ranking, and aggregate summaries remain excluded and denied in the initial pilot.
+A SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period. The active SESAO Auditor operates the exact assigned Assessment end to end without mutating canonical School financial records; ESAO Reviewer access, cross-school comparison, ranking, and aggregate summaries remain excluded and denied in the initial pilot.
 _Avoid_: Annual Self-Assessment, Audit Review Report, general ledger
 
 **Audit Assessment Cycle**:
-A versioned instance of a School Financial Accounting Audit for one School and audit period, with different working and finalizing SESAO Auditors, applicable Policy Version, Audit Checklist Version, workpapers, findings, result, report, acceptance, and follow-up history. Any appointed SESAO Auditor may create and assign the two positions but may occupy at most one of them.
+A versioned instance of a School Financial Accounting Audit for one School and audit period, with one active Auditor at a time, applicable Policy Version, Audit Checklist Version, workpapers, findings, result, report, responsible-Auditor acceptance, reassignment history, and follow-up history. The authenticated creator becomes the initial active Auditor, and ESAO Admin controls later assignment changes.
 _Avoid_: Assessment item, report filter
 
 **Audit Checklist Version**:
@@ -375,11 +383,11 @@ The effective-dated, source-cited set of audit topics, criteria, test methods, r
 _Avoid_: Mutable checklist setting, self-assessment form
 
 **Audit Workpaper**:
-A structured record of one audit test or review step, including the criterion, method, observation, evidence references, conclusion, and responsible reviewer.
+A structured record of one audit test step, including the criterion, method, observation, evidence references, conclusion, and responsible active Auditor.
 _Avoid_: Generic attachment, Audit Log entry
 
 **Audit Finding**:
-A documented audit conclusion or exception linked to an Audit Workpaper and its evidence, with severity, owner, due date, corrective action, response, and verification state.
+A documented audit conclusion or exception linked to an Audit Workpaper and its evidence, with severity, owner, due date, corrective action, response, attributable revisions, and follow-up/re-test state.
 _Avoid_: Informational warning, Needs Correction status only
 
 **Audit Score**:
@@ -391,7 +399,7 @@ A policy-defined classification of an Audit Score and/or specified critical find
 _Avoid_: Universal pass/fail, color-only status
 
 **School Financial Accounting Audit Report**:
-The finalized per-School report for an Audit Assessment Cycle, preserving its scope, criteria/checklist and policy revisions, workpaper conclusions, findings, score, result level, acceptance history, and corrective-action state.
+The completed per-School report for an Audit Assessment Cycle, preserving its scope, criteria/checklist and policy revisions, workpaper conclusions, findings, score, result level, responsible-Auditor finalization/acceptance history, and corrective-action state.
 _Avoid_: Annual Self-Assessment report, overwritten reprint
 
 **ESAO Audit Summary**:
