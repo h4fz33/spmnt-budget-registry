@@ -93,7 +93,7 @@ The Policy Publisher may activate an evidence-backed Policy Version without seco
 
 ### Closure requirement
 
-**OPEN — appointment evidence required.**
+**RESOLVED — Order 452/2568, the approved Matrix designation, the approved all-17-School publication scope, and the approved website current-status verification rule are required evidence.**
 
 ---
 
@@ -162,26 +162,18 @@ When no authenticated School Director is active, a formally controlled Temporary
 
 It is not a general or automatic staff-shortage bypass.
 
-### Required controls
+### Approved controls
 
-The Authorization Matrix must explicitly define:
-
-- issuer;
-- exact command scope;
-- duration;
-- reviewer;
-- evidence requirements;
-- segregation-of-duties restrictions.
-
-These values must not be invented.
+- An authenticated SESAO Product Owner/accountable reviewer or SESAO Auditor independently issues, activates, or revokes the approval under strong authentication.
+- The approval is limited to one named School and only the specific Director-required commands listed in its evidence record.
+- It has fixed start and expiry timestamps, no automatic renewal, and is immediately revoked when a permanent School Director is appointed.
+- No separate independent reviewer is required.
+- The evidence records the authenticated issuer, School, Director-unavailability reason, commands, timestamps, decision, and Audit Log outcome.
+- The issuer cannot approve their own approval, be its subject, use it for their own financial action, delegate or re-delegate it, or bypass School segregation of duties.
 
 ### Current status
 
-The mechanism is approved in principle, but its detailed authorization parameters remain:
-
-**OPEN**
-
-until authoritative values are supplied.
+**RESOLVED — approved by the Product Owner on 2026-08-10.**
 
 ### Consequence
 
@@ -230,9 +222,9 @@ The Finance Officer cannot use this interpretation to bypass unrelated financial
 
 ### Decision
 
-**Routine posting is included in the existing delegation mechanism.**
+**Routine posting is within the architectural delegation concept, but no delegation is enabled in the initial pilot.**
 
-Routine posting may therefore be delegated subject to the existing delegation safeguards:
+Any future Matrix amendment may enable routine-posting delegation only with these safeguards:
 
 - compatible role;
 - same organizational/School scope;
@@ -242,11 +234,11 @@ Routine posting may therefore be delegated subject to the existing delegation sa
 - explicit revocation;
 - invalidation when the delegator loses the underlying authority.
 
-Delegation of routine posting does **not** grant approval authority.
+Until such an amendment is approved, delegation creation, revocation, and use are denied. A future routine-posting delegation would not grant approval authority.
 
 ### Authorization effect
 
-A delegated School Admin or other eligible delegate may perform only the explicitly delegated routine-posting capability.
+No delegate may perform routine posting in the initial pilot. If later enabled, an eligible delegate could perform only the explicitly delegated routine-posting capability.
 
 The delegate does not thereby acquire:
 
@@ -437,7 +429,7 @@ The following interpretations are superseded for the current application authori
 | System Admin has unrestricted organizational membership authority | System Admin is platform-scoped; ESAO Admin owns organizational membership |
 | Director absence always blocks Director-required operations | Controlled Temporary Director Approval remains available |
 | Receipt Book `approval` implies second-person authorization | Approval is custody/issuance evidence |
-| Routine posting is outside delegation | Routine posting is included in existing delegation |
+| Routine posting can never be delegated | It remains a future delegation concept, but no delegation grant or use is enabled in the initial pilot |
 | Post-close Director approval is unresolved | Director approval is mandatory |
 | Director daily signature is merely acknowledgement/evidence | Director signature is formal approval |
 | Policy Version can have a separate retirement/deactivation command | Supersession is the only inactive transition |
@@ -453,110 +445,19 @@ Historical manuals, dated research notes, previous session notes, and earlier ar
 
 The nine human decisions are resolved, but the following authorization values still prevent P0-04 closure.
 
-## 5.1 Policy Publisher organizational evidence and designation
+## 5. Current Matrix Decisions
 
-Required:
+The Product Owner approved the following final-Matrix inputs on 2026-08-10:
 
-- named current holder;
-- named alternate;
-- authoritative organizational evidence;
-- official Internal Audit position and assignment;
-- effective/current status verification;
-- approved Authorization Matrix designation;
-- separately approved application publication scope;
-- attributable record.
+- Order 452/2568 eligibility is validated before Policy Publisher designation/publication through the official SESAO Narathiwat Internal Audit Unit page. Record the URL, retrieval timestamp, named-person result, and conflict outcome.
+- Policy Publisher publication scope is all 17 Schools affiliated with SESAO Narathiwat, sourced separately from the official SESAO organizational information page, not Order 452/2568.
+- No generic ESAO or platform override command exists. Every unlisted privileged command is denied.
+- Temporary Director Approval uses the approved controls in Decision 3, but recipient eligibility and required subject evidence remain `OPEN`; issuance and use fail closed.
+- Privileged Correction requires School Director approval, with no separate independent pre-execution reviewer; the proposer/preparer cannot self-approve.
+- The Daily Balance Verifier, SESAO Auditor assessment, membership, School Director, and ESAO Reviewer limits are those explicitly enumerated by the live Authorization Matrix.
+- The Product Owner approved the final Authorization Matrix, subject to durable recording of this decision and operational evidence.
 
-**Status: OPEN**
-
----
-
-## 5.2 Temporary Director Approval
-
-Required:
-
-- issuer;
-- exact command scope;
-- duration;
-- reviewer;
-- evidence;
-- SoD restrictions.
-
-**Status: OPEN**
-
----
-
-## 5.3 Privileged Correction reviewer
-
-Required:
-
-- whether an independent reviewer is required;
-- reviewer role/capability;
-- reviewer scope;
-- prohibited combinations.
-
-**Status: OPEN**
-
----
-
-## 5.4 Daily Balance independent verifier
-
-Required:
-
-- verifier capability/role;
-- permitted scope;
-- independence from preparer;
-- relationship between verifier and Director approver.
-
-**Status: OPEN**
-
----
-
-## 5.5 ESAO Reviewer scope
-
-Required:
-
-- assigned-School boundary;
-- aggregate-reporting boundary;
-- exact report/action scope;
-- any required review evidence.
-
-**Status: OPEN**
-
----
-
-## 5.6 Privileged capability administration
-
-The Authorization Matrix must explicitly define who can:
-
-- grant privileged capabilities;
-- revoke privileged capabilities;
-- appoint privileged role holders;
-- change privileged assignments;
-- review those operations;
-- perform emergency or replacement actions, if any.
-
-No actor may be inferred as authorized merely because they possess a generic administrative role.
-
-**Status: OPEN**
-
----
-
-## 5.7 Other privileged commands
-
-The final P0-04 matrix must explicitly classify remaining privileged operations, including where applicable:
-
-- monthly reconciliation and close;
-- audit-assessment assignment;
-- audit-assessment final acceptance;
-- ESAO reporting/oversight operations;
-- any generic `override` command;
-- membership and privileged-role elevation/revocation;
-- delegation creation/revocation;
-- other commands capable of changing authorization or financial state.
-
-Each must receive explicit actor, scope, approver, reviewer, prohibited combination, authentication, delegation, and audit requirements.
-
-**Status: OPEN**
+Temporary Director Approval recipient eligibility and subject evidence remain `OPEN`. Every other unsupported or unlisted operation is explicitly denied, and every command fails closed when its command-specific evidence is missing or invalid.
 
 ---
 
@@ -629,8 +530,8 @@ Codex should:
 2. record this resolution as the authoritative BLK-003 decision record;
 3. reconcile live governance/design documents against the nine decisions;
 4. preserve historical source material;
-5. identify and explicitly mark remaining `OPEN` authorization values;
-6. rebuild the P0-04 Authorization Matrix;
+5. retain the approved operational evidence for each privileged use;
+6. maintain the P0-04 Authorization Matrix as the implementation source;
 7. validate that no stale live statement contradicts these decisions;
 8. keep P0-04 marked `BLOCKED`;
 9. make no application/RBAC implementation changes until P0-04 is approved.
@@ -641,9 +542,9 @@ Codex should:
 
 | ID | Decision | Status |
 | --- | --- | --- |
-| BLK-003-01 | Policy Publisher eligibility from Order 452/2568 organizational evidence; approved Matrix designation for one current holder and one standby alternate | **RESOLVED IN PRINCIPLE; RECONCILIATION REQUIRED** |
+| BLK-003-01 | Policy Publisher eligibility from Order 452/2568 organizational evidence; approved Matrix designation for one current holder and one standby alternate | **RESOLVED** |
 | BLK-003-02 | System Admin platform lifecycle; ESAO Admin organizational membership | **RESOLVED** |
-| BLK-003-03 | Temporary Director Approval retained as controlled alternate | **RESOLVED** |
+| BLK-003-03 | Temporary Director Approval retained as controlled alternate | **PARTIALLY RESOLVED — RECIPIENT ELIGIBILITY/EVIDENCE OPEN** |
 | BLK-003-04 | Receipt Book approval = custody/issuance evidence | **RESOLVED** |
 | BLK-003-05 | Routine posting included in existing delegation | **RESOLVED** |
 | BLK-003-06 | School Director approval mandatory for Privileged Correction | **RESOLVED** |
@@ -661,4 +562,4 @@ Codex should:
 
 ### No implementation authorization code should be written from this record alone.
 
-The final implementation authorization model must derive from the approved P0-04 Authorization Matrix after all remaining `OPEN` values have been resolved and the required human sign-off has been recorded.
+The final implementation authorization model must derive from the approved P0-04 Authorization Matrix after the required operational evidence has been retained and P0-04 completion is explicitly authorized.

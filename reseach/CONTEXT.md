@@ -35,7 +35,7 @@ _Avoid_: Accountant when referring to the operational finance role
 Thai UI: `เจ้าหน้าที่การเงิน`
 
 **School Director**:
-The single active School role whose approval is required for selected privileged financial actions at one School. ESAO Admin assigns or replaces the holder from formal external appointment evidence; without an active holder, every Director-required command is denied.
+The single active School role whose approval is required for selected privileged financial actions at one School. Without an active holder, a Director-required command is denied unless an exact valid Temporary Director Approval exists under the Authorization Matrix.
 _Avoid_: Typed approver name, checkbox approval
 Thai UI: `ผู้อำนวยการสถานศึกษา`
 
@@ -44,12 +44,12 @@ Approval made by an authenticated School Director for a director-required action
 _Avoid_: Reassigned approval identity
 
 **Temporary Director Approval**:
-A constrained future alternate authorization that could apply only when no authenticated School Director is active. It is excluded and denied in the initial pilot; later activation requires a new approved matrix decision for issuer, command scope, duration, reviewer, evidence, and segregation-of-duties restrictions.
-_Avoid_: Director Approval, automatic shortage exception, external approver
+A time-bounded authorization record for a named subject, one School, and explicitly listed Director-required commands when no active School Director can act. It is not currently issuable because recipient eligibility and subject evidence remain unresolved.
+_Avoid_: Temporary Director role, delegation, automatic shortage exception, generic external approver
 
 **Routine Posting Delegation**:
-An explicit, capability-specific delegation that permits routine posting within the delegate's compatible role and the same School/organizational scope. It has explicit revocation, becomes invalid when the delegator loses the underlying authority, cannot be re-delegated, and grants no approval authority.
-_Avoid_: Automatic permission, approval delegation, role transfer
+A deferred capability-specific authorization concept for routine posting. No grant or use is enabled in the initial pilot; any future enablement requires an approved Matrix amendment.
+_Avoid_: Current permission, automatic permission, approval delegation, role transfer
 
 **Daily Balance Verifier**:
 A dedicated School-scoped capability held by an authenticated School Admin or Finance Officer who independently verifies a Daily Balance Report prepared by another person before School Director approval. The authenticated School Director for that School assigns or prospectively revokes the capability but cannot assign it to themselves; the holder cannot prepare, approve/sign, solely reconcile, or close the same report and cannot delegate the capability in the initial pilot.
@@ -253,7 +253,7 @@ An auditable, effective-dated version of the Effective Financial Policy. A later
 _Avoid_: Edited-in-place policy, retire command, deactivate command
 
 **Policy Publisher**:
-An in-application capability within the SESAO Internal Audit authorization model that registers unchanged OBEC policy evidence, sets the separately approved School scope and effective date, and activates an approved, auditable Policy Version. Current official Internal Audit position/assignment evidence establishes eligibility; the approved Authorization Matrix designates one current holder and one standby alternate. Activation does not require a second-person approval or pre-activation review. It cannot alter the OBEC source text, invent a source revision, or mutate a School's canonical financial records.
+An in-application capability within the SESAO Internal Audit authorization model that registers unchanged OBEC policy evidence, sets the all-17-School SESAO Narathiwat scope and effective date, and activates an approved, auditable Policy Version. Order 452/2568 establishes eligibility; the approved Authorization Matrix designates one current holder and one standby alternate. Before designation or publication, record an official SESAO Internal Audit Unit page check with its URL, retrieval timestamp, named-person result, and conflict outcome. Activation does not require a second-person approval or pre-activation review. It cannot alter the OBEC source text, invent a source revision, or mutate a School's canonical financial records.
 _Avoid_: External policy issuer, mutable school setting, finance-officer override, unappointed capability holder
 
 **Policy Resolution**:
