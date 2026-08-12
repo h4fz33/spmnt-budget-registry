@@ -2,7 +2,7 @@
 
 **Status:** approved
 **Approved:** 2026-08-08
-**Last amended:** 2026-08-08
+**Last amended:** 2026-08-12
 **Pilot and school-user population:** all 17 schools in the supplied School Directory; this is the project's complete current school-user population, not a sample subset.
 
 ## Accountable Organization
@@ -19,6 +19,8 @@
 | ESAO code | `1000960001` |
 
 The Office of Basic Education Committee owns sponsorship/accountability and external governance-policy authority for the pilot. The Secondary Educational Service Area Office Narathiwat owns product delivery, accountable audit/oversight review, and the in-application Policy Publisher function for unchanged OBEC policies across the complete 17-school population. Order 452/2568 establishes Policy Publisher eligibility; the approved Authorization Matrix designates the current holder and standby alternate. Before designation or publication, the official SESAO Internal Audit Unit page is checked and its URL, retrieval timestamp, named-person result, and conflict outcome recorded. The approved 17-school publication scope is sourced from the official SESAO organizational information page and is not attributed to Order 452/2568. A designated current holder may register the source, set scope/effective date, and activate a Policy Version; that function does not permit source-text changes or School financial-record mutation. The canonical command matrix is `docs/governance/p0-04-authorization-matrix.md`. P0-04 is complete under the Product Owner-approved School Director-only model: each School has zero or one active School Director, and Director-required commands deny when no active holder exists. Operational actions must be performed by named, authenticated users. An organization label, typed name, shared account, or unrelated role is not approval evidence.
+
+OBEC is also the central authority for the common policy/form baseline used across participating ESAO branches. Supplied OBEC policies, manuals, and reference forms are authoritative implementation inputs for the 17-School pilot. A reference form branded for another ESAO is treated as an implementation of the common OBEC baseline unless its source expressly makes the layout or rule branch-specific; no separate Narathiwat provenance, applicability, issuer-confirmation, revision, or form-approval gate is imposed merely for that branding. Form fields and printed signature positions define documentary/evidence structure only. P0-03/P0-06 govern financial behavior and effective policy; P0-04 alone governs application commands and roles. See [ADR-0013](../adr/0013-obec-central-governance-and-authoritative-reference-forms.md).
 
 ## School-User Population Boundary
 

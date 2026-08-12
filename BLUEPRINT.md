@@ -4,9 +4,46 @@
 **Working name:** SchoolBanchee
 **Audience:** Product owners, school finance teams, Education Service Area Office (ESAO) supervisors, auditors, and the implementation team
 **Status:** Proposed product and domain baseline
-**Version:** 1.1
-**Last updated:** 2026-08-09
+**Version:** 1.2
+**Last updated:** 2026-08-12
 **Pilot authority:** [SESAO Narathiwat Pilot Governance Charter](./docs/governance/pilot-charter.md)
+
+## Central OBEC Governance and Form Authority
+
+OBEC is the central governance authority for SchoolBanchee. The common OBEC
+policy and form baseline applies across participating ESAO branches; the
+17-School SESAO Narathiwat pilot uses that common B.E. 2515 baseline. SESAO
+may act as the in-application Policy Publisher for unchanged OBEC policy
+evidence within the approved governance and Authorization Matrix boundary,
+but it does not become the issuer of the OBEC policy.
+
+Supplied OBEC policies, manuals, and reference forms are authoritative
+implementation inputs. An authoritative OBEC/reference form may directly
+define application UI structure, fields, reports, registers, printed
+signature/evidence fields, and document/evidence capture structure. A form
+branded for another ESAO, such as a Yala 2 reference, is not rejected merely
+for that branding unless the source expressly makes its layout or rule
+branch-specific. No additional ESAO provenance, current-revision,
+applicability, issuer-confirmation, or form-approval gate is required merely
+to recognize supplied OBEC form structure. Completed transaction documents
+are acceptance/evidence data, not a prerequisite for defining that structure.
+
+Form structure and application behavior are separate layers:
+
+```text
+OBEC source -> policy/document/form structure -> application UI/evidence structure
+P0-03/P0-06 -> financial behavior and effective policy rules
+P0-04      -> application authorization and command authority
+```
+
+P0-03 remains authoritative for Fund Flow and financial behavior. P0-04
+remains the authoritative application authorization boundary, including the
+School Director-only model, segregation of duties, and the absence of
+Temporary/Acting Director or substitute authority. P0-06 resolves behavior
+through the active effective-dated Policy Version. A printed signature,
+title, committee, inspector, approver, recipient, or other form label is
+documentary structure and evidence; it does not create an application role,
+permission, or authorization.
 
 ## 1. Purpose
 
@@ -77,6 +114,7 @@ The requirements are derived from the local research copies in `reseach/` (the d
 7. **Auditability is a user feature.** The reason, actor, time, source revision, and evidence for a change must be visible to permitted reviewers.
 8. **Thai-first, accessible, and printable.** Screens and reports use Thai operational language, clear Buddhist/Gregorian date handling, keyboard support, and print-safe layouts.
 9. **Assessment types are explicit.** Daily inspection, Annual Self-Assessment, School Financial Accounting Audit, and Audit Review Report have different owners, evidence, conclusions, and authority boundaries.
+10. **Form structure is not command authority.** Authoritative OBEC/reference forms may define UI and documentary structure, but P0-03/P0-06 govern financial behavior and P0-04 alone governs application authorization.
 
 ## 4. Ubiquitous Language
 
@@ -130,7 +168,7 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 
 ### Assessment and audit
 
-- **Annual Self-Assessment:** School-submitted fiscal-year review against a versioned ten-dimension checklist, with evidence, findings, corrective actions, and Director/ESAO review. It is not an independent external audit result.
+- **Annual Self-Assessment:** School-submitted fiscal-year review against the OBEC ten control dimensions. Its detailed instrument, result/scoring content, signatures/acknowledgements, and application commands must come from the authoritative `GAP-08` form/rule and applicable policy/authorization; it is not an independent external audit result.
 - **School Financial Accounting Audit:** SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period, using approved criteria, workpapers, and evidence without mutating canonical financial records.
 - **Audit Assessment Cycle:** Versioned instance of a School Financial Accounting Audit for one School and period, including one active Auditor assignment at a time, policy/checklist revisions, workpapers, findings, score/result, report, responsible-Auditor acceptance, reassignment history, and follow-up.
 - **Audit Checklist Version:** Effective-dated set of audit topics, criteria, test methods, required evidence, scoring weights, and result-level rules, with source citation, publisher, scope, and applicability. Examination-topic and scoring-category mappings are stored explicitly when they differ.
@@ -309,7 +347,7 @@ Each school completes one assessment per fiscal year against these ten control d
 9. Advance/loan control
 10. Receipt-book control
 
-Each dimension has a versioned checklist, evidence references, finding severity, owner, due date, corrective action, and Director submission/acceptance. ESAO Reviewer comparison is excluded and denied in the initial pilot; any later assigned-School or aggregate scope requires a new approved matrix decision and cannot change school records.
+The supplied OBEC material currently establishes only annual frequency, the ten dimensions, School/year identification, and ESAO submission. Item-level criteria, response/evidence cells, scoring/weight/result calculations, corrective-action fields, and signature/acknowledgement positions must come from the missing `GAP-08` OBEC instrument or an authoritative OBEC minimum-content rule. Do not invent those fields or infer submission/review authority from form appearance. Until `GAP-08` is resolved and applicable behavior/authorization is mapped through P0-06/P0-04, the complete Self-Assessment UI/report fails closed. ESAO Reviewer comparison remains excluded and denied in the initial pilot.
 
 ### 7.9 School financial accounting audit assessment
 
@@ -573,7 +611,7 @@ Start as a modular monolith so posting, policy resolution, reconciliation, and a
 4. **Registries:** canonical registry projections and running balances.
 5. **Cross-check and custody:** cashbook overlay, daily inspection, external evidence references.
 6. **Reconciliation and close:** daily/monthly reconciliation, stale detection, close revisions.
-7. **Assessment:** annual ten-dimension self-assessment plus SESAO school accounting audit assessment, versioned workpapers, findings, scoring, and corrective actions.
+7. **Assessment:** annual ten-dimension Self-Assessment under the resolved `GAP-08` contract, plus the distinct SESAO school accounting Audit Assessment with versioned workpapers, findings, scoring, and corrective actions.
 8. **Reporting and exports:** reproducible report queries, print/PDF/CSV/XLSX boundaries.
 9. **Audit and operations:** append-only audit history, system logs, export diagnostics, backups.
 
@@ -660,7 +698,7 @@ The application opens to the user's permitted workspace and current fiscal year.
 - **Daily Balance and inspection:** Finance Officer preparation, assigned `Daily Balance Verifier` verification, and School Director approval/signature states, plus the separate inspection checklist, counted balances, external evidence references, discrepancy workflow, and inspection acceptance event.
 - **Reconciliation:** versioned daily/monthly reconciliation, bank comparison fields, outstanding items, report package, and stale indicators.
 - **Monthly close:** close readiness checklist, unresolved exceptions, report submission, close revision, and permitted correction path.
-- **Annual self-assessment:** ten dimensions, evidence, findings, corrective actions, and Director/ESAO review.
+- **Annual self-assessment:** source-backed School/year, ten-dimension, and ESAO-submission header structure; item-level fields, scoring/results, signatures, and commands remain gated by `GAP-08`, P0-06, and P0-04.
 - **School financial accounting audit:** active-assignment queue, versioned criteria and workpapers, evidence and external-evidence references, findings, management responses, follow-up/re-test, score/result, and final report history.
 - **ESAO audit summary:** authorized assigned-school audit status, overdue finding follow-up, comparable result distributions, and policy-permitted ranking with clear scope and cohort filters.
 - **Reports and exports:** reproducible filters, Thai fiscal dates, print-safe templates, export category boundary, and replacement history.
@@ -684,7 +722,7 @@ The application opens to the user's permitted workspace and current fiscal year.
 3. Bank Reconciliation with external statement reference and outstanding items.
 4. Annual School Revenue Receipt/Payment Report, submitted within the policy period after fiscal year end (the guide specifies 30 days).
 5. Fund balance and outstanding-obligation reports by Fund Flow, type, programme, and money position.
-6. Annual ten-dimension Self-Assessment and corrective-action report.
+6. Annual ten-dimension Self-Assessment result/submission report as defined by the resolved `GAP-08` OBEC form/rule and applicable policy.
 7. Audit Review Report for approvals, corrections, voids, disagreements, stale reports, exports, and policy changes.
 8. Budget Allocation/Commitment/Use/Availability and variance reports by plan, programme, Project/Activity, category, and fiscal period.
 9. Outstanding/Overdue Official Advance and settlement report by recipient, fund, due date, and corrective status.
@@ -760,9 +798,10 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - Confirm pilot schools, roles, fund-flow catalogue, evidence retention, and policy publishers.
 - Approve the glossary and the canonical-vs-cross-check boundary.
 - Convert the research guide's rules into initial versioned policy data.
-- Produce a signed sample pack of real anonymized forms and expected totals.
+- Reconcile supplied authoritative OBEC/reference forms into implementation-ready UI, report, registry, signature/evidence, and document structures.
+- Produce an anonymized acceptance dataset with approved expected totals; completed transaction examples test the implementation and do not establish form authority.
 
-**Exit:** policy owners can explain every Fund Flow and required record, and the sample pack has expected answers.
+**Exit:** policy owners can explain every Fund Flow and required record, authoritative form structures are mapped without a duplicate ESAO approval gate, and the acceptance dataset has approved expected answers.
 
 ### Phase 1: Secure foundation
 
@@ -795,7 +834,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 ### Phase 4: Reporting, assessment, and SESAO audit
 
 - Monthly and annual report packages, print/PDF/CSV exports, stale/replacement behavior.
-- Ten-dimension annual self-assessment and corrective-action tracking.
+- Ten-dimension annual Self-Assessment using the resolved `GAP-08` form/rule; include scoring, result, evidence, signature, or corrective-action fields only where that contract requires them.
 - SESAO School Financial Accounting Audit Assessment with workpapers, findings, policy-controlled scores/result levels, final reports, and authorized aggregate summaries.
 - ESAO review and aggregate risk views.
 
@@ -818,7 +857,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - All overdue State Income remittances, Contract-Security obligations, and Withheld-Tax liabilities are visible with an owner and due date.
 - All overdue Official Advances and unexplained Receipt Book gaps are visible with an owner and corrective status.
 - Daily and monthly report totals reproduce from the registry without manual spreadsheet repair.
-- Annual self-assessment completion and corrective-action closure are measurable per school.
+- Annual Self-Assessment completion and ESAO submission are measurable per School under the resolved `GAP-08` contract.
 - 100% of finalized School Financial Accounting Audits identify their audit period, assigned scope, checklist/rubric and policy revisions, completed workpapers, findings, score/result, and report history.
 - ESAO audit summaries and any authorized ranking reproduce from comparable finalized audit cycles without exposing unassigned schools or hiding incomplete cycles.
 - Typical event entry is under two minutes after configuration; routine reports render in under five seconds for a pilot school.
@@ -847,6 +886,8 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 ### Baseline decisions
 
 - The Control Registry is the financial source of truth; the cashbook is a deliberate cross-check overlay.
+- OBEC is the central governance authority; supplied OBEC/reference forms are authoritative implementation inputs across ESAO branches unless the source expressly defines a branch-specific rule or layout.
+- Documentary fields and printed signatures do not create application roles or commands; P0-03/P0-06 govern behavior and P0-04 governs authorization.
 - Budget Allocations and Commitments measure authority and reservation, not school cash.
 - Financial events are posted as controlled domain records, not as automatic universal double-entry journal rows.
 - Policy versions are effective-dated and published by the Matrix-designated eligible Internal Audit Policy Publisher from unchanged OBEC policy evidence. A newer activation supersedes the prior version; school users and other ESAO roles cannot retire, deactivate, or override versions ad hoc.
@@ -860,13 +901,10 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 
 ### Resolve before Phase 1 exit
 
-- Which exact OBEC/ESAO policy documents and revisions are effective for the pilot schools?
-- Which fund flows require cashbook cross-checks, which require Director Approval, and which allow partial settlement?
-- Which Official Advance purposes/funds are permitted, what due dates apply, and which Receipt Book forms/serial rules are currently authoritative?
+- Supply the complete OBEC annual Self-Assessment instrument/result/submission form for `GAP-08`, or an authoritative OBEC minimum-content rule if no fixed form or score exists.
 - Evidence storage location, retention period, maximum file size, and external-document reference format.
 - PostgreSQL hosting boundary, encryption/key ownership, backup service, and recovery objectives approved by the sponsoring authority.
 - Registration identity-proof requirements, email verification/recovery channel, password policy, and which school roles applicants may request.
-- Official report templates, Thai terminology review, signature requirements, and export classifications.
 - Which section 3 audit criteria, workpaper templates, weights, topic-to-score-category mapping, result-level cutoffs, ranking cohort/tie rules, signatures, and finding-response deadlines are currently applicable to SESAO schools.
 - Whether the pilot needs offline capture or can require a connected deployment.
 

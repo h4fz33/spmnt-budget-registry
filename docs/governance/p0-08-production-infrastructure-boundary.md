@@ -182,6 +182,24 @@ Return this section only. Every row requires a selected value or an explicit rej
 | `P0-08-D10` | `A` approves accountable recovery delegation | `O` names/accepts restore and recovery duties; `S` accepts security approval duties; `P` names/accepts business validation | Restore operator, recovery lead, security approver, business validation owner, isolated environment, runbook owner/reference, drill frequency, temporary-copy disposition, and sign-off evidence | `OPEN` | `OPEN` | `OPEN` |
 | `P0-08-D11` | `A` grants final production authorization after evidence acceptance | `O` produces technical proof; `S` accepts security/isolation proof; `P` accepts business recovery and School-boundary results | Evidence references and pass/fail results for Prisma migrations, PostgreSQL `SERIALIZABLE`, row locks, retry/idempotency, constraints, School isolation, encryption, backup restore, Audit Log/history preservation, and RPO/RTO drill | `OPEN` | `OPEN` | `OPEN` |
 
+### Returned Evidence Reconciliation - 2026-08-12
+
+The repository, attachments available to this task, current P0-07 D01/D10 state, and governance-alignment evidence were rechecked after the decision sheet was issued. No returned document contains an accountable P0-08 selected value, effective date, conditions, required sign-off, or D11 provider-specific pass evidence. The P0-07 Product Owner record `PO-REP-2026-08-12-D01` approves OBEC as the organizational data owner for the P0-07 storage classification, but explicitly leaves provider and region to P0-08. It is supporting product-governance evidence only: it does not document `A` infrastructure delegation/sign-off, name an operator, or establish the P0-08 provider responsibility split, so it does not resolve D01 or D02. P0-07-D10 remains `OPEN` and does not resolve D09.
+
+| ID | Authoritative response/evidence actually supplied | Reconciliation against required authority | Status |
+| --- | --- | --- | --- |
+| `P0-08-D01` | No hosting model, provider/service tier, region, PostgreSQL version policy, availability topology, contracting organization, or infrastructure approval returned. P0-07 D01 explicitly leaves provider/region open. | Required `A` decision and `O`/`S`/`P` inputs are absent. | `OPEN` |
+| `P0-08-D02` | `PO-REP-2026-08-12-D01` records OBEC as organizational data owner for P0-07. No infrastructure delegation, database operator, support owner, escalation owner, or provider responsibility split returned. | Supporting `P` evidence exists, but required `A` decision plus `O`/`S` duty acceptance are absent. | `OPEN` |
+| `P0-08-D03` | No returned decision separately approves or rejects offline reads, queued writes, local persistence, synchronization, connected drafts, or manual recovery. | Required `P` decision and `S`/`O` review are absent; existing fail-closed safe state remains. | `OPEN` |
+| `P0-08-D04` | No approved RPO, measurement boundary, covered components, calendar interpretation, exception, or escalation returned. | Required `A` decision, `P` loss-tolerance input, and `O` feasibility proof are absent. | `OPEN` |
+| `P0-08-D05` | No approved RTO, measurement boundary, degraded-mode rule, calendar, escalation, or business validation authority returned. | Required `A` decision, `P` recovery-priority input, and `O` feasibility proof are absent. | `OPEN` |
+| `P0-08-D06` | No returned encryption control decision or accepted provider/configuration evidence for transit, storage, backup, restore copies, or evidence objects. | Required `S` decision, `O` proof, and any `A` residual-risk acceptance are absent. | `OPEN` |
+| `P0-08-D07` | No secret owner, key owner, custodian, rotation/revocation authority, emergency path, recovery path, or audit evidence returned. | Required `A` accountable ownership/delegation, `S` custody design, and `O` duty acceptance are absent. | `OPEN` |
+| `P0-08-D08` | No backup/PITR service, schedule, consistency method, monitoring, escalation, secondary-copy strategy, protected-content decision, or access boundary returned. | Required `A` authorization and `O`/`S`/`P` inputs are absent. | `OPEN` |
+| `P0-08-D09` | P0-07-D10 remains `OPEN`; no backup period/generations, legal-hold behavior, immutability, destruction, or disposal evidence returned. | Required joint `R`/`A` decision and `S`/`O` inputs are absent. | `OPEN` |
+| `P0-08-D10` | No restore operator, recovery lead, security approver, business validator, restore environment, runbook, drill frequency, copy disposition, or sign-off path returned. | Required `A` delegation and `O`/`S`/`P` duty acceptance are absent. | `OPEN` |
+| `P0-08-D11` | No selected provider exists and no provider-specific migration, `SERIALIZABLE`, row-lock, retry/idempotency, constraint, School-isolation, encryption, backup/restore, Audit Log/history, or RPO/RTO drill result was returned. | Required technical proof and `A`/`O`/`S`/`P` acceptance are absent. Production authorization cannot pass. | `OPEN` |
+
 ### Required Sign-Off
 
 | Authority | Decision | Name/reference | Date | Conditions |
@@ -204,6 +222,6 @@ Return this section only. Every row requires a selected value or an explicit rej
 | Backup content, frequency, retention, encryption, ownership, restore, verification, and protection documented | Satisfied as approval requirements | Daily/quarterly Blueprint targets recorded; service/retention/owners/protection remain P0-08-D08 through D10 and P0-07-D10 |
 | Serializable transaction support confirmed | Satisfied only at architecture level | PostgreSQL/Prisma requirement is approved; selected-service proof remains P0-08-D11 |
 | Financial, audit, evidence, authentication/authorization, School-isolation, and fail-closed risks evaluated | Satisfied for design | Safety evaluation and restore correctness requirements |
-| Accountable approval makes production boundary enforceable | **Not satisfied** | P0-08-D01 through P0-08-D11 and all sign-off rows are `OPEN` |
+| Accountable approval makes production boundary enforceable | **Not satisfied; re-verified 2026-08-12** | P0-08-D01 through P0-08-D11 and all sign-off rows remain `OPEN`; no returned provider-specific D11 proof exists |
 
 **P0-08 status:** `BLOCKED`. The approved PostgreSQL/Prisma and NextAuth choices remain unchanged, but production hosting, connectivity policy, recovery objectives, encryption/key ownership, backup service, and operational ownership cannot be approved from current repository evidence.

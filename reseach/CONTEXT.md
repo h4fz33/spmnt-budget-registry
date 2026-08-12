@@ -5,7 +5,7 @@ SchoolBanchee is a school-finance context for Thai OBEC procedures. This is the 
 ## Organizations And Roles
 
 **Office of Basic Education Committee (OBEC)**:
-The sponsor and accountable organization for the pilot, and the external Governing Policy Authority whose issued policy is the source for an Effective Financial Policy. OBEC does not directly operate the in-application Policy Publisher role.
+The sponsor and accountable organization for the pilot, and the central Governing Policy Authority whose common policy and form baseline applies across participating ESAO branches. OBEC does not directly operate the in-application Policy Publisher role.
 Thai name: `สำนักงานคณะกรรมการการศึกษาขั้นพื้นฐาน`
 
 _Avoid_: Treating OBEC as the operational publisher, or assuming an ESAO user has Policy Publisher permission without approved eligibility and designation
@@ -112,6 +112,24 @@ _Avoid_: Registration Application, login session
 An effective role attached to an Approved Membership for one School. Finance Officer may coexist with School Admin, but role union does not create a combined role, imply Daily Balance Verifier, or bypass person-level segregation of duties.
 _Avoid_: Replacement role, combined finance-admin role, implicit capability
 
+## Governance And Document Authority
+
+**Common OBEC Baseline**:
+The centrally governed OBEC policy and form source shared across participating ESAO branches. The 17-School SESAO Narathiwat pilot uses the B.E. 2515 baseline without creating a separate ESAO policy baseline.
+_Avoid_: Narathiwat-specific baseline, per-ESAO form authority
+
+**Authoritative Reference Form**:
+A supplied OBEC policy/manual form or reference implementation that may define application UI, report, register, document, printed-signature, and evidence-capture structure. Another ESAO's branding does not make it branch-specific unless the source expressly says so.
+_Avoid_: Illustrative-only sample, ESAO-approved template, application authorization source
+
+**Documentary Signature Position**:
+A signature, title, committee, inspector, approver, recipient, or similar position printed on an Authoritative Reference Form as document/evidence structure. It does not itself create an application role, permission, or command authority.
+_Avoid_: Application role, substitute Director, authorization grant
+
+**Application Authorization**:
+The authority for a named authenticated actor to execute an application command within an approved scope and segregation-of-duties boundary. It is not inferred from a form field, printed signature, title, or committee label.
+_Avoid_: Documentary signature, typed approver, form-derived role
+
 ## Interface Language
 
 **Thai-First Interface**:
@@ -129,7 +147,7 @@ The School's approved Fiscal Year plan that organizes Projects and Activities an
 _Avoid_: Transaction list, informal spending plan
 
 **Annual Self-Assessment**:
-A School-submitted fiscal-year review against the versioned ten control dimensions, with evidence, findings, corrective actions, and Director/ESAO review. It is not an independent School Financial Accounting Audit.
+A School-submitted fiscal-year review against the OBEC ten control dimensions. Its detailed instrument, result/scoring content, signatures/acknowledgements, and application commands come only from the authoritative form/rule and applicable policy/authorization; it is not an independent School Financial Accounting Audit.
 _Avoid_: External audit, final audit result
 
 **Budget Allocation**:
