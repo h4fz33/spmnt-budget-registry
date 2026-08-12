@@ -1,0 +1,40 @@
+{
+  "policyVersionId": "POL-INITIAL-PILOT-001",
+  "status": "DRAFT-PENDING-ACTIVATION",
+  "authorizationBoundary": "AUTH-22",
+  "activationAuthority": {
+    "designation": "Current Policy Publisher",
+    "personName": "นางบังอร วันริโก",
+    "applicationIdentity": "96010001001",
+    "applicationUserName": "a96010001001",
+    "technicalExecutor": "sealed initial-policy bootstrap CLI"
+  },
+  "organizationScope": "1000960001",
+  "schoolScope": {
+    "source": "data/schools.csv",
+    "expectedCount": 17,
+    "sha256": "9AD9FE0F7BC05A529B6B60A57BF238456853A865FD52B38A9A337FE6B0A74EAF"
+  },
+  "requiredSources": [
+    {
+      "path": "reseach/manual_2515.md",
+      "sha256": "2E0244DDE33CB251A7899A21AD993A34D3086C6D6DF5B964A43242465A0F9223"
+    },
+    {
+      "path": "reseach/state-income remittance.md",
+      "sha256": "F35F68DFE9AD766F6D1E0A70CAE86FB7C5CA62D2D537D8139DB22F99CB0832ED"
+    },
+    {
+      "path": "reseach/FF-14 Internal money transfer.md",
+      "sha256": "FEED6B09D08ED726D3DF90778649B27CF6BD1AEEC360844C57638B1C7832EB37"
+    },
+    {
+      "path": "docs/governance/p0-03-fund-flow-record-matrix.md",
+      "sha256": "9D702818B7256CF5AC7D1A67C8E7BE466965755D6991EBB46CF8EAD7892D765C"
+    },
+    {
+      "path": "docs/governance/p0-04-authorization-matrix.md",
+      "sha256": "CFC0651E4AB1D365D37CB256FEB2604B1B3106215B4AD8B613E317EFF823E6EC"
+    }
+  ]
+}

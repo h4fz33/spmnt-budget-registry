@@ -35,17 +35,13 @@ _Avoid_: Accountant when referring to the operational finance role
 Thai UI: `เจ้าหน้าที่การเงิน`
 
 **School Director**:
-The single active School role whose approval is required for selected privileged financial actions at one School. Without an active holder, a Director-required command is denied unless an exact valid Temporary Director Approval exists under the Authorization Matrix.
+The sole School authority whose approval is required for selected privileged financial actions at one School. A School has zero or one active holder. Without an active holder, every Director-required command is denied and no other role may substitute.
 _Avoid_: Typed approver name, checkbox approval
 Thai UI: `ผู้อำนวยการสถานศึกษา`
 
 **Director Approval**:
 Approval made by an authenticated School Director for a director-required action.
 _Avoid_: Reassigned approval identity
-
-**Temporary Director Approval**:
-A time-bounded authorization record for a named subject, one School, and explicitly listed Director-required commands when no active School Director can act. It is not currently issuable because recipient eligibility and subject evidence remain unresolved.
-_Avoid_: Temporary Director role, delegation, automatic shortage exception, generic external approver
 
 **Routine Posting Delegation**:
 A deferred capability-specific authorization concept for routine posting. No grant or use is enabled in the initial pilot; any future enablement requires an approved Matrix amendment.
@@ -157,8 +153,8 @@ Money temporarily disbursed to an eligible person for an approved official activ
 _Avoid_: Personal loan, permanent expense
 
 **Advance Settlement**:
-The controlled discharge of an Official Advance using accepted expense evidence, return of unused money, or both.
-_Avoid_: New receipt, undocumented write-off
+The one atomic controlled discharge of an Official Advance using accepted expense evidence, return of unused money, or both. Repeated partial settlement submissions are not part of the initial pilot.
+_Avoid_: New receipt, undocumented write-off, repeated partial settlement
 
 **Receipt Book**:
 A controlled physical receipt-number range assigned to a custodian for one Fiscal Year, including used, voided, and unused receipts. Its issuance/handover record is custody evidence, not a mandatory second-person authorization.
@@ -206,13 +202,29 @@ _Avoid_: Generic income, budget fund
 Money the school collects but may not retain for its own use and must remit under the applicable policy.
 _Avoid_: Retainable school income, unrestricted fund
 
-**Refundable Deposit**:
-Non-budgetary money held until it must be returned to the entitled party, with a controlled due date.
-_Avoid_: School income, permanent balance
+**Contract Security**:
+Custodial money received under a contract and held pending a controlled release to the entitled contractor. It is separate from Withheld Tax; full or evidenced partial release cannot exceed the outstanding custodial balance.
+_Avoid_: School income, generic refundable deposit, tax liability
 
-**Cash-to-Bank Transfer**:
-An internal position change between cash and bank for the same fund. It is registry-only and is neither a receipt nor a payment.
-_Avoid_: Cashbook receipt, cashbook payment, external money movement
+**Withheld Tax**:
+The tax component retained from a gross payment as a custodial liability until remitted to the Revenue Department. It is not Contract Security and is not a returnable deposit.
+_Avoid_: Retainable fund, contract-security return, generic deposit
+
+**Internal Money-Position Transfer**:
+An atomic, net-zero movement between cash, bank, and/or paying-agency positions within the same fund. It is neither an external receipt nor a payment and has no Cashbook Cross-Check Entry.
+_Avoid_: Cash-to-Bank Transfer, Cashbook receipt, Cashbook payment, external money movement, generic transfer authority
+
+**Fund Class**:
+The policy-controlled top-level classification of a fund. It is immutable to School administration.
+_Avoid_: Locally editable school category
+
+**Fund Type / Fund Subtype**:
+The policy-defined classification used to select a Fund Flow and associated controls. The immutable initial catalogue supplies defaults; a School Admin may add school-specific entries only under approved policy templates and cannot change Fund Class or inherited flow controls.
+_Avoid_: Unrestricted local category, generic `OTHER`, policy override
+
+**Non-Compliant Partial Remittance**:
+A recorded State Income or Withheld-Tax remittance that discharges less than the allocated outstanding liability. The liability remains outstanding and enters Needs Correction; the state does not authorize an otherwise unsupported partial payment.
+_Avoid_: Normal partial settlement, completed remittance
 
 **Canonical Registry Entry**:
 The control-registry record that represents a Financial Event for financial reporting and control.
@@ -223,7 +235,7 @@ The control registry for documents submitted in support of a Budget Direct-Payme
 _Avoid_: Cashbook receipt, school payment record
 
 **Cashbook Cross-Check Entry**:
-A linked secondary cashbook record used only where the Fund Flow requires a receipt/payment cross-check. It is not canonical and is not created for direct-paid budget claims or cash-to-bank transfers.
+A linked secondary cashbook record used only where the Fund Flow requires a receipt/payment cross-check. It is not canonical and is not created for direct-paid budget claims or Internal Money-Position Transfers.
 _Avoid_: Primary transaction record, universal cashbook row
 Thai UI: `รายการบันทึกในสมุดเงินสดเพื่อตรวจสอบยันยอด`
 
@@ -248,7 +260,7 @@ The payment of State Income to the required receiving authority under the applic
 _Avoid_: Retainable-fund expense, school income payment
 
 **Due-Date Control**:
-The applicable-policy deadline attached to a remittance, Refundable Deposit, or other time-bound Financial Event.
+The applicable-policy deadline attached to a remittance, Contract Security, Withheld Tax, or other time-bound Financial Event.
 _Avoid_: Informal reminder, hard-coded local rule
 
 **Effective Financial Policy**:
@@ -339,7 +351,7 @@ The structured authenticated School Director Approval recorded before a Privileg
 _Avoid_: Client-supplied approver, free-text approval checkbox, self-approval
 
 **Lifecycle Child**:
-A posted Remittance or Refund linked to its State Income receipt or Refundable Deposit receipt. A source with a Lifecycle Child is not directly correctable because replacing it would invalidate the child's controlled source relationship.
+A posted Remittance or Contract-Security Return linked to its State Income receipt or Contract-Security receipt. A source with a Lifecycle Child is not directly correctable because replacing it would invalidate the child's controlled source relationship.
 _Avoid_: Independent child row, silently re-parented payment
 
 **Repair Reason Category**:
@@ -353,6 +365,22 @@ _Avoid_: Sync warning, ignored mismatch
 **Audit Log**:
 The immutable history of meaningful financial and governance actions.
 _Avoid_: Activity feed, debug log
+
+**Evidence Category**:
+The domain class assigned to evidence so storage, privacy, access, retention, deletion, export, and audit controls can be resolved consistently. It is not a file format or a generic attachment label.
+_Avoid_: File extension, folder name, export category
+
+**Privacy Classification**:
+The handling class derived from evidence content and disclosure risk. The pilot classes are Public, Internal, Confidential, and Restricted; content can raise a category to a more restrictive class.
+_Avoid_: Role, permission, retention period
+
+**Retention Rule**:
+An approved rule stating how long a category is kept, which event starts the period, which holds suspend disposition, and what deletion or preservation action follows. An open duration is not permanent legal retention.
+_Avoid_: Backup schedule, archive status, guessed legal period
+
+**Legal Hold**:
+A recorded suspension of otherwise eligible evidence destruction because an investigation, audit, dispute, appeal, correction, or other approved records obligation remains active.
+_Avoid_: Ordinary archive, indefinite retention without authority
 
 **Active Financial Record**:
 A financial record included in normal reporting, workflows, and review surfaces.
@@ -423,6 +451,14 @@ _Avoid_: Export category, report kind
 **Export Category**:
 The domain class of records used to determine whether an export is allowed and which boundary applies.
 _Avoid_: File format, button label
+
+**Prohibited Export**:
+An export whose category, requester, scope, content, record state, or delivery path is not explicitly approved. It is denied even when the requester can view some underlying records.
+_Avoid_: Warning-only export, role-inferred download
+
+**Export Artifact**:
+A generated file for one approved Export Category and exact authorized scope. It inherits the source classification, is integrity-recorded, and expires under its approved download-window rule while the export-attempt history remains.
+_Avoid_: Permanent public URL, audit record, unrestricted evidence archive
 
 **Client Export Acknowledgement**:
 A UI-only acknowledgement shown before an export action when the applicable export procedure requires it.

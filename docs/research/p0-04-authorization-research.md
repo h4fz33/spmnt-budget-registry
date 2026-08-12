@@ -1,6 +1,6 @@
 # P0-04 Authorization Research And Decision Register
 
-**Status:** final command matrix rebuilt; P0-04 remains blocked by explicitly recorded evidence gaps
+**Status:** final command matrix approved; P0-04 closure conditions satisfied
 **Research date:** 2026-08-08
 **Latest reconciliation:** 2026-08-10
 **Decision authority:** [P0-04 — BLK-003 Resolution Record](<P0-04 — BLK-003 Resolution Record.md>)
@@ -16,7 +16,7 @@ Generic role names do not grant authority. An operation not enumerated by the Ma
 
 1. **Policy Publisher:** Order 452/2568 establishes Internal Audit eligibility for `นางบังอร วันริโก` and `นายอานุงรุสลัน ดาโวะ`. The approved Matrix designates the former as current holder and the latter as standby alternate. The official Internal Audit Unit page supplies the approved current-status check; all 17 SESAO Narathiwat Schools are the separately sourced application publication scope. System Admin applies the exact designation technically and has no selection or modification authority.
 2. **Membership:** System Admin owns platform account/registration lifecycle only. ESAO Admin owns organization membership, School assignment, Finance Officer/School Admin role assignment, and evidence-backed School Director assignment across all 17 Schools.
-3. **Temporary Director Approval:** The mechanism is approved in principle with School/command/time/evidence/SoD controls, but recipient eligibility and required subject evidence remain unsupported. Its grant and every temporary path therefore remain deferred and denied.
+3. **School Director-only model:** Temporary Director capability is explicitly excluded from the initial pilot and is denied. Each School has zero or one active School Director; every Director-required command denies when no active holder exists, and no other role may substitute. `AUTH-14` and `AUTH-15` remain stable `DEFERRED-AND-DENIED` IDs.
 4. **Receipt Book:** Finance Officer issuance requires custody/issuance evidence, not a second-person authorization inferred from the word approval.
 5. **Delegation:** No delegation is enabled in the initial pilot. Every delegated variant and delegation grant/revoke command is denied.
 6. **Privileged Correction:** School Director approval is mandatory before execution; proposer/preparer self-approval is prohibited; no separate independent pre-execution reviewer is required.
@@ -39,9 +39,8 @@ Generic role names do not grant authority. An operation not enumerated by the Ma
 
 ## Remaining Blockers
 
-1. Temporary Director Approval recipient eligibility and required appointment/subject evidence are `OPEN`. `AUTH-14`, `AUTH-15`, and every temporary variant fail closed.
-2. No other decision value is open. The final live-governance contradiction sweep passed on 2026-08-10.
+None. No Temporary Director recipient evidence is required for a capability that is explicitly excluded and denied. The final live-governance contradiction sweep passed on 2026-08-10.
 
 ## Completion Status
 
-The canonical Matrix contains explicit controls for all enumerated commands and explicit denial for unlisted/generic commands. P0-04 must remain `BLOCKED` until every closure condition in the Matrix is satisfied. Do not implement RBAC from an unsupported `OPEN` value.
+The canonical Matrix contains explicit controls for all enumerated commands and explicit denial for unlisted/generic commands. All 13 P0-04 closure conditions are satisfied; `P0-04 = DONE`. Future implementation must derive from the approved Matrix and may not infer a Temporary or Acting Director capability.
