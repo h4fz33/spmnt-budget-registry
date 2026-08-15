@@ -2,12 +2,12 @@
   "schema": "schoolbanchee/p0-09-policy-owner-approval/v1",
   "fixtureId": "P0-09-ACCEPTANCE-001",
   "approvalRequired": true,
-  "approvalStatus": "PENDING_EXTERNAL_POLICY_OWNER_APPROVAL",
+  "approvalStatus": "APPROVED",
   "approverRole": "Private Business / Product Owner",
-  "approverIdentity": null,
-  "signedAt": null,
-  "signatureEvidenceReference": null,
-  "approvalStatement": "Private Business / Product Owner must attest that the exact deterministic expected results, source-policy references, and structural-only SAR boundary in this fixture are accepted for Phase 0 private-product acceptance use. SESAO domain review is advisory evidence only and cannot satisfy this approval.",
+  "approverIdentity": "Private Business / Product Owner acting through Codex task 01a00121-caf9-7b01-ac22-cf932b67be3c",
+  "signedAt": "2026-08-15T11:42:56+07:00",
+  "signatureEvidenceReference": "OWNER-STATEMENT-2026-08-15-P0-09-APPROVAL",
+  "approvalStatement": "Private Business / Product Owner attests that the exact deterministic expected results, source-policy references, and structural-only SAR boundary in this fixture are accepted for Phase 0 private-product acceptance use. SESAO domain review is advisory evidence only and did not satisfy this approval.",
   "nonSubstitutablePriorEvidence": [
     {
       "source": "docs/governance/p0-03-fund-flow-record-matrix.md",

@@ -25,11 +25,11 @@ account, receipt, or external-document identifier.
 - `expected-results.json`: the explicit registry, budget, balance,
   reconciliation, report, and control expectations.
 - `form-output-expectations.json`: P0-05 GAP and report/register coverage.
-- `policy-owner-approval.json`: integrity-bound sign-off record. It must show
-  `APPROVED` with a real Private Business / Product Owner identity, timestamp,
-  and evidence reference before P0-09 can be marked `DONE`. SESAO domain
-  review may be retained as advisory evidence only and cannot satisfy this
-  private-product acceptance gate.
+- `policy-owner-approval.json`: integrity-bound sign-off record for the exact
+  approved fixture, expected-results, and form-output hashes. It records the
+  attributable Private Business / Product Owner identity, timestamp, and
+  evidence reference; SESAO domain review is advisory evidence only and cannot
+  satisfy this private-product acceptance gate.
 
 ## Verification
 
@@ -40,15 +40,15 @@ node scripts/verify-p0-09-acceptance-dataset.cjs
 node scripts/verify-p0-09-acceptance-dataset.cjs --require-policy-owner-approval
 ```
 
-The first command verifies the deterministic dataset. The second intentionally
-fails while the approval record remains pending; it is the final acceptance
-gate and never treats prior P0-03/P0-05/P0-06 approvals or SESAO advisory
-domain evidence as a substitute.
+The first command verifies the deterministic dataset. The second verifies the
+recorded Private Business / Product Owner approval evidence as the final
+acceptance gate; it never treats prior P0-03/P0-05/P0-06 approvals or SESAO
+advisory domain evidence as a substitute.
 
 ## Next Exact Action
 
-Private Business / Product Owner must review the three unchanged
-integrity-bound files and record attributable approval identity, timestamp,
-and evidence reference in `policy-owner-approval.json`. The approval remains
-pending until that evidence is supplied; no additional approval beyond that
-existing P0-09 gate is introduced here.
+The approval applies only to the three recorded integrity-bound hashes. Before
+changing `fixture.json`, `expected-results.json`, or
+`form-output-expectations.json`, recompute all three hashes and obtain a new
+attributable Private Business / Product Owner approval; do not reuse this
+approval for changed payloads.
