@@ -5,8 +5,21 @@
 **Audience:** Product owners, school finance teams, Education Service Area Office (ESAO) supervisors, auditors, and the implementation team
 **Status:** Proposed product and domain baseline
 **Version:** 1.2
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-14
 **Pilot authority:** [SESAO Narathiwat Pilot Governance Charter](./docs/governance/pilot-charter.md)
+
+## Private Product And Testing Boundary (Effective 2026-08-14)
+
+SchoolBanchee is a private Business product being prepared for non-binding
+testing with SESAO Narathiwat. `Private Business / Product Owner` is the
+product owner, accountable infrastructure approver, test-data governance
+owner, and risk owner. SESAO is a testing partner and domain adviser only; it
+is not product, infrastructure, security, or data-governance authority.
+OBEC remains authoritative for policy and reference-form source material, not
+for this private product's sponsorship or infrastructure approval. The
+bootstrap pilot uses synthetic/anonymized data only; real School financial or
+personal data is prohibited. The 17-school directory is a test scope, not a
+live organizational deployment commitment.
 
 ## Central OBEC Governance and Form Authority
 
@@ -66,6 +79,7 @@ The requirements are derived from the local research copies in `reseach/` (the d
 | Source | Requirements used |
 | --- | --- |
 | `reseach/manual_2515.md` | Subsidiary-unit accounting model, three fund classes, supporting books/registers, daily/monthly/year-end reports, daily inspection, receipt-book control, borrowing/advance control, and the ten annual self-assessment dimensions. |
+| `reseach/GAP-08_SAR_2515-1_manual_to_system_reference.md` and supplied 2515-1/2/3 workbooks | Criterion/evidence semantics and authoritative OBEC document/UI/report structures for the resolved GAP-08 contract. Scoring and authorization come from `POL-GAP-08-SAR-001` and P0-04, not printed signatures or workbook formulas alone. |
 | `reseach/manual_2544.md` | Simplified financial-control model for schools, direct payment of budget claims by the paying authority, state-revenue remittance, non-budgetary fund handling, required registers, evidence, and monthly submission expectations. |
 | `reseach/audit-operation-manual.md` | Partial SESAO operational-audit reference: school financial-accounting audit objectives, nine examination topics, criterion-level procedures and workpapers, per-school reporting, weighted scoring, result levels, ranking, and an ESAO summary. It is a candidate audit-instrument source, not an automatic replacement for the common B.E. 2515 baseline or a blanket current OBEC rule. |
 | `reseach/CONTEXT.md` | Canonical project vocabulary and pilot boundaries, including the control registry, selected cashbook cross-check overlay, policy resolution, close/correction, evidence, and export terminology. |
@@ -101,7 +115,7 @@ The requirements are derived from the local research copies in `reseach/` (the d
 
 ### Deferred from the initial pilot
 
-- ESAO Reviewer access, cross-school comparison, ranking, and aggregate summaries. The SESAO Auditor audit-assessment model remains in pilot scope but is gated by explicit command-level authorization decisions.
+- ESAO Reviewer actions beyond `AUTH-24` submitted-SAR read and permitted aggregate/report generation, including approval, signing, submission, return, mutation, assessor assignment, ranking, and score override. Audit-assessment aggregation/ranking remains separately gated.
 
 ## 3. Product Principles
 
@@ -123,13 +137,15 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 ### Organizations and roles
 
 - **School:** An independently managed financial reporting boundary. It is not a tenant or a branch.
-- **Office of Basic Education Committee (OBEC):** Sponsor and accountable organization for the pilot, and the external Governing Policy Authority whose issued policy evidence is used by the application. OBEC does not directly operate an in-application Policy Publisher account.
-- **Education Service Area Office (ESAO):** Oversight organization that receives school reports and may aggregate results.
+- **Private Business / Product Owner:** Private product owner and accountable authority for product scope, infrastructure approval, test-data governance, and risk acceptance.
+- **Office of Basic Education Committee (OBEC):** Authoritative source of policy and reference-form material used by the product; not the private product sponsor or infrastructure approver.
+- **Education Service Area Office (ESAO):** Non-binding testing partner and domain adviser; not product, infrastructure, security, or data-governance authority.
 - **Finance Officer:** School user who performs finance work for one school.
 - **School Admin:** Additive School Role Assignment that may coexist with Finance Officer on the same Approved Membership and performs permitted school governance actions. It cannot activate or assign memberships and does not imply Daily Balance Verifier.
 - **School Director:** The sole authenticated School authority whose approval is required for selected privileged actions. A School has zero or one active holder. ESAO Admin assigns, replaces, or revokes the application authorization state from formal external appointment evidence; the assignment does not itself create an external governmental appointment. Every Director-required command is denied when no active holder exists, and no other role may substitute.
 - **ESAO Admin:** Formally appointed ESAO user who administers organization memberships, School assignment, School-level roles, and active Auditor assignments across all 17 SESAO Narathiwat pilot Schools. Auditor assignment administration does not grant Audit Assessment content access or the SESAO Auditor role. The initial pilot has no per-admin School subset, financial authority, self-administration, or delegation.
-- **ESAO Reviewer:** Read/review/compare/report capability with no canonical financial-record mutation, financial approval, membership administration, correction execution, or policy publication authority. It is excluded and denied in the initial pilot; any later assigned-School or aggregate-reporting scope requires a new approved matrix decision.
+- **ESAO Reviewer:** Initial-pilot capability limited to reading submitted SARs and generating permitted aggregate/report outputs across the 17 Schools under `AUTH-24`; it has no approval, signature, submission, return, mutation, assignment, ranking, override, financial, membership, correction, or policy authority.
+- **External Assessor:** Authenticated individual explicitly assigned to SAR assessor slot 2 for one School/SAR scope. The capability grants no School membership, approval, submission, financial, audit, or cross-School authority.
 - **SESAO Auditor:** End-to-end operator of an Audit Assessment. Any number of named authenticated accounts may hold the role. An authenticated configured Auditor creates an Assessment and atomically becomes its initial active Auditor; that active Auditor then performs, modifies findings for, finalizes, and approves/accepts the exact assigned Assessment without any additional Auditor participant or review step. The role cannot mutate a School's canonical financial records, and Policy Publisher remains a separately granted capability.
 - **Policy Publisher:** An in-application capability within the SESAO Internal Audit authorization model. Order 452/2568 establishes eligibility for `นางบังอร วันริโก` and `นายอานุงรุสลัน ดาโวะ`; the approved Authorization Matrix designates exactly one current holder and one standby alternate. Before designation or publication, the official SESAO Narathiwat Internal Audit Unit page must be checked and its URL, retrieval timestamp, named-person result, and conflict outcome recorded. Publication scope is all 17 Schools affiliated with SESAO Narathiwat, separately sourced from the official SESAO organizational information page and not attributed to Order 452/2568. The capability registers unchanged OBEC policy evidence, sets scope/effective date, and activates/supersedes an approved Policy Version.
 - **System Admin:** Platform operations and identity-governance role that owns platform account/registration lifecycle, diagnostics, and support. It cannot decide or originate organization authority. It may technically apply only the exact Product Owner/accountable-reviewer-approved Policy Publisher designation and evidence with fresh re-authentication, without selecting the person, altering approved scope, or self-granting authority. It performs no school financial action.
@@ -168,10 +184,12 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 
 ### Assessment and audit
 
-- **Annual Self-Assessment:** School-submitted fiscal-year review against the OBEC ten control dimensions. Its detailed instrument, result/scoring content, signatures/acknowledgements, and application commands must come from the authoritative `GAP-08` form/rule and applicable policy/authorization; it is not an independent external audit result.
+- **Annual Self-Assessment:** School fiscal-year review against the OBEC ten control dimensions, signed by two distinct assigned assessors, approved/signed by the active School Director, and submitted by the assigned Finance Officer. It is not an independent external audit result.
+- **GAP-08 Assessment Instrument/Contract Reference:** Source-cited reference to the supplied authoritative 2515-1/2/3 structures, semantic matrix, and resolved `POL-GAP-08-SAR-001`; it is distinct from `Audit Checklist Version`.
+- **SchoolBanchee 2515-3 Aggregate:** Bootstrap-pilot report derived from submitted 2515-2 results for all 17 Schools under `SB-2515-3-17-SCHOOL-AGGREGATE`; it is not original OBEC 2515-3 and grants no ranking or approval authority.
 - **School Financial Accounting Audit:** SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period, using approved criteria, workpapers, and evidence without mutating canonical financial records.
 - **Audit Assessment Cycle:** Versioned instance of a School Financial Accounting Audit for one School and period, including one active Auditor assignment at a time, policy/checklist revisions, workpapers, findings, score/result, report, responsible-Auditor acceptance, reassignment history, and follow-up.
-- **Audit Checklist Version:** Effective-dated set of audit topics, criteria, test methods, required evidence, scoring weights, and result-level rules, with source citation, publisher, scope, and applicability. Examination-topic and scoring-category mappings are stored explicitly when they differ.
+- **Audit Checklist Version:** Effective-dated set of audit topics, criteria, test methods, required evidence, scoring weights, and result-level rules used strictly by a SESAO School Financial Accounting Audit, with source citation, publisher, scope, and applicability. Examination-topic and scoring-category mappings are stored explicitly when they differ; this version is never reused for Annual Self-Assessment.
 - **Audit Workpaper:** Structured record of one audit test step, including criterion, method, observation, evidence references, conclusion, and responsible active Auditor.
 - **Audit Finding:** Documented audit conclusion or exception linked to a workpaper and evidence, with severity, owner, due date, corrective action, response, and follow-up/re-test state.
 - **Audit Score:** Reproducible weighted result calculated from a checklist version and completed workpapers; it is a historical snapshot and never replaces findings or evidence.
@@ -183,7 +201,7 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 
 Access is scoped by organization and role. A user never gains access to another school's financial records merely by knowing an identifier.
 
-| Capability | Finance Officer | School Admin | School Director | ESAO Admin | ESAO Reviewer | SESAO Auditor / Policy Publisher capability | System Admin |
+| Capability | Finance Officer | School Admin | School Director | ESAO Admin | ESAO Reviewer | SESAO Auditor / Policy Publisher / External Assessor capability | System Admin |
 | --- | --- | --- | --- | --- | --- | --- |
 | Submit public registration | Request Finance Officer | Not publicly requestable; ESAO Admin may add after approval | Not publicly requestable | Not publicly requestable | Not publicly requestable | Not publicly requestable | Not publicly requestable |
 | Platform account/registration lifecycle | No | No | No | No organization-membership decision | No | No | Platform-wide only |
@@ -194,6 +212,11 @@ Access is scoped by organization and role. A user never gains access to another 
 | Verify Daily Balance | No self-verification | No role inferred | Approves after verification | No role inferred | No role inferred | No role inferred | No |
 | Approve/sign Daily Balance | No | No | Authenticated approval/signature after verification | No | No | No | No |
 | Approve director-required actions | No | No | Yes | No | No | No | No |
+| Assign/revoke/replace SAR assessor | No | No | Own School under `AUTH-35` | No | No | No | No |
+| Sign SAR as assessor | Assigned slot 1 only | No | Prohibited | No | No | Assigned External Assessor slot 2 only; Auditor/Publisher gains nothing | No |
+| Approve/sign SAR | No | No | Own School under `AUTH-38`; cannot submit | No | No | No | No |
+| Submit approved SAR to ESAO | Assigned Finance Officer under `AUTH-39` | No | Prohibited | No | No | External Assessor prohibited | No |
+| Read/aggregate submitted SARs | Own School submission history | Own School if permitted later | Own School | No | All 17 submitted SARs and permitted reports under `AUTH-24`; no ranking/mutation | No role inference | No |
 | Assign/reassign/revoke active Audit Assessment Auditor | No | No | No | Authorized administrative boundary only | No | No role inference | No |
 | Create Audit Assessment | No | No | No | No | No | Authenticated SESAO Auditor; creator becomes initial active Auditor atomically | No |
 | Perform Audit Assessment or modify findings | No | No | No | No | No | Active Auditor: exact Assessment/School/period only | No |
@@ -210,9 +233,9 @@ Access is scoped by organization and role. A user never gains access to another 
 
 System Admin owns platform account and registration lifecycle only. ESAO Admin is authoritative for organization membership approval/rejection, suspension/removal, School assignment, and School-level role assignment; platform administration cannot bypass that boundary.
 
-SESAO Product Owner/accountable reviewer is the external appointment authority for ESAO Admin. System Admin may technically apply or revoke only the exact appointment evidence with fresh re-authentication and complete audit attribution; it cannot originate the appointment, select the person, alter the all-17-School scope, or use this path for ordinary membership or another privileged capability.
+Private Business / Product Owner is accountable for product configuration. System Admin may technically apply or revoke only the exact approved product record with fresh re-authentication and complete audit attribution; application configuration does not create an external governmental appointment or authority.
 
-During the sealed one-time Initial Authorization Bootstrap, System Admin may configure any number of initial SESAO Auditor accounts from authenticated application identity, person name, role, and SESAO Narathiwat organizational scope without appointment-document upload, evidence hash, external verification, or second-person in-application approval. This is application configuration, not an external governmental appointment. After bootstrap, the SESAO Product Owner/accountable reviewer originates Auditor appointment/revocation changes and System Admin applies only the exact approved record. Configuration alone grants no School or Assessment access.
+During the sealed one-time Initial Authorization Bootstrap, System Admin may configure test Auditor accounts from authenticated application identity, person name, role, and synthetic test scope without treating the configuration as an external governmental appointment. Private Business / Product Owner controls the product approval record. Configuration alone grants no School or Assessment access.
 
 A SESAO Policy Publisher may activate an evidence-backed Policy Version without a second-person approval or pre-activation review. Activation remains attributable and audited. The P0-04 Matrix has Product Owner approval; each privileged use still requires its command-specific evidence, including current-status verification before Policy Publisher designation or publication.
 
@@ -222,7 +245,7 @@ Temporary Director, Acting Director, substitute Director, temporary subject, and
 
 Segregation of duties is enforced for approval, verification, inspection, and close. The same person must not silently create, approve, reconcile, and close the same sensitive action when the effective policy prohibits it. For Daily Balance, Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, and School Director approval/signature are separate ordered controls.
 
-ESAO Admin assigns, atomically reassigns, or revokes the active Auditor for an existing Audit Assessment but cannot create or perform Assessment content, modify findings, finalize, or approve/accept the result. An authenticated SESAO Auditor who creates a new Assessment becomes its initial active Auditor in the same atomic transaction. The single active Auditor then operates that Assessment end to end under the command-level P0-04 Matrix with no additional Auditor approval or review step. Ranking and ESAO Reviewer access remain denied in the initial pilot, and any financial correction uses the normal linked-correction commands.
+ESAO Admin assigns, atomically reassigns, or revokes the active Auditor for an existing Audit Assessment but cannot create or perform Assessment content, modify findings, finalize, or approve/accept the result. An authenticated SESAO Auditor who creates a new Assessment becomes its initial active Auditor in the same atomic transaction. The single active Auditor then operates that Assessment end to end under the command-level P0-04 Matrix with no additional Auditor approval or review step. Audit ranking and ESAO Reviewer access to Audit Assessments remain denied; narrow `AUTH-24` submitted-SAR access does not cross this boundary. Any financial correction uses the normal linked-correction commands.
 
 ### 5.1 Registration and membership lifecycle
 
@@ -347,13 +370,15 @@ Each school completes one assessment per fiscal year against these ten control d
 9. Advance/loan control
 10. Receipt-book control
 
-The supplied OBEC material currently establishes only annual frequency, the ten dimensions, School/year identification, and ESAO submission. Item-level criteria, response/evidence cells, scoring/weight/result calculations, corrective-action fields, and signature/acknowledgement positions must come from the missing `GAP-08` OBEC instrument or an authoritative OBEC minimum-content rule. Do not invent those fields or infer submission/review authority from form appearance. Until `GAP-08` is resolved and applicable behavior/authorization is mapped through P0-06/P0-04, the complete Self-Assessment UI/report fails closed. ESAO Reviewer comparison remains excluded and denied in the initial pilot.
+The supplied 2515-1/2/3 and ESAO forms establish the authoritative GAP-08 document/UI/report structure. `POL-GAP-08-SAR-001` resolves scoring and applicability: direct `YES` receives full fixed weight and `NO` zero; composites use deterministic `ALL_REQUIRED` over applicable subcriteria with no fractional score; a genuinely non-applicable criterion receives full fixed weight only when explicit `N/A`, reason, and source-condition/evidence reference are recorded. Missing/insufficient evidence is `EVIDENCE_GAP` / `REVIEW_REQUIRED`, never automatic `NO` or `N/A`, and blocks final scoring/submission. Preserve every 2515-1 assertion and semantic traceability.
+
+Each School has exactly two distinct SAR assessors: the assigned active Finance Officer and an explicitly assigned External Assessor. Both sign before the active School Director approves/signs. The Director cannot assess or submit; the External Assessor cannot approve or submit; only the assigned Finance Officer submits after both signatures, Director approval, resolved scoring, and no blocking evidence gap. The lifecycle is `DRAFT -> IN_PROGRESS -> ASSESSOR_1_SIGNED -> ASSESSOR_2_SIGNED -> DIRECTOR_APPROVAL_PENDING -> DIRECTOR_APPROVED -> READY_FOR_SUBMISSION -> SUBMITTED`. July remains the source-established annual submission context; no unsupported exact due-day or fiscal-close coupling is invented. `AUTH-24` permits ESAO Reviewer read/aggregate only for submitted SARs and grants no ranking, approval, return, mutation, or override.
 
 ### 7.9 School financial accounting audit assessment
 
 The section 3 audit in `reseach/audit-operation-manual.md` is a substantive, SESAO-led examination of a School's accounting controls. It verifies that the Annual Action Plan covers every fund transparently, actual balances and custody controls are complete and compliant, and accounting/register/reporting records are current and correct. It is a fourth workflow alongside Daily Inspection, Annual Self-Assessment, and Audit Review Report. It is not a second way to post or correct financial records.
 
-Any number of SESAO Auditor accounts may be configured. For each Audit Assessment Cycle, exactly one Auditor is active at a time and owns the end-to-end workflow: create the Assessment, perform the examination, modify findings, finalize the Assessment, and approve/accept its result as the responsible audit operator. Creation atomically establishes the authenticated creator as the initial active Auditor. ESAO Admin may later assign, atomically reassign, or revoke the active assignment but has no Assessment content or review authority. No additional Auditor role, participant, approval, verification, or review step is required. The active Auditor cannot mutate School canonical records, and ESAO Reviewer access, cross-school comparison, ranking, and aggregate summaries remain excluded and denied in the initial pilot.
+Any number of SESAO Auditor accounts may be configured. For each Audit Assessment Cycle, exactly one Auditor is active at a time and owns the end-to-end workflow: create the Assessment, perform the examination, modify findings, finalize the Assessment, and approve/accept its result as the responsible audit operator. Creation atomically establishes the authenticated creator as the initial active Auditor. ESAO Admin may later assign, atomically reassign, or revoke the active assignment but has no Assessment content or review authority. No additional Auditor role, participant, approval, verification, or review step is required. The active Auditor cannot mutate School canonical records. `AUTH-24` SAR aggregation does not grant ESAO Reviewer access to Audit Assessments, audit ranking, or audit aggregates.
 
 `Planned -> Created -> Fieldwork -> Findings Draft -> Management Response -> Follow-up -> Finalized -> Completed`
 
@@ -413,14 +438,20 @@ These rules are enforced in domain services and database constraints, then cover
 25. Middleware route checks never replace server-side membership and organization authorization.
 26. Normalized email is unique, and at most one active/pending Registration Application exists for the same identity and School; public responses do not reveal whether an identity already exists.
 27. An Annual Self-Assessment, a School Financial Accounting Audit, a Daily Inspection, and an Audit Review Report are distinct record types with distinct actors and lifecycles; one cannot be silently substituted for another.
-28. Every Audit Workpaper belongs to one Audit Assessment Cycle and one Audit Checklist Version, records its test outcome and evidence references, and cannot be finalized while a required criterion is missing unless the policy records an authorized exception or N/A rationale.
-29. Finalized audit cycles, workpapers, findings, score snapshots, rank snapshots, and reports are immutable. A correction to a stored audit dependency creates a Stale dependency and an explicit replacement or follow-up revision; a later unrelated policy publication does not re-resolve historical audit results.
-30. Audit Scores and any result level or ranking are reproducible from the stored checklist/rubric version, completed workpapers, source revisions, and authorized cohort; a score never hides an unresolved finding.
-31. Audit-assessment commands may create review, finding, report, and follow-up records, but cannot mutate a School's canonical financial records or bypass linked-correction and authorization rules.
-32. An Audit Assessment Cycle resolves exactly one published Audit Checklist Version by School scope and audit/as-of date. Missing or tied versions fail closed, and a finalized cycle never re-resolves merely because a later checklist is published.
-33. A Daily Balance Report records Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, then authenticated School Director approval/signature in that order. The verifier cannot prepare, approve/sign, solely reconcile, or close the same report.
-34. A Policy Version becomes inactive only when a newer activated Policy Version supersedes it. Historical policy resolution remains immutable, and no separate retirement/deactivation command exists.
-35. Each School has zero or one active School Director. Every Director-required command fails closed when no active Director exists; no ESAO, platform, audit, policy, finance, or other role may inherit or substitute for that authority.
+28. An Annual Self-Assessment stores a neutral GAP-08 Assessment Instrument/Contract Reference and never resolves or reuses an Audit Checklist Version; the latter is strictly for SESAO School Financial Accounting Audits.
+29. A 2515-1 assessment item records `YES`, `NO`, or source-permitted `N/A` with evidence references. Direct and composite scores follow `POL-GAP-08-SAR-001`; no partial score exists. Missing evidence produces blocking `EVIDENCE_GAP` / `REVIEW_REQUIRED`, never automatic `NO` or `N/A`.
+30. A Self-Assessment may be `READY_FOR_SUBMISSION` only after two distinct assigned assessors sign, the active School Director approves/signs, all scores resolve, and no blocking `EVIDENCE_GAP` remains. Only the assigned Finance Officer may then submit to ESAO.
+31. Annual Self-Assessment neither closes a fiscal year nor blocks or authorizes financial close; financial records and their year-end/post-year-end controls are assessment evidence according to their applicable deadlines.
+31a. The School Director cannot occupy a SAR assessor slot or submit SAR; the External Assessor cannot approve or submit; the Finance Officer cannot approve as Director; no generic delegation applies.
+31b. `SB-2515-3-17-SCHOOL-AGGREGATE` derives only from submitted 2515-2 results for all 17 Schools and creates no ranking, approval, return, mutation, or score-override authority.
+32. Every Audit Workpaper belongs to one Audit Assessment Cycle and one Audit Checklist Version, records its test outcome and evidence references, and cannot be finalized while a required criterion is missing unless the policy records an authorized exception or N/A rationale.
+33. Finalized audit cycles, workpapers, findings, score snapshots, rank snapshots, and reports are immutable. A correction to a stored audit dependency creates a Stale dependency and an explicit replacement or follow-up revision; a later unrelated policy publication does not re-resolve historical audit results.
+34. Audit Scores and any result level or ranking are reproducible from the stored checklist/rubric version, completed workpapers, source revisions, and authorized cohort; a score never hides an unresolved finding.
+35. Audit-assessment commands may create review, finding, report, and follow-up records, but cannot mutate a School's canonical financial records or bypass linked-correction and authorization rules.
+36. An Audit Assessment Cycle resolves exactly one published Audit Checklist Version by School scope and audit/as-of date. Missing or tied versions fail closed, and a finalized cycle never re-resolves merely because a later checklist is published.
+37. A Daily Balance Report records Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, then authenticated School Director approval/signature in that order. The verifier cannot prepare, approve/sign, solely reconcile, or close the same report.
+38. A Policy Version becomes inactive only when a newer activated Policy Version supersedes it. Historical policy resolution remains immutable, and no separate retirement/deactivation command exists.
+39. Each School has zero or one active School Director. Every Director-required command fails closed when no active Director exists; no ESAO, platform, audit, policy, finance, or other role may inherit or substitute for that authority.
 
 ## 9. Core Algorithms
 
@@ -568,8 +599,9 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 - `bank_reconciliations`: period, external statement reference, book balance, statement balance, outstanding items, result.
 - `monthly_reconciliations`: fiscal period, version, status, linked daily/bank records, exceptions, acceptance event.
 - `monthly_closes`: period, close revision, closed by, closed at, report package, reopen/exception policy.
-- `annual_assessment_cycles`: school, fiscal year, checklist version, status, submission and acceptance.
-- `assessment_items`: dimension, finding, severity, evidence, owner, due date, corrective action.
+- `annual_assessment_cycles`: School, fiscal year, GAP-08 Instrument/Contract Reference, source/policy revisions, lifecycle (`DRAFT`, `IN_PROGRESS`, `ASSESSOR_1_SIGNED`, `ASSESSOR_2_SIGNED`, `DIRECTOR_APPROVAL_PENDING`, `DIRECTOR_APPROVED`, `READY_FOR_SUBMISSION`, `SUBMITTED`), two distinct effective assessor assignments/signatures, active School Director approval/signature, July context, Finance Officer submission metadata, and immutable replacement history.
+- `assessment_items`: 2515-1 dimension/criterion code, assertion (`YES`, `NO`, or source-permitted `N/A`), N/A reason/source condition, observation/note, evidence references/category (`DERIVED`, `DOCUMENTARY`, or `ATTESTED`), semantic mapping, applicable-subcriterion set, fixed weight, derived score, `EVIDENCE_GAP`/`REVIEW_REQUIRED`, and policy/source revisions.
+- `sar_assessor_assignments`: School, assessor slot, authenticated person, Finance Officer role or External Assessor capability basis, effective start/end, grant/revoke/replace actor and reason, authorization revisions, and immutable history.
 - `audit_assessment_cycles`: School, fiscal/audit period, as-of date, checklist/policy/source revisions, current active Auditor assignment, immutable assignment history, status, create/perform/finalize/accept/complete events, and report references.
 - `audit_workpapers`: cycle, checklist item, procedure, population/sample, observed result, evidence references, conclusion, responsible Auditor, and follow-up/re-test history.
 - `audit_findings`: cycle/workpaper, control topic, severity, rationale, owner, due date, corrective action, management response, follow-up/re-test, and closure or accepted-exception state.
@@ -635,7 +667,8 @@ Suggested commands:
 - `CreateReconciliationVersion` / `AcceptReconciliation`
 - `CloseMonth`
 - `ProposeLinkedCorrection` / `ApprovePrivilegedCorrection`
-- `StartAssessmentCycle` / `SubmitAssessment` / `AcceptAssessment`
+- `StartAnnualSelfAssessment` / `AssignSarAssessor` / `RevokeSarAssessor` / `ReplaceSarAssessor`
+- `SignSarAsFinanceOfficer` / `SignSarAsExternalAssessor` / `ApproveSignSarAsDirector` / `SubmitApprovedSarAsFinanceOfficer`
 - `CreateAuditAssessment` / `AssignAuditAssessment` / `ReassignAuditAssessment` / `RevokeAuditAssignment`
 - `PerformAuditAssessment` / `ModifyAuditFindings`
 - `FinalizeAuditAssessment` / `ApproveAcceptAuditAssessmentResult`
@@ -698,7 +731,7 @@ The application opens to the user's permitted workspace and current fiscal year.
 - **Daily Balance and inspection:** Finance Officer preparation, assigned `Daily Balance Verifier` verification, and School Director approval/signature states, plus the separate inspection checklist, counted balances, external evidence references, discrepancy workflow, and inspection acceptance event.
 - **Reconciliation:** versioned daily/monthly reconciliation, bank comparison fields, outstanding items, report package, and stale indicators.
 - **Monthly close:** close readiness checklist, unresolved exceptions, report submission, close revision, and permitted correction path.
-- **Annual self-assessment:** source-backed School/year, ten-dimension, and ESAO-submission header structure; item-level fields, scoring/results, signatures, and commands remain gated by `GAP-08`, P0-06, and P0-04.
+- **Annual self-assessment:** source-faithful 2515-1 assertions/evidence and 2515-2 scores/results under `POL-GAP-08-SAR-001`; two distinct assessor assignments/signatures; School Director approval/signature; Finance Officer submission; explicit blocking evidence/review states; lifecycle history; July context; and the derived 17-school 2515-3 aggregate visible only through `AUTH-24`.
 - **School financial accounting audit:** active-assignment queue, versioned criteria and workpapers, evidence and external-evidence references, findings, management responses, follow-up/re-test, score/result, and final report history.
 - **ESAO audit summary:** authorized assigned-school audit status, overdue finding follow-up, comparable result distributions, and policy-permitted ranking with clear scope and cohort filters.
 - **Reports and exports:** reproducible filters, Thai fiscal dates, print-safe templates, export category boundary, and replacement history.
@@ -722,7 +755,7 @@ The application opens to the user's permitted workspace and current fiscal year.
 3. Bank Reconciliation with external statement reference and outstanding items.
 4. Annual School Revenue Receipt/Payment Report, submitted within the policy period after fiscal year end (the guide specifies 30 days).
 5. Fund balance and outstanding-obligation reports by Fund Flow, type, programme, and money position.
-6. Annual ten-dimension Self-Assessment result/submission report as defined by the resolved `GAP-08` OBEC form/rule and applicable policy.
+6. Annual ten-dimension Self-Assessment package with source-faithful 2515-1, derived 2515-2, two assessor signatures, Director approval, Finance Officer submission evidence, and the approved 17-school 2515-3 aggregate; July remains the source submission context without an invented exact due-day.
 7. Audit Review Report for approvals, corrections, voids, disagreements, stale reports, exports, and policy changes.
 8. Budget Allocation/Commitment/Use/Availability and variance reports by plan, programme, Project/Activity, category, and fiscal period.
 9. Outstanding/Overdue Official Advance and settlement report by recipient, fund, due date, and corrective status.
@@ -745,7 +778,7 @@ Every report stores the exact filters, source revision, policy resolution, gener
 - Restrict audit workpapers, findings, scores, result levels, and rankings to the assigned School/ESAO boundary; school users can access only their School's authorized report and response workflow.
 - Keep audit logs append-only, separately permissioned, and retained according to the applicable records policy.
 - Back up the database and report metadata daily, test restoration quarterly, and record backup health.
-- Define recovery objectives before production: target RPO <= 24 hours and RTO <= 4 hours for the pilot unless the sponsoring authority sets stricter values.
+- Define recovery objectives before any production decision: the candidates of RPO <= 24 hours and RTO <= 4 hours remain unapproved until Private Business / Product Owner, operations, and security authority accept them.
 - Provide idempotency keys, retry-safe jobs, and a clear failed-export correlation path.
 
 ## 16. Quality Strategy
@@ -758,6 +791,7 @@ Every report stores the exact filters, source revision, policy resolution, gener
 - Integration tests against a real PostgreSQL database for registration, membership authorization, every Fund Flow, serializable transaction retry, constraint enforcement, and close state.
 - Contract tests for report totals and export boundaries.
 - End-to-end tests for receipt, payment, direct-payment claim, remittance, daily inspection, monthly close, privileged correction, and annual assessment.
+- Annual Self-Assessment tests for direct full/zero scoring, composite `ALL_REQUIRED`, mixed/all-N/A full fixed weight, invalid N/A rejection, `EVIDENCE_GAP` / `REVIEW_REQUIRED` blocking, two distinct assessors, Director-assessor/submission denial, External Assessor submission denial, Finance Officer post-approval submission, exact lifecycle transitions, policy/source reproducibility, 17-school aggregate derivation, and no fiscal-close coupling.
 - End-to-end tests for advance eligibility/disbursement, approved settlement behavior, overdue closure, and Receipt Book issue/use/void/year-end cancellation.
 - Unit and integration tests for Audit Checklist Version resolution, topic-to-score-category mapping, workpaper completeness, score/result calculation, tie/incomplete handling, finding revision history, immutable finalization, responsible-Auditor acceptance, stale/replacement behavior, and exact Assessment/School authorization.
 - End-to-end tests for atomic creator assignment, ESAO Admin assignment/reassignment/revocation, single-active-Auditor enforcement, fieldwork, management response, finding modification, finalization, result acceptance, post-completion denial, final audit report, authorized ESAO summary, and corrective-action re-test without canonical-record mutation.
@@ -801,7 +835,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - Reconcile supplied authoritative OBEC/reference forms into implementation-ready UI, report, registry, signature/evidence, and document structures.
 - Produce an anonymized acceptance dataset with approved expected totals; completed transaction examples test the implementation and do not establish form authority.
 
-**Exit:** policy owners can explain every Fund Flow and required record, authoritative form structures are mapped without a duplicate ESAO approval gate, and the acceptance dataset has approved expected answers.
+**Exit:** `P0-GATE` is satisfied: applicable policy owners can explain every Fund Flow and required record, authoritative form structures are mapped without a duplicate ESAO approval gate, and Private Business / Product Owner has approved the acceptance dataset's expected answers.
 
 ### Phase 1: Secure foundation
 
@@ -834,7 +868,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 ### Phase 4: Reporting, assessment, and SESAO audit
 
 - Monthly and annual report packages, print/PDF/CSV exports, stale/replacement behavior.
-- Ten-dimension annual Self-Assessment using the resolved `GAP-08` form/rule; include scoring, result, evidence, signature, or corrective-action fields only where that contract requires them.
+- Ten-dimension annual Self-Assessment using the resolved GAP-08 forms, semantic matrix, `POL-GAP-08-SAR-001`, `AUTH-35` through `AUTH-39`, and narrow `AUTH-24`, including the approved 17-school 2515-3 aggregate and July source context.
 - SESAO School Financial Accounting Audit Assessment with workpapers, findings, policy-controlled scores/result levels, final reports, and authorized aggregate summaries.
 - ESAO review and aggregate risk views.
 
@@ -875,7 +909,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 | Misconfigured PostgreSQL isolation permits inconsistent posting | Startup and integration checks require migrations, transactional connectivity, and serializable retry behavior before enabling posting. |
 | Public registration is abused or grants privilege | Rate limiting, non-enumerating responses, restricted requested roles, no session before approval, scoped approvers, and audited activation. |
 | Evidence is lost or cannot be reviewed | Retention policy, integrity metadata, encrypted object storage or controlled external reference, backup and restore drills. |
-| Poor school connectivity interrupts entry | Retry-safe drafts and idempotent submission; decide offline scope before Phase 1 exit. |
+| Poor school connectivity interrupts entry | Retry-safe drafts and idempotent submission; decide offline scope before `P0-GATE` permits Phase 1 to begin. |
 | A correction invalidates an accepted close/report | Dependency tracking, stale propagation, sequenced reconciliation, and explicit replacement reports. |
 | Self-assessment, daily inspection, and final audit are conflated | Separate aggregates, commands, evidence, reports, and permissions; no assessment record can mutate canonical financial records. |
 | Historical audit weights or ranking rules are treated as current | Versioned audit checklist/rubric with source citation, scope, effective range, explicit topic-to-score mapping, and policy-controlled result bands/ranking. |
@@ -899,11 +933,11 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - Each School has zero or one active School Director; no Temporary or Acting Director capability exists in the initial pilot, and Director-required commands deny without an active holder.
 - The repository School Directory seed contains the supplied 17 schools with unique SMIS and MOE codes.
 
-### Resolve before Phase 1 exit
+### Resolve before P0-GATE permits Phase 1 to begin
 
-- Supply the complete OBEC annual Self-Assessment instrument/result/submission form for `GAP-08`, or an authoritative OBEC minimum-content rule if no fixed form or score exists.
+- Activate `POL-GAP-08-SAR-001` through `AUTH-22` before enabling runtime SAR behavior; the source contract, Product Owner decisions, and P0-04 amendment are resolved.
 - Evidence storage location, retention period, maximum file size, and external-document reference format.
-- PostgreSQL hosting boundary, encryption/key ownership, backup service, and recovery objectives approved by the sponsoring authority.
+- PostgreSQL hosting boundary, encryption/key ownership, backup service, and recovery objectives approved by the Private Business accountable Product/Infrastructure Owner with named operations and security acceptance.
 - Registration identity-proof requirements, email verification/recovery channel, password policy, and which school roles applicants may request.
 - Which section 3 audit criteria, workpaper templates, weights, topic-to-score-category mapping, result-level cutoffs, ranking cohort/tie rules, signatures, and finding-response deadlines are currently applicable to SESAO schools.
 - Whether the pilot needs offline capture or can require a connected deployment.

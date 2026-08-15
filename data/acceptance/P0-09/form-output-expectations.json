@@ -1,0 +1,85 @@
+{
+  "schema": "schoolbanchee/p0-09-form-output-expectations/v1",
+  "fixtureId": "P0-09-ACCEPTANCE-001",
+  "mode": "STRUCTURAL_ACCEPTANCE_EXPECTATION_NOT_RUNTIME_RENDERING",
+  "p0_05Coverage": [
+    {
+      "contractId": "GAP-01",
+      "sourceStructure": "Official receipt",
+      "output": "Three issued receipt projections and one void receipt control state",
+      "expected": { "issuedReceiptCount": 3, "voidReceiptCount": 1, "issuedReceiptTotalSatang": 4200000 },
+      "documentarySignatureSlots": ["money receiver", "daily inspector"],
+      "applicationAuthority": "AUTH-10 only; printed slots create no role"
+    },
+    {
+      "contractId": "GAP-02",
+      "sourceStructure": "Payment evidence, receipt-in-lieu, approval memorandum, BK.28",
+      "output": "Payment, remittance, contract-return, advance-settlement, and withholding evidence projections",
+      "expected": { "cashbookPaymentSatang": 2360000, "withheldTaxCertificateCount": 1 },
+      "documentarySignatureSlots": ["recipient", "preparer", "approver", "certificate issuer"],
+      "applicationAuthority": "P0-03/P0-06 command mapping only"
+    },
+    {
+      "contractId": "GAP-03",
+      "sourceStructure": "Document-Request Register",
+      "output": "One claim row and one full linked confirmation",
+      "expected": { "claimSatang": 4000000, "confirmedSatang": 4000000, "unconfirmedSatang": 0 },
+      "documentarySignatureSlots": ["recipient"],
+      "applicationAuthority": "AUTH-10"
+    },
+    {
+      "contractId": "GAP-04",
+      "sourceStructure": "Advance Agreement and Receipt",
+      "output": "One two-copy advance agreement/approval projection",
+      "expected": { "advanceSatang": 500000, "agreementCopyCount": 2, "outstandingBeforeSettlementSatang": 500000 },
+      "documentarySignatureSlots": ["borrower", "Finance Officer review", "School Director approval", "receipt acknowledgement"],
+      "applicationAuthority": "AUTH-12"
+    },
+    {
+      "contractId": "GAP-05",
+      "sourceStructure": "Advance settlement and unused-cash return",
+      "output": "One atomic settlement projection linked to the original agreement",
+      "expected": { "expenseEvidenceSatang": 300000, "unusedCashReturnSatang": 200000, "closingOutstandingSatang": 0 },
+      "documentarySignatureSlots": ["recipient"],
+      "applicationAuthority": "AUTH-10; no second approval invented"
+    },
+    {
+      "contractId": "GAP-06",
+      "sourceStructure": "Receipt Book Control Register and annual use report",
+      "output": "One FY 2569 receipt-book control projection",
+      "expected": { "serialRange": "000101-000110", "issuedReceiptCount": 3, "voidReceiptCount": 1, "unusedReceiptCount": 6 },
+      "documentarySignatureSlots": ["custodian", "handover", "correction or void"],
+      "applicationAuthority": "AUTH-13 only; custody signatures create no additional approver"
+    },
+    {
+      "contractId": "GAP-07",
+      "sourceStructure": "Daily inspection and Daily Balance/custody report",
+      "output": "One daily inspection evidence projection and one Daily Balance report projection",
+      "expected": { "receiptTotalSatang": 4200000, "cashSatang": 1040000, "bankSatang": 800000, "documentsHeldSatang": 0, "totalSatang": 1840000 },
+      "documentarySignatureSlots": ["daily inspector", "preparer", "custody committee", "recipient", "School Director"],
+      "applicationAuthority": "Daily Inspection is separate; Daily Balance is AUTH-16/17/18 when runtime exists"
+    },
+    {
+      "contractId": "GAP-08",
+      "sourceStructure": "2515-1 detailed assessment, 2515-2 score report, and 2515-3 aggregate structure",
+      "output": "One structural-only 2515-1/2515-2 projection and a non-emitted aggregate expectation",
+      "expected": { "dimensionCount": 10, "totalScorePointsX100": 10000, "resultBand": "Very Good", "aggregateRequiredSchoolCount": 17, "aggregateFixtureSchoolCount": 1 },
+      "documentarySignatureSlots": ["assessor 1", "assessor 2", "School Director"],
+      "applicationAuthority": "No runtime SAR command or submission is exercised; POL-GAP-08-SAR-001 remains unactivated"
+    }
+  ],
+  "reportAndRegisterCoverage": [
+    { "contractId": "FR-01", "expected": "Cashbook receipt THB 42,000.00; payment THB 23,600.00; closing THB 18,400.00" },
+    { "contractId": "FR-02", "expected": "State-Income receipt THB 12,000.00; remittance THB 7,000.00; outstanding THB 5,000.00" },
+    { "contractId": "FR-03/04", "expected": "Non-Budgetary closing total THB 13,400.00" },
+    { "contractId": "FR-05", "expected": "Document-request claim and confirmation both THB 40,000.00" },
+    { "contractId": "FR-06", "expected": "Documents Held as Money closes at THB 0.00" },
+    { "contractId": "FR-07/08", "expected": "Bank/passbook closing THB 8,000.00" },
+    { "contractId": "FR-09", "expected": "School-revenue closing THB 7,000.00" },
+    { "contractId": "FR-10", "expected": "Daily Balance total THB 18,400.00" },
+    { "contractId": "FR-11", "expected": "Budget THB 0.00; State Income THB 5,000.00; Non-Budgetary THB 13,400.00; total THB 18,400.00" },
+    { "contractId": "FR-12", "expected": "Bank reconciliation book and statement each THB 8,000.00; difference THB 0.00" },
+    { "contractId": "FR-13", "expected": "Annual school-revenue receipt THB 20,000.00; payment THB 13,000.00; closing THB 7,000.00" },
+    { "contractId": "FR-14/15", "expected": "FF-14 cash-to-bank transfer THB 2,000.00, net zero, no cashbook entry" }
+  ]
+}

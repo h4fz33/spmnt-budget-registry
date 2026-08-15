@@ -17,5 +17,5 @@ Document structure does not grant application authority. Printed signatures, tit
 
 - UI and report work may start from the P0-05-mapped OBEC/reference structures without a second ESAO form-approval workflow.
 - Forms cannot create a Temporary/Acting Director, substitute approver, generic role, or permission outside P0-04.
-- A genuine missing OBEC form/rule, such as P0-05 `GAP-08`, remains a blocker; a genuine source-specific adoption/effective-date question, such as `BLK-004`, remains governed through an applicable Policy Version.
+- A genuine missing OBEC form/rule remains a blocker. P0-05 `GAP-08` was later resolved by the supplied 2515-1/2/3 package, Product Owner contract, P0-04 amendment, and `POL-GAP-08-SAR-001`; `BLK-004` remains a separate audit-policy question governed through an applicable Policy Version.
 - ADR-0006 continues to govern ESAO operational publication of unchanged OBEC policy. This decision adds no second policy authority or generic form/provenance administration platform.

@@ -1,0 +1,30 @@
+{
+  "schema": "schoolbanchee/p0-09-policy-owner-approval/v1",
+  "fixtureId": "P0-09-ACCEPTANCE-001",
+  "approvalRequired": true,
+  "approvalStatus": "PENDING_EXTERNAL_POLICY_OWNER_APPROVAL",
+  "approverRole": "Private Business / Product Owner",
+  "approverIdentity": null,
+  "signedAt": null,
+  "signatureEvidenceReference": null,
+  "approvalStatement": "Private Business / Product Owner must attest that the exact deterministic expected results, source-policy references, and structural-only SAR boundary in this fixture are accepted for Phase 0 private-product acceptance use. SESAO domain review is advisory evidence only and cannot satisfy this approval.",
+  "nonSubstitutablePriorEvidence": [
+    {
+      "source": "docs/governance/p0-03-fund-flow-record-matrix.md",
+      "whatItApproves": "Historical Fund Flow/domain rules that remain advisory input for current private-product acceptance, not the P0-09 calculated expected results."
+    },
+    {
+      "source": "data/policy-bootstrap/POL-INITIAL-PILOT-001.activation.json",
+      "whatItApproves": "OBEC-source policy activation evidence, not private-product approval of the P0-09 calculated expected results."
+    },
+    {
+      "source": "docs/research/gap-08-contract-decision-package.md",
+      "whatItApproves": "Historical SESAO domain-validation evidence for the GAP-08 contract, not runtime SAR activation or Private Business / Product Owner sign-off of P0-09 expected results."
+    }
+  ],
+  "requiredIntegrityBindings": {
+    "fixtureSha256": "36E781FDCB6129F3FAC2AA2FDC40F16428B8EBC6E613718301C59AFF0587E03D",
+    "expectedResultsSha256": "73A01DA0DC096F64FC3ECB76E7D6D1D6F9E4001476E34FEFAB773ABDD15EC364",
+    "formOutputExpectationsSha256": "51F46B9C43C435777E86CD9A16FD251B6A6FBE55B8C50DE84E1B595F5B1CD278"
+  }
+}

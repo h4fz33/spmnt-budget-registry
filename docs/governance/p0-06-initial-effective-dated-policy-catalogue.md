@@ -111,4 +111,8 @@ For each Financial Event, resolve exactly one active Policy Version by organizat
 - Unsupported variants, tied policy resolution, missing evidence, cross-scope access, and source mutation fail closed.
 - Historical policy resolution is immutable; later activation supersedes only future events.
 
+## GAP-08 SAR Extension
+
+The Product Owner-approved GAP-08 scoring, N/A, assessor, approval, submission, lifecycle, result-band, and 2515-3 exception rules are registered separately as [`POL-GAP-08-SAR-001`](./p0-06-gap-08-sar-policy-extension.md). They do not mutate the already activated `POL-INITIAL-PILOT-001`. Runtime SAR resolution must use the extension's own source hashes/effective period and requires an `AUTH-22` activation record before application behavior is enabled.
+
 **P0-06 status:** `DONE`. `POL-INITIAL-PILOT-001` is ACTIVE with the authoritative bootstrap effective start, `AUTH-22` activation evidence, source-integrity validation, all-17-School scope validation, non-overlap validation, and idempotent rerun verification. This bootstrap record does not implement future Policy Administration UI/workflow.

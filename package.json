@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start -p 6000",
     "lint": "next lint",
-    "activate:initial-policy": "node scripts/activate-initial-policy.cjs"
+    "activate:initial-policy": "node scripts/activate-initial-policy.cjs",
+    "verify:p0-09": "node scripts/verify-p0-09-acceptance-dataset.cjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

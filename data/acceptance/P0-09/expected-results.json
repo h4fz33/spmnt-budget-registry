@@ -1,0 +1,137 @@
+{
+  "schema": "schoolbanchee/p0-09-expected-results/v1",
+  "fixtureId": "P0-09-ACCEPTANCE-001",
+  "moneyUnit": "satang",
+  "policyInputs": {
+    "fundFlowMatrix": "docs/governance/p0-03-fund-flow-record-matrix.md",
+    "financialPolicyVersion": "POL-INITIAL-PILOT-001",
+    "financialPolicyActivation": "data/policy-bootstrap/POL-INITIAL-PILOT-001.activation.json",
+    "formRegister": "docs/research/p0-05-form-report-sample-register.md",
+    "sarStructurePolicy": "POL-GAP-08-SAR-001"
+  },
+  "registryTotals": {
+    "schoolRevenueSatang": 700000,
+    "withheldTaxSatang": 40000,
+    "stateIncomeSatang": 500000,
+    "contractSecuritySatang": 600000,
+    "documentsHeldSatang": 0,
+    "canonicalRegistryClosingTotalSatang": 1840000,
+    "canonicalRegistryClosingTotalDisplay": "THB 18,400.00"
+  },
+  "budgetTotals": {
+    "revisedAllocationSatang": 10000000,
+    "confirmedUseSatang": 4000000,
+    "outstandingCommitmentSatang": 0,
+    "availableBudgetSatang": 6000000,
+    "availableBudgetDisplay": "THB 60,000.00"
+  },
+  "balanceTotals": {
+    "cashSatang": 1040000,
+    "bankSatang": 800000,
+    "documentsHeldSatang": 0,
+    "moneyPositionTotalSatang": 1840000,
+    "moneyPositionTotalDisplay": "THB 18,400.00"
+  },
+  "reconciliationTotals": {
+    "cashbookReceiptSatang": 4200000,
+    "cashbookPaymentSatang": 2360000,
+    "cashbookClosingSatang": 1840000,
+    "registryCashbookDifferenceSatang": 0,
+    "bankRegisterSatang": 800000,
+    "bankStatementSatang": 800000,
+    "outstandingChequeSatang": 0,
+    "unrecordedTransferSatang": 0,
+    "bankReconciliationDifferenceSatang": 0
+  },
+  "requiredReportTotals": {
+    "documentRequestRegister": {
+      "claimSatang": 4000000,
+      "confirmedSatang": 4000000,
+      "unconfirmedSatang": 0
+    },
+    "dailyBalanceReport": {
+      "cashSatang": 1040000,
+      "chequesAndInstrumentsSatang": 0,
+      "documentsHeldSatang": 0,
+      "passbooksAndBankSatang": 800000,
+      "totalSatang": 1840000,
+      "amountInWords": "eighteen thousand four hundred baht only"
+    },
+    "remainingFundClassificationReport": {
+      "budgetSatang": 0,
+      "stateIncomeSatang": 500000,
+      "nonBudgetarySatang": 1340000,
+      "grandTotalSatang": 1840000
+    },
+    "bankReconciliationStatement": {
+      "bookBalanceSatang": 800000,
+      "statementBalanceSatang": 800000,
+      "netDifferenceSatang": 0
+    },
+    "annualSchoolRevenueReceiptPaymentReport": {
+      "openingBalanceSatang": 0,
+      "receiptSatang": 2000000,
+      "paymentSatang": 1300000,
+      "closingBalanceSatang": 700000
+    },
+    "receiptBookAnnualUseReport": {
+      "issuedReceiptCount": 3,
+      "voidReceiptCount": 1,
+      "unusedReceiptCount": 6,
+      "issuedReceiptTotalSatang": 4200000
+    },
+    "annualSelfAssessment2515_2": {
+      "dimensionScoresPointsX100": [1000, 2000, 500, 1000, 2000, 1700, 500, 300, 500, 500],
+      "totalPointsX100": 10000,
+      "resultBand": "Very Good",
+      "runtimeStatus": "STRUCTURAL_ONLY_NOT_RUNTIME"
+    },
+    "schoolbanchee2515_3Aggregate": {
+      "requiredSubmittedSchoolCount": 17,
+      "fixtureSubmittedSchoolCount": 1,
+      "expectedStatus": "NOT_EMITTED_IN_SINGLE_SCHOOL_FIXTURE",
+      "rankingEnabled": false
+    }
+  },
+  "controlAndEvidenceStates": {
+    "directPayment": {
+      "status": "FULLY_CONFIRMED",
+      "cashbookEntryCount": 0,
+      "schoolMoneyEffectSatang": 0
+    },
+    "stateIncomeRemittance": {
+      "status": "NON_COMPLIANT_PARTIAL_NEEDS_CORRECTION",
+      "outstandingSatang": 500000,
+      "needsCorrection": true
+    },
+    "contractSecurity": {
+      "status": "COMPLIANT_PARTIAL_RELEASE",
+      "outstandingSatang": 600000,
+      "releaseEvidencePresent": true
+    },
+    "withheldTax": {
+      "status": "NON_COMPLIANT_PARTIAL_NEEDS_CORRECTION",
+      "outstandingSatang": 40000,
+      "needsCorrection": true,
+      "separateFromContractSecurity": true
+    },
+    "officialAdvance": {
+      "status": "SETTLED_ATOMICALLY",
+      "expenseEvidenceSatang": 300000,
+      "unusedCashReturnSatang": 200000,
+      "outstandingSatang": 0,
+      "repeatedPartialSubmission": false
+    },
+    "internalMoneyPositionTransfer": {
+      "status": "COMPLIANT_NET_ZERO_TRANSFER",
+      "cashDecreaseSatang": 200000,
+      "bankIncreaseSatang": 200000,
+      "cashbookEntryCount": 0
+    },
+    "documentaryAuthorityBoundary": {
+      "printedSignatureSlotsAreEvidenceOnly": true,
+      "inventedApplicationRoles": 0,
+      "temporaryOrActingDirector": false
+    }
+  }
+}

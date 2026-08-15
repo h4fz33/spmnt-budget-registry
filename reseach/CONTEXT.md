@@ -1,11 +1,11 @@
 # SchoolBanchee
 
-SchoolBanchee is a school-finance context for Thai OBEC procedures. This is the sole live glossary for the target procedure and complete school-user population; current-code gaps belong in the blueprint and historical research copies are pointers only. `research/school-banchee-plan/context-thai-pronouns.md` supplies the Thai display vocabulary and formal operational register without changing the definitions below.
+SchoolBanchee is a private school-finance product context informed by Thai OBEC procedures. This is the sole live glossary for the target procedure and synthetic/anonymized bootstrap testing scope; current-code gaps belong in the blueprint and historical research copies are pointers only. `research/school-banchee-plan/context-thai-pronouns.md` supplies the Thai display vocabulary and formal operational register without changing the definitions below.
 
 ## Organizations And Roles
 
 **Office of Basic Education Committee (OBEC)**:
-The sponsor and accountable organization for the pilot, and the central Governing Policy Authority whose common policy and form baseline applies across participating ESAO branches. OBEC does not directly operate the in-application Policy Publisher role.
+The central source authority for policy and reference-form material used by the product. OBEC is not the sponsor, product owner, infrastructure approver, or data-governance authority for this private product.
 Thai name: `สำนักงานคณะกรรมการการศึกษาขั้นพื้นฐาน`
 
 _Avoid_: Treating OBEC as the operational publisher, or assuming an ESAO user has Policy Publisher permission without approved eligibility and designation
@@ -15,9 +15,17 @@ A school whose financial records are managed independently for reporting and aud
 _Avoid_: Tenant, branch
 Thai UI: `สถานศึกษา`
 
-**Actual School-User Population**:
-The complete set of Schools that use SchoolBanchee in the current approved scope. It is not a sample subset. The current population is the 17 Schools under SESAO Narathiwat identified in the Pilot Governance Charter.
-_Avoid_: Pilot-only subset, optional sample schools
+**Bootstrap Test-School Scope**:
+The synthetic/anonymized 17-School directory used to exercise the private product. It is not a live user population, deployment commitment, or permission to process real School financial or personal data.
+_Avoid_: Actual School-user population, production deployment population
+
+**Private Business / Product Owner**:
+The final accountable approver for private-product scope, infrastructure, test-data governance, product acceptance, and risk acceptance, including P0-07 and P0-09.
+_Avoid_: Treating OBEC or SESAO as the private product or infrastructure owner
+
+**SESAO Testing Partner**:
+SESAO Narathiwat acting as a non-binding testing partner and domain adviser. It may supply advisory domain-validation evidence, but cannot satisfy private-product, infrastructure, security, data-governance, or product-acceptance approval.
+_Avoid_: SESAO Product Owner, final product approver, infrastructure approver
 
 **Education Service Area Office**:
 The auditing and oversight organization for its assigned school-user population. It receives and reviews school financial reports and may aggregate school-level results, but it does not own a School's canonical financial records or become the Policy Publisher by virtue of that oversight.
@@ -77,8 +85,16 @@ An attributable post-bootstrap external record that names an ESAO Admin or SESAO
 _Avoid_: System Admin decision, self-appointment, generic admin grant
 
 **ESAO Reviewer**:
-An Education Service Area Office capability limited to reading, reviewing, comparing, and reporting permitted School information, and recording permitted review/report evidence. It is excluded and denied in the initial pilot; any later assigned-School or aggregate-reporting scope requires an approved matrix decision and cannot add mutation, approval, membership, correction, policy-publication, acceptance, rejection, return, or override authority by implication.
-_Avoid_: ESAO Admin, financial approver, correction reviewer by default
+An Education Service Area Office capability limited in the bootstrap pilot to reading submitted SARs and generating permitted aggregate/report outputs across the 17 Schools. It cannot approve, sign, submit, return, mutate, assign, rank, override, administer membership, execute corrections, or publish policy.
+_Avoid_: ESAO Admin, SAR approver, ranking authority, correction reviewer
+
+**External Assessor**:
+An authenticated individual holding an explicit assignment to assessor slot 2 for one School's Annual Self-Assessment. The assignment grants only that scoped assessment/signature capability and no School membership, approval, submission, financial, audit, or cross-School authority.
+_Avoid_: ESAO Reviewer, SESAO Auditor, School Director, delegated approver
+
+**SAR Assessor Assignment**:
+The effective, auditable link between one School SAR assessor slot and one eligible person. Slot 1 requires an active Finance Officer and slot 2 requires an External Assessor; the two people must be distinct and neither may be the active School Director.
+_Avoid_: Generic delegation, printed signature alone, shared assessor identity
 
 **SESAO Auditor**:
 The end-to-end Audit Assessment operator role, which may be held by any number of named authenticated accounts. An authenticated configured Auditor creates an Assessment and atomically becomes its initial active Auditor; the active Auditor then performs, modifies findings for, finalizes, and approves/accepts the result. The role does not imply ESAO Reviewer, generic aggregate access, financial-record mutation, or Policy Publisher authority.
@@ -147,8 +163,12 @@ The School's approved Fiscal Year plan that organizes Projects and Activities an
 _Avoid_: Transaction list, informal spending plan
 
 **Annual Self-Assessment**:
-A School-submitted fiscal-year review against the OBEC ten control dimensions. Its detailed instrument, result/scoring content, signatures/acknowledgements, and application commands come only from the authoritative form/rule and applicable policy/authorization; it is not an independent School Financial Accounting Audit.
+A School fiscal-year review against the OBEC ten control dimensions, assessed by two distinct assigned assessors, approved/signed by the active School Director, and submitted to ESAO by the assigned Finance Officer. It is not an independent School Financial Accounting Audit.
 _Avoid_: External audit, final audit result
+
+**SchoolBanchee 2515-3 Aggregate**:
+The bootstrap-pilot cross-school report derived from submitted 2515-2 results for all 17 Schools under exception `SB-2515-3-17-SCHOOL-AGGREGATE`. It is not the original OBEC meaning of Form 2515-3 and is not a ranking or approval instrument.
+_Avoid_: Original OBEC 2515-3, school ranking, ESAO approval queue
 
 **Budget Allocation**:
 An authorized spending ceiling assigned to a School for a Fiscal Year, budget category, programme, Project, or Activity. It is authority to spend, not cash received by the School.
@@ -417,7 +437,7 @@ A review surface for audit-sensitive financial and governance actions.
 _Avoid_: Debug report, activity log
 
 **School Financial Accounting Audit**:
-A SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period. The active SESAO Auditor operates the exact assigned Assessment end to end without mutating canonical School financial records; ESAO Reviewer access, cross-school comparison, ranking, and aggregate summaries remain excluded and denied in the initial pilot.
+A SESAO-led substantive examination of one School's financial-accounting controls for a defined audit period. The active SESAO Auditor operates the exact assigned Assessment end to end without mutating canonical School financial records; `AUTH-24` submitted-SAR access does not grant ESAO Reviewer access, ranking, or aggregation for Audit Assessments.
 _Avoid_: Annual Self-Assessment, Audit Review Report, general ledger
 
 **Audit Assessment Cycle**:

@@ -2,29 +2,29 @@
 
 **Status:** approved
 **Approved:** 2026-08-08
-**Last amended:** 2026-08-12
-**Pilot and school-user population:** all 17 schools in the supplied School Directory; this is the project's complete current school-user population, not a sample subset.
+**Last amended:** 2026-08-14
+**Pilot/testing scope:** the supplied 17-school directory is a synthetic/anonymized bootstrap testing scope, not a live deployment commitment or authorization to process real School data.
 
 ## Accountable Organization
 
 | Responsibility | Approved organization |
 | --- | --- |
-| Sponsor / accountable organization | สำนักงานคณะกรรมการการศึกษาขั้นพื้นฐาน (Office of Basic Education Committee) |
-| Product owner | สำนักงานเขตพื้นที่การศึกษามัธยมศึกษานราธิวาส (Secondary Educational Service Area Office Narathiwat) |
+| Private product owner / accountable infrastructure approver | Private Business / Product Owner |
+| SESAO relationship | Non-binding testing partner and domain adviser; not product, infrastructure, or data-governance authority |
 | Governing Policy Authority | สำนักงานคณะกรรมการการศึกษาขั้นพื้นฐาน (Office of Basic Education Committee) |
 | Policy Publisher(s) in SchoolBanchee | สำนักงานเขตพื้นที่การศึกษามัธยมศึกษานราธิวาส (Secondary Educational Service Area Office Narathiwat) |
-| Accountable reviewer | สำนักงานเขตพื้นที่การศึกษามัธยมศึกษานราธิวาส (Secondary Educational Service Area Office Narathiwat) |
+| Accountable product/infrastructure reviewer | Private Business / Product Owner |
 | ESAO Thai name | สำนักงานเขตพื้นที่การศึกษามัธยมศึกษานราธิวาส |
 | ESAO English name | Secondary Educational Service Area Office Narathiwat |
 | ESAO code | `1000960001` |
 
-The Office of Basic Education Committee owns sponsorship/accountability and external governance-policy authority for the pilot. The Secondary Educational Service Area Office Narathiwat owns product delivery, accountable audit/oversight review, and the in-application Policy Publisher function for unchanged OBEC policies across the complete 17-school population. Order 452/2568 establishes Policy Publisher eligibility; the approved Authorization Matrix designates the current holder and standby alternate. Before designation or publication, the official SESAO Internal Audit Unit page is checked and its URL, retrieval timestamp, named-person result, and conflict outcome recorded. The approved 17-school publication scope is sourced from the official SESAO organizational information page and is not attributed to Order 452/2568. A designated current holder may register the source, set scope/effective date, and activate a Policy Version; that function does not permit source-text changes or School financial-record mutation. The canonical command matrix is `docs/governance/p0-04-authorization-matrix.md`. P0-04 is complete under the Product Owner-approved School Director-only model: each School has zero or one active School Director, and Director-required commands deny when no active holder exists. Operational actions must be performed by named, authenticated users. An organization label, typed name, shared account, or unrelated role is not approval evidence.
+Private Business owns product accountability, infrastructure approval, test-data governance, and risk acceptance for this private testing product. SESAO Narathiwat is a non-binding testing partner and domain adviser only; it does not approve product, infrastructure, security, retention, or data-governance decisions. OBEC remains the authoritative source of policy and reference-form material, not the software sponsor or infrastructure approver. Any application authorization model remains a product design boundary and must not be read as an external governmental appointment. The effective date of this boundary is 2026-08-14. Operational actions must be performed by named, authenticated users. An organization label, typed name, shared account, or unrelated role is not approval evidence.
 
 OBEC is also the central authority for the common policy/form baseline used across participating ESAO branches. Supplied OBEC policies, manuals, and reference forms are authoritative implementation inputs for the 17-School pilot. A reference form branded for another ESAO is treated as an implementation of the common OBEC baseline unless its source expressly makes the layout or rule branch-specific; no separate Narathiwat provenance, applicability, issuer-confirmation, revision, or form-approval gate is imposed merely for that branding. Form fields and printed signature positions define documentary/evidence structure only. P0-03/P0-06 govern financial behavior and effective policy; P0-04 alone governs application commands and roles. See [ADR-0013](../adr/0013-obec-central-governance-and-authoritative-reference-forms.md).
 
 ## School-User Population Boundary
 
-All 17 schools in [`data/schools.csv`](../../data/schools.csv) are approved for the pilot and constitute the project's complete actual school-user population:
+The 17 entries in [`data/schools.csv`](../../data/schools.csv) are retained as a synthetic/anonymized bootstrap test fixture. They are not a live School-user population, deployment commitment, or permission to ingest real School financial or personal data:
 
 | School | SMIS code | MOE code |
 | --- | --- | --- |
@@ -46,13 +46,13 @@ All 17 schools in [`data/schools.csv`](../../data/schools.csv) are approved for 
 | สวนพระยาวิทยา | `96022008` | `1096240365` |
 | บูกิตประชาอุปถัมภ์ | `96022010` | `1096240366` |
 
-Each School remains an independent financial reporting and audit boundary. SESAO Narathiwat is the audit/oversight unit for the complete school-user population and may aggregate or review reports, but it does not own or silently mutate a School's canonical financial records.
+Each configured test School remains an independent financial reporting and audit boundary in the product model. SESAO Narathiwat may advise on domain behavior and participate in non-binding testing, but this creates no live operational, product, infrastructure, or data-governance authority.
 
-Adding or removing a School from the pilot and actual school-user population requires an approved charter revision and an audited School Directory change. School names are display values; SMIS and MOE codes are the controlled identifiers and are imported as strings.
+Adding or removing a test fixture from the bootstrap scope requires an approved product change and an audited School Directory change. School names are display values; SMIS and MOE codes are controlled test identifiers and are imported as strings.
 
 ## Follow-Up Appointments and Decisions
 
-This charter establishes organization-level accountability and the actual school-user population scope. It does not complete these later controls:
+This charter establishes private-product accountability and the bootstrap testing scope. It does not complete these later controls:
 
 - `P0-02`: bind each pilot School to the exact effective OBEC/ESAO financial procedure and citations.
 - `P0-04`: complete. Retain the Product Owner-approved Matrix and its operational evidence; before each Policy Publisher designation/publication, record the approved current-status check and scope evidence.
@@ -63,8 +63,10 @@ This charter establishes organization-level accountability and the actual school
 
 On 2026-08-08, the project owner amended the P0-01 authority assignments. This amendment supersedes the role assignments recorded in the original P0-01 session note while preserving that note as historical evidence. The amendment does not change the complete 17-school population boundary or the ESAO code.
 
+On 2026-08-14, the project owner superseded the product-accountability and population interpretation: Private Business / Product Owner is the accountable product/infrastructure and test-data authority; SESAO is a non-binding testing partner/domain adviser; the 17-school directory is synthetic/anonymized test scope only; and real School financial or personal data is prohibited. See [ADR-0015](../adr/0015-private-product-testing-governance.md).
+
 Later on 2026-08-08, the project owner superseded the prior in-application publisher assignment: OBEC is the external governance-policy authority, while SESAO Narathiwat receives unchanged OBEC policies and performs their in-application registration, scoping, effective dating, and activation. See [ADR-0006](../adr/0006-sesao-operational-policy-publication.md).
 
 ## Source of Approval
 
-The original sponsor, ownership, review responsibilities, all-17-school pilot scope, and official ESAO code `1000960001` were supplied by the project owner on 2026-08-08. The authority split was amended by the project owner on 2026-08-08; see the [P0-01 amendment evidence](../progress/sessions/2026-08-08_1922_codex_P0-01.md). The project owner further clarified that the same 17 schools are the complete actual school-user population and that SESAO Narathiwat is their audit/oversight unit; see the [P0-02 scope clarification](../progress/sessions/2026-08-08_2145_codex_P0-02.md). The in-application publication authority was then amended as recorded in [ADR-0006](../adr/0006-sesao-operational-policy-publication.md) and the [P0-01 publication-authority amendment](../progress/sessions/2026-08-08_2230_codex_P0-01.md). The School list is validated from [`data/schools.csv`](../../data/schools.csv): 17 rows with unique, nonblank School names, SMIS codes, and MOE codes.
+The original 2026-08-08 authority and population statements remain historical evidence. The authoritative 2026-08-14 private-product/testing boundary supersedes their product-owner, infrastructure-authority, and live-population interpretation without changing historical notes, P0-03/P0-04 behavior, or OBEC policy/form source authority. The School list remains validated from [`data/schools.csv`](../../data/schools.csv) as a 17-row synthetic/anonymized bootstrap fixture.
