@@ -20,7 +20,7 @@ The bootstrap initial-pilot contract is approved as follows:
 
 ## 1. Evidence boundary
 
-The supplied OBEC B.E. 2515 materials are central-governance source material for the 17-school pilot. No additional ESAO provenance or applicability approval is required. The form layouts establish document/UI structure, but printed signatures do not create application roles. P0-03 remains the Fund Flow Matrix. The controlled GAP-08 amendment is now recorded in P0-04 without changing any financial command or the School Director-only boundary.
+The supplied OBEC B.E. 2515 materials are central-governance source material for the 17-school pilot. No additional ESAO provenance or applicability approval is required. The form layouts establish document/UI structure, but printed signatures do not create application roles. P0-03 remains the Fund Flow Matrix. The controlled GAP-08 amendment is now recorded in P0-04 without changing any financial command; SAR `AUTH-35` through `AUTH-39` remain active-School-Director-only where their Matrix rows require Director action and are outside substitute scope.
 
 Evidence inspected:
 
@@ -174,6 +174,6 @@ All eight prior decision categories are `APPROVED` and recorded in Section 0, P0
 
 ## 10. Revised GAP-08 closure criteria
 
-GAP-08 closure requires: (a) approved composite and N/A rules; (b) registered effective Policy Version for dimensions, weights, bands and July context; (c) P0-04 amendment for assessor assignment/revocation/signing, Director approval/signature, Finance Officer submission, and narrow cross-school read/aggregate; (d) durable 17-school 2515-3 exception; (e) complete source-faithful 2515-1/2/3 and ESAO structures; and (f) verification that P0-03 and the School Director-only boundary remain unchanged.
+GAP-08 closure requires: (a) approved composite and N/A rules; (b) registered effective Policy Version for dimensions, weights, bands and July context; (c) P0-04 amendment for assessor assignment/revocation/signing, active-School-Director approval/signature, Finance Officer submission, and narrow cross-school read/aggregate; (d) durable 17-school 2515-3 exception; (e) complete source-faithful 2515-1/2/3 and ESAO structures; and (f) verification that P0-03 and the active-School-Director-only SAR boundary remain unchanged.
 
 All GAP-08 source/contract closure criteria are satisfied. No template or application code is implemented. Runtime use remains fail-closed until `POL-GAP-08-SAR-001` is activated through `AUTH-22` and later implementation tasks pass their own verification.

@@ -43,13 +43,29 @@ _Avoid_: Accountant when referring to the operational finance role
 Thai UI: `เจ้าหน้าที่การเงิน`
 
 **School Director**:
-The sole School authority whose approval is required for selected privileged financial actions at one School. A School has zero or one active holder. Without an active holder, every Director-required command is denied and no other role may substitute.
+The active School authority for one School. A School has zero or one active holder; it is distinct from a separately recorded Acting or Temporary Substitute Director Authority.
 _Avoid_: Typed approver name, checkbox approval
 Thai UI: `ผู้อำนวยการสถานศึกษา`
 
+**Effective Director Authority**:
+The single authority holder resolved for one School, permitted command, and time: an able active School Director, otherwise a valid Acting Substitute Director Authority, otherwise a valid Temporary Substitute Director Authority, else none. It is not a role, membership, generic delegation, or a way to widen a command's approved scope.
+_Avoid_: Fallback role, delegated Director, parallel approver
+
+**Acting Substitute Director Authority**:
+A named, time-bounded authority record for a distinct named substitute when the active School Director is unable. The record identifies both the unavailable active Director and the distinct Acting substitute; it is not an additional active School Director, a membership, or a generic delegation.
+_Avoid_: Acting Director role, temporary role, automatic fallback
+
+**Temporary Substitute Director Authority**:
+A named, time-bounded authority record for a permitted command scope when documented basis shows the Active/Acting resolution cannot supply an effective holder, including a School with zero active Director. It is not an additional active School Director, a membership, or a generic delegation.
+_Avoid_: Temporary Director role, broad delegation, emergency override
+
+**Substitute Director Authority Record**:
+The attributable evidence-backed record that identifies an Acting or Temporary subject, School, time boundary, command scope, basis, status, and lifecycle history. For Acting it identifies the unavailable active Director and distinct Acting substitute; for Temporary it identifies the basis that Active/Acting resolution cannot supply a holder. It does not create authority when its required evidence is incomplete, invalid, stale, or ambiguous.
+_Avoid_: Informal handover, role grant, undocumented delegation
+
 **Director Approval**:
-Approval made by an authenticated School Director for a director-required action.
-_Avoid_: Reassigned approval identity
+Approval made by the authenticated Effective Director Authority holder only where the Authorization Matrix expressly permits it for the command. All command evidence and segregation-of-duties rules still apply.
+_Avoid_: Reassigned approval identity, generic substitute approval
 
 **Routine Posting Delegation**:
 A deferred capability-specific authorization concept for routine posting. No grant or use is enabled in the initial pilot; any future enablement requires an approved Matrix amendment.

@@ -16,6 +16,6 @@ Document structure does not grant application authority. Printed signatures, tit
 ## Consequences
 
 - UI and report work may start from the P0-05-mapped OBEC/reference structures without a second ESAO form-approval workflow.
-- Forms cannot create a Temporary/Acting Director, substitute approver, generic role, or permission outside P0-04.
+- Forms cannot create a Substitute Director Authority, generic role, or permission. Product Owner Decision 12 independently defines the limited P0-04 `AUTH-14`/`AUTH-15` authority model; the required appointment/organizational evidence type remains open and fails closed under `BLK-011`.
 - A genuine missing OBEC form/rule remains a blocker. P0-05 `GAP-08` was later resolved by the supplied 2515-1/2/3 package, Product Owner contract, P0-04 amendment, and `POL-GAP-08-SAR-001`; `BLK-004` remains a separate audit-policy question governed through an applicable Policy Version.
 - ADR-0006 continues to govern ESAO operational publication of unchanged OBEC policy. This decision adds no second policy authority or generic form/provenance administration platform.

@@ -1,11 +1,12 @@
 # P0-04 — BLK-003 Resolution Record
 
-**Status:** BLK-003 fully resolved by the Product Owner-approved School Director-only model; P0-04 closure conditions satisfied
+**Status:** Historical `BLK-003` resolution (including the former School Director-only model) is preserved; Product Owner Decision 12 supersedes the live former model effective 2026-08-15 and exposes separate `BLK-011` appointment-evidence work
 **Blocker:** `BLK-003`  
 **Affected tasks:** `P0-04`, `P0-06`, `P0-10`  
-**Decision owner:** SESAO Narathiwat Product Owner / accountable reviewer  
+**Historical decision owner:** SESAO Narathiwat Product Owner / accountable reviewer
 **Decision date:** 2026-08-09  
 **Latest superseding decision:** 2026-08-10
+**Current amendment authority:** Private Business / Product Owner, Product Owner Decision 12, 2026-08-15
 **Purpose:** Record the human decisions resolving the authorization conflicts identified during P0-04 reconciliation.
 
 ---
@@ -452,7 +453,7 @@ Initial Auditor accounts use the sealed application bootstrap with authenticated
 
 ---
 
-## Decision 11 — School Director-Only Initial Pilot
+## Decision 11 — School Director-Only Initial Pilot (Historical/Superseded)
 
 ### Decision
 
@@ -471,7 +472,38 @@ Temporary Director, Acting Director, Temporary Director Approval, temporary subj
 
 ### Status
 
-**RESOLVED — approved by the Product Owner on 2026-08-10.**
+**HISTORICAL/SUPERSEDED EFFECTIVE 2026-08-15 - approved by the then-recorded Product Owner on 2026-08-10. Decision 12 supersedes the live no-substitute interpretation without changing the active-School-Director invariant.**
+
+---
+
+## Decision 12 — Substitute School Director Authority
+
+**Status:** **APPROVED MODEL** by Private Business / Product Owner, effective 2026-08-15. Execution remains fail closed under `BLK-011` until the exact authoritative appointment/organizational evidence type is supplied.
+
+### Decision
+
+Each School continues to have zero or one active School Director. Acting and Temporary Substitute Director Authority are not additional active Directors, generic delegation, membership, or role transfer. They are named, separately auditable authority records managed only by ESAO Admin under `AUTH-14`.
+
+Effective Director Authority resolves for the exact School, command, and time in this deterministic order:
+
+1. a valid active School Director when present and able;
+2. otherwise one valid Acting Substitute Director Authority;
+3. otherwise one valid Temporary Substitute Director Authority;
+4. otherwise deny.
+
+When the active Director resumes, Acting authority immediately ceases to be effective. Active/Acting/Temporary conflict, same-tier duplicate or overlap, invalid status or scope, expiry, stale/incomplete/ambiguous evidence, or any result with more than one effective holder fails closed. The invariants are: active Directors `<= 1`, effective Acting holders `<= 1`, effective Temporary holders `<= 1`, and effective Director Authority holders for the same School/command/time `<= 1`.
+
+### Lifecycle and evidence boundary
+
+`AUTH-14` is ESAO Admin-only and may appoint/activate, replace/renew through a new record or revision, revoke, expire, or invalidate an Acting/Temporary authority record. ESAO Admin gains no Director-required financial authority by managing that record; System Admin is prohibited from the lifecycle.
+
+Temporary records require a named Temporary subject, School, appointment/organizational evidence, documented basis that Active/Acting resolution cannot supply a holder (including a School with zero active Director), start, expiry, exact command scope, appoint/revoke actor, status, and audit history. Acting records require both the named unavailable active Director and a distinct named Acting substitute, School, documented active-Director inability reason/basis/evidence, start, expiry or termination, appointment actor, exact command scope, status, and audit history. This decision does not invent a legal or organizational document type or external eligibility criteria. The missing exact evidence type and validation rule, including the evidence for inability or temporary basis, is `BLK-011`; until that blocker is resolved, `AUTH-14` and `AUTH-15` deny execution.
+
+### Command boundary
+
+Only a valid, named, explicitly scoped `AUTH-15` holder may execute `AUTH-09`, `AUTH-11`, `AUTH-12`, `AUTH-18`, or the approval portion of `AUTH-21`. All underlying authentication, policy, evidence, School scope, and segregation-of-duties controls remain. `AUTH-19`, `AUTH-34`, `AUTH-35`, `AUTH-38`, membership, Policy Publisher, Auditor, System Admin, cross-School, generic, and emergency commands remain excluded from substitute authority.
+
+No self-appointment, self-grant, re-delegation, generic override, or cross-School/command-scope bypass is permitted.
 
 ---
 
@@ -483,7 +515,7 @@ The following interpretations are superseded for the current application authori
 | --- | --- |
 | Named Policy Publisher is optional configuration for P0-04 | Order 452/2568 organizational evidence plus approved Matrix designation are required for Policy Publisher eligibility/designation |
 | System Admin has unrestricted organizational membership authority | System Admin is platform-scoped; ESAO Admin owns organizational membership |
-| Controlled Temporary Director Approval remains available | No Temporary or Acting Director capability is included; Director-required commands deny when no active School Director exists |
+| School Director-only model; `AUTH-14`/`AUTH-15` always denied | Historical model superseded effective 2026-08-15 by Decision 12; only the enumerated substitute command scope may later resolve through `AUTH-15`, and execution remains fail closed under `BLK-011` |
 | Receipt Book `approval` implies second-person authorization | Approval is custody/issuance evidence |
 | Routine posting can never be delegated | It remains a future delegation concept, but no delegation grant or use is enabled in the initial pilot |
 | Post-close Director approval is unresolved | Director approval is mandatory |
@@ -491,7 +523,7 @@ The following interpretations are superseded for the current application authori
 | Policy Version can have a separate retirement/deactivation command | Supersession is the only inactive transition |
 | ESAO Reviewer may have generic acceptance/return/override authority | ESAO Reviewer is review/compare/report only |
 | Audit Assessment requires distinct working and finalizing Auditors | One active Auditor operates the Assessment end to end |
-| SESAO Auditor may administer Assessment assignments or Temporary Director Approval | ESAO Admin administers Assessment assignments; SESAO Auditor has only the five approved Assessment actions |
+| SESAO Auditor may administer Assessment assignments or Substitute Director Authority | ESAO Admin administers Assessment assignments and the enumerated substitute lifecycle; SESAO Auditor has only the five approved Assessment actions |
 
 These supersessions apply to the **current application authorization model**.
 
@@ -499,30 +531,30 @@ Historical manuals, dated research notes, previous session notes, and earlier ar
 
 ---
 
-# 5. Final Matrix Decisions
+# 5. Current Matrix Decisions
 
-The Product Owner decisions are fully resolved. No Temporary Director recipient authorization value remains open.
+Historical `BLK-003` decisions remain resolved. Product Owner Decision 12 is an approved live amendment, but its required appointment/organizational evidence type remains open under `BLK-011`.
 
 ## 5. Current Matrix Decisions
 
-The Product Owner approved the following final-Matrix inputs on 2026-08-10:
+The then-recorded Product Owner approved the following historical Matrix inputs on 2026-08-10:
 
 - Order 452/2568 eligibility is validated before Policy Publisher designation/publication through the official SESAO Narathiwat Internal Audit Unit page. Record the URL, retrieval timestamp, named-person result, and conflict outcome.
 - Policy Publisher publication scope is all 17 Schools affiliated with SESAO Narathiwat, sourced separately from the official SESAO organizational information page, not Order 452/2568.
 - No generic ESAO or platform override command exists. Every unlisted privileged command is denied.
-- Temporary Director capability is explicitly excluded from the initial pilot. `AUTH-14` and `AUTH-15` are `DEFERRED-AND-DENIED`, and every Director-required command denies when no active School Director exists.
+- The former Temporary Director exclusion is historical/superseded effective 2026-08-15 by Decision 12; it remains preserved as historical evidence.
 - Privileged Correction requires School Director approval, with no separate independent pre-execution reviewer; the proposer/preparer cannot self-approve.
 - The Daily Balance Verifier, SESAO Auditor assessment, membership, School Director, and ESAO Reviewer limits are those explicitly enumerated by the live Authorization Matrix.
 - The SESAO Auditor workflow uses one active Auditor per Assessment, atomic creator assignment, ESAO Admin-controlled later assignment changes, and the five approved end-to-end Auditor commands without an additional Auditor review step.
-- The Product Owner approved the final Authorization Matrix, subject to durable recording of this decision and operational evidence.
+- The Product Owner approved the historical Authorization Matrix, subject to durable recording of this decision and operational evidence.
 
-No Temporary Director recipient or subject evidence is required because the capability is excluded and denied. Every unsupported or unlisted operation is explicitly denied, and every command fails closed when its command-specific evidence is missing or invalid.
+Decision 12, approved by Private Business / Product Owner effective 2026-08-15, adds the limited Acting/Temporary model described above. The exact source-required appointment/organizational evidence type is not supplied; `BLK-011` prevents appointment and exercise until it is reconciled. Every unsupported or unlisted operation remains denied, and every command fails closed when its command-specific evidence is missing or invalid.
 
 ---
 
 # 6. P0-04 Closure Rule
 
-`BLK-003` is fully resolved. The Product Owner-approved School Director-only model closes the former Temporary Director evidence gap.
+`BLK-003` remains historically resolved. Decision 12 replaces its live School Director-only interpretation and creates the separate live `BLK-011` evidence gap; it does not rewrite historical evidence.
 
 P0-04 is complete when the canonical documents have been reconciled and the checks below confirm all 13 conditions.
 
@@ -542,9 +574,9 @@ P0-04 may be marked `[DONE]` only when:
 12. no unresolved conflict remains that can alter authorization behavior;
 13. the final Authorization Matrix has received the required human approval/sign-off.
 
-The final Authorization Matrix records all 13 conditions as satisfied:
+The final Authorization Matrix records Conditions 1-10 and 12-13 as satisfied. Condition 11 is **OPEN** because no exact authoritative appointment/organizational evidence type or validation rule was supplied for Acting/Temporary authority.
 
-**P0-04 = DONE**
+**P0-04 = BLOCKED -- amended under `BLK-011`**
 
 ---
 
@@ -571,7 +603,7 @@ The B.E. 2515 material remains the selected baseline for the current 17-School p
 
 The existing P0-04 research describes its proposed authorization matrix as an inference requiring Product Owner/accountable-review approval and named appointments.
 
-This resolution record supplies the Product Owner decisions needed to reconcile the identified conflicts.
+This resolution record preserves the historical Product Owner decisions and supplies the current Private Business / Product Owner Decision 12 needed to reconcile the live Substitute Director Authority boundary.
 
 The final Authorization Matrix was rebuilt from these decisions and is now the canonical command-level authorization source; the earlier proposed matrix must not be treated as live.
 
@@ -581,7 +613,7 @@ The matrix must retain the existing principle that Policy Publisher activation r
 
 # 9. Required Next Action
 
-Use the approved P0-04 Authorization Matrix as the input to dependent work only when each dependent task's own prerequisites are complete. Any future proposal for Temporary or Acting Director authority requires a new approved Matrix decision; it must not be inferred from this historical record.
+Private Business / Product Owner must supply the exact authoritative appointment/organizational evidence type and validation rule for Acting and Temporary authority, including inability and temporary-basis evidence. Then a separately claimed implementation task may design/test `AUTH-14`/`AUTH-15`; until then all substitute appointment and exercise commands remain denied.
 
 ---
 
@@ -591,7 +623,7 @@ Use the approved P0-04 Authorization Matrix as the input to dependent work only 
 | --- | --- | --- |
 | BLK-003-01 | Policy Publisher eligibility from Order 452/2568 organizational evidence; approved Matrix designation for one current holder and one standby alternate | **RESOLVED** |
 | BLK-003-02 | System Admin platform lifecycle; ESAO Admin organizational membership | **RESOLVED** |
-| BLK-003-03 | School Director-only model; Temporary Director capability excluded from initial pilot | **RESOLVED — `AUTH-14`/`AUTH-15` DEFERRED-AND-DENIED** |
+| BLK-003-03 | School Director-only model; Temporary Director capability excluded from initial pilot | **HISTORICAL/SUPERSEDED EFFECTIVE 2026-08-15** |
 | BLK-003-04 | Receipt Book approval = custody/issuance evidence | **RESOLVED** |
 | BLK-003-05 | Routine posting included in existing delegation | **RESOLVED** |
 | BLK-003-06 | School Director approval mandatory for Privileged Correction | **RESOLVED** |
@@ -599,6 +631,7 @@ Use the approved P0-04 Authorization Matrix as the input to dependent work only 
 | BLK-003-08 | Supersession only; no Policy Version retirement command | **RESOLVED** |
 | BLK-003-09 | ESAO Reviewer = review/compare/report only | **RESOLVED** |
 | BLK-003-10 | Single active end-to-end SESAO Auditor; ESAO Admin controls later assignment changes | **RESOLVED** |
+| D12 | Substitute School Director Authority: deterministic Active/Acting/Temporary precedence; ESAO Admin-only lifecycle; limited `AUTH-09/11/12/18` and approval portion of `AUTH-21` scope | **APPROVED MODEL; EXECUTION BLOCKED BY `BLK-011`** |
 
 ### Overall BLK-003 status
 
@@ -606,7 +639,7 @@ Use the approved P0-04 Authorization Matrix as the input to dependent work only 
 
 ### Overall P0-04 status
 
-**DONE — ALL 13 CLOSURE CONDITIONS SATISFIED**
+**BLOCKED -- amended. `BLK-011` must supply the exact authoritative appointment/organizational evidence type and validation rule for Acting/Temporary authority before Condition 11 can be satisfied.**
 
 ### No implementation authorization code should be written from this record alone.
 

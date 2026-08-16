@@ -51,8 +51,9 @@ P0-04      -> application authorization and command authority
 
 P0-03 remains authoritative for Fund Flow and financial behavior. P0-04
 remains the authoritative application authorization boundary, including the
-School Director-only model, segregation of duties, and the absence of
-Temporary/Acting Director or substitute authority. P0-06 resolves behavior
+Active/Acting/Temporary Effective Director Authority model for only its explicitly
+permitted commands, segregation of duties, and fail-closed appointment evidence.
+P0-06 resolves behavior
 through the active effective-dated Policy Version. A printed signature,
 title, committee, inspector, approver, recipient, or other form label is
 documentary structure and evidence; it does not create an application role,
@@ -142,7 +143,8 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 - **Education Service Area Office (ESAO):** Non-binding testing partner and domain adviser; not product, infrastructure, security, or data-governance authority.
 - **Finance Officer:** School user who performs finance work for one school.
 - **School Admin:** Additive School Role Assignment that may coexist with Finance Officer on the same Approved Membership and performs permitted school governance actions. It cannot activate or assign memberships and does not imply Daily Balance Verifier.
-- **School Director:** The sole authenticated School authority whose approval is required for selected privileged actions. A School has zero or one active holder. ESAO Admin assigns, replaces, or revokes the application authorization state from formal external appointment evidence; the assignment does not itself create an external governmental appointment. Every Director-required command is denied when no active holder exists, and no other role may substitute.
+- **School Director:** The active authenticated School authority for selected privileged actions. A School has zero or one active holder; ESAO Admin assigns, replaces, or revokes that application authorization state from formal external appointment evidence, without creating an external governmental appointment. Acting and Temporary authority are separately recorded, not additional active Directors. An Acting record identifies the unavailable active Director and a distinct named Acting substitute; a Temporary record identifies its named substitute and the documented basis that Active/Acting resolution cannot supply a holder, including zero active Director.
+- **Effective Director Authority:** The one valid authority holder for a School, permitted command, and time: an able active School Director, otherwise a valid Acting authority, otherwise a valid Temporary authority, else none. It is not a role, membership, generic delegation, or a way to extend a command beyond P0-04.
 - **ESAO Admin:** Formally appointed ESAO user who administers organization memberships, School assignment, School-level roles, and active Auditor assignments across all 17 SESAO Narathiwat pilot Schools. Auditor assignment administration does not grant Audit Assessment content access or the SESAO Auditor role. The initial pilot has no per-admin School subset, financial authority, self-administration, or delegation.
 - **ESAO Reviewer:** Initial-pilot capability limited to reading submitted SARs and generating permitted aggregate/report outputs across the 17 Schools under `AUTH-24`; it has no approval, signature, submission, return, mutation, assignment, ranking, override, financial, membership, correction, or policy authority.
 - **External Assessor:** Authenticated individual explicitly assigned to SAR assessor slot 2 for one School/SAR scope. The capability grants no School membership, approval, submission, financial, audit, or cross-School authority.
@@ -178,7 +180,7 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 - **Monthly Reconciliation:** End-of-month reconciliation and report-preparation procedure.
 - **Monthly Close:** Marking a month as reported while preserving approved linked corrections.
 - **Linked Correction:** Audited correction linked to the original event and affected records; it replaces nothing silently.
-- **Privileged Correction:** Post-close linked correction requiring authenticated School Director Approval before execution, with the proposer/preparer barred from self-approval. The initial pilot requires no separate independent pre-execution reviewer; immutable evidence is retained for later approved oversight access.
+- **Privileged Correction:** Post-close linked correction requiring authenticated Effective Director Authority approval before execution, with the proposer/preparer barred from self-approval. The initial pilot requires no separate independent pre-execution reviewer; immutable evidence is retained for later approved oversight access.
 - **Audit Log:** Immutable history of meaningful financial and governance actions.
 - **Effective Financial Policy / Policy Version:** Versioned rules selected by scope and event effective date.
 
@@ -201,7 +203,7 @@ The full glossary lives in [`reseach/CONTEXT.md`](./reseach/CONTEXT.md). The ter
 
 Access is scoped by organization and role. A user never gains access to another school's financial records merely by knowing an identifier.
 
-| Capability | Finance Officer | School Admin | School Director | ESAO Admin | ESAO Reviewer | SESAO Auditor / Policy Publisher / External Assessor capability | System Admin |
+| Capability | Finance Officer | School Admin | School Director / permitted Effective Director Authority | ESAO Admin | ESAO Reviewer | SESAO Auditor / Policy Publisher / External Assessor capability | System Admin |
 | --- | --- | --- | --- | --- | --- | --- |
 | Submit public registration | Request Finance Officer | Not publicly requestable; ESAO Admin may add after approval | Not publicly requestable | Not publicly requestable | Not publicly requestable | Not publicly requestable | Not publicly requestable |
 | Platform account/registration lifecycle | No | No | No | No organization-membership decision | No | No | Platform-wide only |
@@ -209,9 +211,9 @@ Access is scoped by organization and role. A user never gains access to another 
 | Draft and submit financial events | Own school | Own school if granted | Review only | No school entry | No school entry | No school entry | Support only, no business entry |
 | Post routine events | Yes, within policy | No in initial pilot | No | No | No | No | No |
 | Prepare Daily Balance | Yes | No | No | No | No | No | No |
-| Verify Daily Balance | No self-verification | No role inferred | Approves after verification | No role inferred | No role inferred | No role inferred | No |
-| Approve/sign Daily Balance | No | No | Authenticated approval/signature after verification | No | No | No | No |
-| Approve director-required actions | No | No | Yes | No | No | No | No |
+| Verify Daily Balance | No self-verification | No role inferred | Permitted Effective Director Authority approves after verification | No role inferred | No role inferred | No role inferred | No |
+| Approve/sign Daily Balance | No | No | Authenticated permitted Effective Director Authority approval/signature after verification | No | No | No | No |
+| Approve director-required actions | No | No | Only where P0-04 permits Effective Director Authority | No | No | No | No |
 | Assign/revoke/replace SAR assessor | No | No | Own School under `AUTH-35` | No | No | No | No |
 | Sign SAR as assessor | Assigned slot 1 only | No | Prohibited | No | No | Assigned External Assessor slot 2 only; Auditor/Publisher gains nothing | No |
 | Approve/sign SAR | No | No | Own School under `AUTH-38`; cannot submit | No | No | No | No |
@@ -224,8 +226,8 @@ Access is scoped by organization and role. A user never gains access to another 
 | Finalize and approve/accept audit assessment result | No | No | No | No content/review authority | No authority inferred | Same active Auditor as responsible audit operator | No |
 | View audit result/ranking | Own school's finalized report | Own school's finalized report | Own school's finalized report | Authorized membership history only | Deferred and denied in initial pilot | Assigned Audit Assessment Cycle only; ranking denied | Operational diagnostics only |
 | Reconcile and prepare monthly report | Yes | Yes | Review only | No | Read/review/compare/report only; no return/acceptance authority | No | No |
-| Close a month | No | No | Yes, after accepting the prepared reconciliation; no delegation | No | Deferred and denied | No | No |
-| Create post-close Privileged Correction | Propose if authorized | Propose if authorized | Approve before execution | No | No correction or review authority inferred | No | No |
+| Close a month | No | No | Active School Director only, after accepting the prepared reconciliation; no delegation | No | Deferred and denied | No | No |
+| Create post-close Privileged Correction | Propose if authorized | Propose if authorized | Permitted Effective Director Authority approves before execution | No | No correction or review authority inferred | No | No |
 | Publish or supersede Policy Version | No | No | No | No | No | Policy Publisher capability only | No |
 | View a school | Own school | Own school | Own school | Membership-administration boundary only | Deferred and denied in initial pilot | Assigned Policy/Audit scope only | Operational diagnostics only |
 | Manage identity/audit operations | No | No | No | Assigned membership history | Permitted review/report evidence only | Policy-publication audit only | Platform-wide account/registration lifecycle only |
@@ -241,9 +243,9 @@ A SESAO Policy Publisher may activate an evidence-backed Policy Version without 
 
 The Product Owner/accountable reviewer designates exactly one current holder and one standby alternate through the approved Authorization Matrix. Current official Internal Audit position/assignment evidence establishes eligibility; no separate Policy Publisher Appointment Memorandum or separate SESAO Auditor appointment document is required. System Admin is only the technical executor. The alternate cannot publish while standby; replacement requires updated authoritative evidence, current-status verification, and an updated approved designation. No delegation or fixed expiry is required.
 
-Temporary Director, Acting Director, substitute Director, temporary subject, and automatic fallback authority are not included in the initial pilot. `AUTH-14` and `AUTH-15` are retained only as `DEFERRED-AND-DENIED` Matrix IDs. ESAO Admin, System Admin, SESAO Auditor, Policy Publisher, Finance Officer, and every other role are prohibited from inheriting School Director authority.
+Product Owner Decision 12 adds an enumerated, non-delegated substitute model. For the exact School, command, and time, Effective Director Authority resolves an able active School Director first, then one valid Acting authority, then one valid Temporary authority, otherwise denies. An Acting record identifies the unavailable active Director and a distinct named Acting substitute with documented inability; a Temporary record requires documented basis that Active/Acting resolution cannot supply a holder, including zero active Director. Active Directors remain zero-or-one; Acting and Temporary are not active Directors. Same-tier overlap, conflicting/stale/ambiguous evidence, invalid scope/status, expiry, or parallel effective holders deny. ESAO Admin alone manages `AUTH-14` records and is never an effective Director by doing so; System Admin, SESAO Auditor, Policy Publisher, Finance Officer, and every other role remain prohibited from inheriting authority. Only `AUTH-09`, `AUTH-11`, `AUTH-12`, `AUTH-18`, and the approval portion of `AUTH-21` may use `AUTH-15`; the exact appointment/organizational evidence type is open under `BLK-011`, so substitute lifecycle and exercise remain fail closed.
 
-Segregation of duties is enforced for approval, verification, inspection, and close. The same person must not silently create, approve, reconcile, and close the same sensitive action when the effective policy prohibits it. For Daily Balance, Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, and School Director approval/signature are separate ordered controls.
+Segregation of duties is enforced for approval, verification, inspection, and close. The same person must not silently create, approve, reconcile, and close the same sensitive action when the effective policy prohibits it. For Daily Balance, Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, and `AUTH-18`-permitted Effective Director Authority approval/signature are separate ordered controls.
 
 ESAO Admin assigns, atomically reassigns, or revokes the active Auditor for an existing Audit Assessment but cannot create or perform Assessment content, modify findings, finalize, or approve/accept the result. An authenticated SESAO Auditor who creates a new Assessment becomes its initial active Auditor in the same atomic transaction. The single active Auditor then operates that Assessment end to end under the command-level P0-04 Matrix with no additional Auditor approval or review step. Audit ranking and ESAO Reviewer access to Audit Assessments remain denied; narrow `AUTH-24` submitted-SAR access does not cross this boundary. Any financial correction uses the normal linked-correction commands.
 
@@ -259,7 +261,7 @@ ESAO Admin assigns, atomically reassigns, or revokes the active Auditor for an e
 6. ESAO Admin approval atomically creates the Approved Membership with Finance Officer and activates the identity when it has at least one active membership. ESAO Admin may add or remove School Admin at approval or later without replacing Finance Officer. Rejection, correction, suspension, removal, assignment change, and role change require a structured reason; every decision records actor, subject, School, requested/assigned roles, previous/new state, reason, time, outcome, and Audit Log evidence. Suspension, removal, assignment change, and role change immediately invalidate the subject's authorization revision.
 7. NextAuth sign-in succeeds only for an active identity with an active membership. ESAO Admin suspension, School assignment/role change, and membership removal take effect on the next protected server check and remain audited.
 8. The first System Admin is created by a one-time operational bootstrap using an environment-identified email and securely supplied password; public registration cannot solve the initial trust problem.
-9. ESAO Admin assigns, replaces, or revokes the School Director application authorization state from formal external appointment evidence. Each School has zero or one active Director; assignment atomically replaces any prior holder, while revocation may leave no active holder. The command requires fresh re-authentication, has no second reviewer, invalidates affected authorization revisions, and records actor, School, old/new Director, evidence, reason, effective time, and outcome. Application assignment does not itself create an external governmental appointment.
+9. ESAO Admin assigns, replaces, or revokes the School Director application authorization state from formal external appointment evidence. Each School has zero or one active Director; assignment atomically replaces any prior holder, while revocation may leave no active holder. Under `AUTH-14`, ESAO Admin alone may separately appoint/activate, replace/renew, revoke, expire, or invalidate a named Acting/Temporary authority record without changing the active-Director count or gaining effective authority. An Acting record requires the unavailable active Director, a distinct named Acting substitute, and documented inability; a Temporary record requires its named subject and documented basis that Active/Acting resolution cannot supply a holder, including zero active Director. Each also requires its exact School, period, permitted command scope, status, and audit history. `BLK-011` leaves the required evidence type open, so the substitute path denies until reconciled. Every state change requires fresh re-authentication, structured reason, authorization-revision invalidation, and audit attribution. Application assignment does not itself create an external governmental appointment.
 
 ## 6. Fund Flows and Record Matrix
 
@@ -280,7 +282,7 @@ The approved source classification and D01-D10 decisions live in [`docs/governan
 | **Withheld-Tax Remittance** | Yes out | Non-Budgetary Registry child | Revenue Department remittance evidence | Yes | Explicit allocation; actual partial remittance is `NON_COMPLIANT_PARTIAL` and `Needs Correction` |
 | **Official Advance Disbursement** | Position change from cash/bank to Document Held as Money | Advance Registry and Document-Held-as-Money control | Approved advance agreement, estimate, and purpose evidence | No | Advance Settlement with policy due date |
 | **Official Advance Settlement** | Accepted expense becomes payment; unused return restores cash position | Advance Registry and applicable fund registry | Accepted expense evidence and/or unused-money return evidence | Accepted expense amount only; unused-money return has no Cashbook entry | One atomic settlement; no repeated partial submissions |
-| **Internal Money-Position Transfer** | Position change only | Applicable fund registry | Deposit/withdrawal evidence | No | `AUTH-34`: Finance Officer initiates approved subtypes; Director approval/acknowledgement only where resolved policy/source requires it; no generic transfer authority |
+| **Internal Money-Position Transfer** | Position change only | Applicable fund registry | Deposit/withdrawal evidence | No | `AUTH-34`: Finance Officer initiates approved subtypes; active School Director approval/acknowledgement only where resolved policy/source requires it; substitute authority is excluded; no generic transfer authority |
 
 Contract Security and Withheld Tax are separate custodial models. Withheld Tax is not a returnable contract deposit. Fund Type/Subtype defaults and Fund Class are policy-controlled; School Admin extensions are limited to approved templates and cannot alter flow controls.
 
@@ -311,7 +313,7 @@ Budget categories such as personnel, operating, investment, subsidy, and other e
 2. The system resolves exactly one Policy Version by school scope, fund flow, and date.
 3. The form collects the policy-required parties, amount, purpose, budget/programme reference, document numbers, money position, and evidence references.
 4. Validation checks fiscal-year membership, positive amount, uniqueness, required evidence, authority, due dates, available balance where applicable, and segregation of duties.
-5. The event is submitted. Director-required actions require approval by the active authenticated School Director and are denied when no active Director exists.
+5. The event is submitted. Director-required actions require approval by the active authenticated School Director unless P0-04 explicitly permits a valid, exact-scope Effective Director Authority holder; all other missing/ambiguous authority states deny.
 6. Posting atomically creates the canonical registry entry, the permitted documents, any permitted cashbook cross-check entry, and the audit event.
 7. Daily inspection compares records and records an acceptance or Needs Correction result.
 
@@ -333,7 +335,7 @@ Budget categories such as personnel, operating, investment, subsidy, and other e
 
 1. Confirm the requester is eligible, the purpose/fund is allowed, and the required estimate and activity/travel evidence is complete.
 2. Enforce the policy rule that can prohibit a new advance while the person has an unsettled prior advance.
-3. Obtain authenticated Director Approval and post the disbursement, Advance Registry entry, Due-Date Control, and Document Held as Money reference. Do not create a Cashbook or fund-expense entry until settlement evidence is accepted.
+3. Obtain authenticated `AUTH-12` approval from the valid explicitly scoped Effective Director Authority holder and post the disbursement, Advance Registry entry, Due-Date Control, and Document Held as Money reference. Do not create a Cashbook or fund-expense entry until settlement evidence is accepted.
 4. Settlement accepts expense evidence, unused-money return, or both. The accepted evidence amount plus returned amount cannot exceed the outstanding advance.
 5. Mark the advance settled only when its outstanding amount is exactly zero. Overdue advances remain visible in daily/monthly controls and corrective-action work.
 
@@ -341,8 +343,8 @@ Budget categories such as personnel, operating, investment, subsidy, and other e
 
 - Finance Officer prepares the Daily Balance Report for each operating day with activity from cash, documents held as money, bank-position records, applicable cashbook cross-checks, and canonical registries.
 - A different authenticated School Admin or Finance Officer holding the School-scoped `Daily Balance Verifier` capability verifies the prepared report. The capability cannot be inferred from daily inspection; the verifier cannot prepare, approve/sign, solely reconcile, or close the same report.
-- After independent verification, an authenticated School Director formally approves/signs the report. The preparer cannot approve/sign the same report.
-- The report records opening balance, receipts, payments/position changes, closing balance, external evidence references, preparer identity/time, verifier identity/time/evidence, and School Director approval/signature identity/time.
+- After independent verification, an authenticated `AUTH-18`-permitted Effective Director Authority holder formally approves/signs the report. The preparer cannot approve/sign the same report.
+- The report records opening balance, receipts, payments/position changes, closing balance, external evidence references, preparer identity/time, verifier identity/time/evidence, and Effective Director Authority approval/signature identity/time.
 - Daily inspection remains a separate comparison control. It may record its own inspector and acceptance/Needs Correction result, but does not substitute for the independent-verifier capability.
 - A disagreement creates a Registry/Cashbook Disagreement and blocks normal close until resolved or explicitly accepted under policy.
 - At month end, the Monthly Reconciliation includes the final daily report, bank reconciliation reference, outstanding remittances and custodial obligations, unresolved exceptions, and report package.
@@ -421,7 +423,7 @@ These rules are enforced in domain services and database constraints, then cover
 8. A Financial Event Reference is unique within the platform and all linked records use it rather than copied descriptions.
 9. Receipt numbers, payment-voucher numbers, claim numbers, deposit references, and remittance references are unique within their configured school/fiscal-year/register scope.
 10. A posted record is immutable. Corrections are linked, reasoned, permission-checked, and auditable.
-11. A closed month rejects ordinary backdated posting. A Privileged Correction requires the source close revision, structured reason category, evidence, and authenticated School Director Approval before execution; the proposer/preparer cannot self-approve, no separate independent pre-execution reviewer is required in the initial pilot, and immutable evidence is retained for later approved oversight access.
+11. A closed month rejects ordinary backdated posting. A Privileged Correction requires the source close revision, structured reason category, evidence, and authenticated `AUTH-21` approval from the permitted Effective Director Authority holder before execution; the proposer/preparer cannot self-approve, no separate independent pre-execution reviewer is required in the initial pilot, and immutable evidence is retained for later approved oversight access.
 12. A source event with a Lifecycle Child cannot be directly replaced or re-parented.
 13. A reconciliation becomes Stale whenever a related posted event, correction, policy result, or evidence reference changes.
 14. A report is reproducible from its stored filter, policy, data revision, and generation time. A stale report remains retained and is replaced explicitly.
@@ -449,9 +451,9 @@ These rules are enforced in domain services and database constraints, then cover
 34. Audit Scores and any result level or ranking are reproducible from the stored checklist/rubric version, completed workpapers, source revisions, and authorized cohort; a score never hides an unresolved finding.
 35. Audit-assessment commands may create review, finding, report, and follow-up records, but cannot mutate a School's canonical financial records or bypass linked-correction and authorization rules.
 36. An Audit Assessment Cycle resolves exactly one published Audit Checklist Version by School scope and audit/as-of date. Missing or tied versions fail closed, and a finalized cycle never re-resolves merely because a later checklist is published.
-37. A Daily Balance Report records Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, then authenticated School Director approval/signature in that order. The verifier cannot prepare, approve/sign, solely reconcile, or close the same report.
+37. A Daily Balance Report records Finance Officer preparation, verification by a different School Admin or Finance Officer holding `Daily Balance Verifier`, then authenticated `AUTH-18` approval/signature by the permitted Effective Director Authority holder in that order. The verifier cannot prepare, approve/sign, solely reconcile, or close the same report.
 38. A Policy Version becomes inactive only when a newer activated Policy Version supersedes it. Historical policy resolution remains immutable, and no separate retirement/deactivation command exists.
-39. Each School has zero or one active School Director. Every Director-required command fails closed when no active Director exists; no ESAO, platform, audit, policy, finance, or other role may inherit or substitute for that authority.
+39. Each School has zero or one active School Director. Effective authority for the same School/command/time is at most one: able active Director, otherwise valid Acting authority, otherwise valid Temporary authority, else deny. Only the P0-04 permitted `AUTH-15` command scope may use substitute authority; no ESAO, platform, audit, policy, finance, or other role may inherit it, and `BLK-011` keeps all substitute execution denied until its evidence rule is supplied.
 
 ## 9. Core Algorithms
 
@@ -540,7 +542,7 @@ For each operating day, select canonical entries whose Fund Flow requires a cros
 1. Lock the original event, its Lifecycle Children, related close revision, and current reconciliation/report dependencies.
 2. Reject direct source replacement when a Lifecycle Child would be orphaned or re-parented.
 3. Before close, create an explicitly linked reversal/adjustment and corrected event under the current open revision.
-4. After close, require a Privileged Correction proposal, structured reason, evidence, source close revision, and authenticated School Director Approval before execution; reject any proposal where the proposer/preparer is the approver. No separate independent pre-execution reviewer is required in the initial pilot; immutable evidence is retained for later approved oversight access. Post the Adjustment Entry in the permitted open period.
+4. After close, require a Privileged Correction proposal, structured reason, evidence, source close revision, and authenticated `AUTH-21` approval by the permitted Effective Director Authority holder before execution; reject any proposal where the proposer/preparer is the approver. No separate independent pre-execution reviewer is required in the initial pilot; immutable evidence is retained for later approved oversight access. Post the Adjustment Entry in the permitted open period.
 5. Recalculate affected projections and mark dependent reconciliations/reports Stale in the same transaction.
 6. Keep the original, correction chain, approvals, and replacement reports queryable as one audit history.
 
@@ -558,7 +560,7 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 - `users`: normalized identity/email, display names, password hash, account status, authorization version, authentication metadata.
 - `registration_applications`: applicant ID, requested school/role, status, reviewer decision, structured reason, timestamps.
 - `organization_memberships`: user ID, organization ID, effective dates, status, approver ID, authorization revision.
-- `membership_role_assignments`: membership ID, role, effective dates, status, grant/revocation actor, reason, evidence reference, and timestamps; Finance Officer and School Admin may coexist for one School, while zero or one School Director assignment may be active per School.
+- `membership_role_assignments`: membership ID, role, effective dates, status, grant/revocation actor, reason, evidence reference, and timestamps; Finance Officer and School Admin may coexist for one School, while zero or one School Director assignment may be active per School. Separately, any future `AUTH-14` authority record must retain subject, School, type, basis/evidence, period, command scope, lifecycle, and audit history without creating a membership or active-Director assignment.
 - `privileged_appointments`: appointment or designation type, external authority/designation authority, evidence reference, subject, fixed scope, effective/current-status or revocation information, technical executor, outcome, and timestamps. Policy Publisher records retain Order 452/2568 eligibility evidence and approved Authorization Matrix designation separately.
 - `auth_events`: credential, sign-in, sign-out, recovery, suspension, and session-security evidence separate from financial audit actions where appropriate.
 - `role_permissions`: permission definitions and policy-bound capabilities.
@@ -595,7 +597,7 @@ Use PostgreSQL through Prisma with explicit history and normalized relations. In
 ### Control and reporting
 
 - `daily_inspections`: operating date, inspector, source revisions, result, discrepancy reason, acceptance event.
-- `daily_balance_reports`: report date, money-position balances, supporting inspection reference, preparer identity/time, `Daily Balance Verifier` identity/time/evidence, School Director approval/signature identity/time, discrepancy state, generation revision.
+- `daily_balance_reports`: report date, money-position balances, supporting inspection reference, preparer identity/time, `Daily Balance Verifier` identity/time/evidence, permitted Effective Director Authority approval/signature identity/time, discrepancy state, generation revision.
 - `bank_reconciliations`: period, external statement reference, book balance, statement balance, outstanding items, result.
 - `monthly_reconciliations`: fiscal period, version, status, linked daily/bank records, exceptions, acceptance event.
 - `monthly_closes`: period, close revision, closed by, closed at, report package, reopen/exception policy.
@@ -723,19 +725,19 @@ The application opens to the user's permitted workspace and current fiscal year.
 - **Registration administration:** System Admin platform account/registration-lifecycle queue and ESAO Admin organization-membership queue within the authorized boundary. ESAO Admin, not System Admin, provides approve, correction, reject, suspend, School-assignment, School-role, and membership-history views.
 - **Workspace dashboard:** balances by fund flow and money position, due/overdue remittances and custodial obligations, Needs Correction items, stale reconciliations, and recent audit-sensitive actions.
 - **Budget workspace:** Annual Action Plan, revised allocations, commitments, direct-payment claims, confirmed use, available budget, and variance by programme/project.
-- **Financial event intake:** flow-first form with dynamic policy-required fields, document checklist, evidence references, approval path, posting preview, and an explicit denied state when Director approval is required but no active School Director exists.
+- **Financial event intake:** flow-first form with dynamic policy-required fields, document checklist, evidence references, approval path, posting preview, and an explicit denied state when no valid Effective Director Authority holder exists for the exact permitted command.
 - **Official advances:** approval queue, outstanding/due/overdue list, evidence settlement, unused-money return, and recipient history.
 - **Receipt-book control:** serial-range inventory, custodian handover, issued/used/void/unused reconciliation, and annual report.
 - **Registry views:** document-request, state-income, non-budgetary (including Contract Security and Withheld Tax), and configured fund registers with running totals and scope filters.
 - **Cashbook cross-check:** only applicable entries, with agreement/disagreement state and link back to canonical event.
-- **Daily Balance and inspection:** Finance Officer preparation, assigned `Daily Balance Verifier` verification, and School Director approval/signature states, plus the separate inspection checklist, counted balances, external evidence references, discrepancy workflow, and inspection acceptance event.
+- **Daily Balance and inspection:** Finance Officer preparation, assigned `Daily Balance Verifier` verification, and `AUTH-18`-permitted Effective Director Authority approval/signature states, plus the separate inspection checklist, counted balances, external evidence references, discrepancy workflow, and inspection acceptance event.
 - **Reconciliation:** versioned daily/monthly reconciliation, bank comparison fields, outstanding items, report package, and stale indicators.
 - **Monthly close:** close readiness checklist, unresolved exceptions, report submission, close revision, and permitted correction path.
 - **Annual self-assessment:** source-faithful 2515-1 assertions/evidence and 2515-2 scores/results under `POL-GAP-08-SAR-001`; two distinct assessor assignments/signatures; School Director approval/signature; Finance Officer submission; explicit blocking evidence/review states; lifecycle history; July context; and the derived 17-school 2515-3 aggregate visible only through `AUTH-24`.
 - **School financial accounting audit:** active-assignment queue, versioned criteria and workpapers, evidence and external-evidence references, findings, management responses, follow-up/re-test, score/result, and final report history.
 - **ESAO audit summary:** authorized assigned-school audit status, overdue finding follow-up, comparable result distributions, and policy-permitted ranking with clear scope and cohort filters.
 - **Reports and exports:** reproducible filters, Thai fiscal dates, print-safe templates, export category boundary, and replacement history.
-- **Administration:** school users, zero-or-one active School Director lifecycle, fiscal years, numbering sequences, and fund-flow configuration for authorized school/ESAO users; ESAO Admin alone assigns/replaces/revokes the Director application authorization state, organization membership administration remains reserved for ESAO Admin, platform account/registration lifecycle for System Admin, and policy publication for the Matrix-designated eligible Internal Audit Policy Publisher acting on unchanged OBEC policy evidence.
+- **Administration:** school users, zero-or-one active School Director lifecycle, separately auditable Acting/Temporary authority records, fiscal years, numbering sequences, and fund-flow configuration for authorized school/ESAO users; ESAO Admin alone assigns/replaces/revokes active-Director state and manages the separate `AUTH-14` lifecycle without becoming an effective holder. Organization membership administration remains reserved for ESAO Admin, platform account/registration lifecycle for System Admin, and policy publication for the Matrix-designated eligible Internal Audit Policy Publisher acting on unchanged OBEC policy evidence.
 
 ### Interaction and accessibility requirements
 
@@ -755,7 +757,7 @@ The application opens to the user's permitted workspace and current fiscal year.
 3. Bank Reconciliation with external statement reference and outstanding items.
 4. Annual School Revenue Receipt/Payment Report, submitted within the policy period after fiscal year end (the guide specifies 30 days).
 5. Fund balance and outstanding-obligation reports by Fund Flow, type, programme, and money position.
-6. Annual ten-dimension Self-Assessment package with source-faithful 2515-1, derived 2515-2, two assessor signatures, Director approval, Finance Officer submission evidence, and the approved 17-school 2515-3 aggregate; July remains the source submission context without an invented exact due-day.
+6. Annual ten-dimension Self-Assessment package with source-faithful 2515-1, derived 2515-2, two assessor signatures, active-School-Director approval, Finance Officer submission evidence, and the approved 17-school 2515-3 aggregate; July remains the source submission context without an invented exact due-day.
 7. Audit Review Report for approvals, corrections, voids, disagreements, stale reports, exports, and policy changes.
 8. Budget Allocation/Commitment/Use/Availability and variance reports by plan, programme, Project/Activity, category, and fiscal period.
 9. Outstanding/Overdue Official Advance and settlement report by recipient, fund, due date, and corrective status.
@@ -772,7 +774,7 @@ Every report stores the exact filters, source revision, policy resolution, gener
 - Enforce least privilege, organization scoping, and server-side authorization on every read and write.
 - Use NextAuth middleware for route gating and server-side membership checks for authorization; inactive/pending users never receive protected application access.
 - Hash credentials using the selected memory-hard password algorithm, rate-limit registration/sign-in, prevent account enumeration, and protect registration endpoints against CSRF/automation abuse.
-- Require strong authentication and re-authentication for director approval, close, privileged correction, policy publication, Audit Assessment finalization and result acceptance, and sensitive export.
+- Require strong authentication and re-authentication for Effective Director Authority approval where the Matrix permits it, active-Director-only close, privileged correction, policy publication, Audit Assessment finalization and result acceptance, and sensitive export.
 - Encrypt data in transit and at rest; keep evidence references private by default and use expiring access for stored artifacts.
 - Redact personal identifiers in ESAO aggregates and exports unless the export policy allows them.
 - Restrict audit workpapers, findings, scores, result levels, and rankings to the assigned School/ESAO boundary; school users can access only their School's authorized report and response workflow.
@@ -795,7 +797,7 @@ Every report stores the exact filters, source revision, policy resolution, gener
 - End-to-end tests for advance eligibility/disbursement, approved settlement behavior, overdue closure, and Receipt Book issue/use/void/year-end cancellation.
 - Unit and integration tests for Audit Checklist Version resolution, topic-to-score-category mapping, workpaper completeness, score/result calculation, tie/incomplete handling, finding revision history, immutable finalization, responsible-Auditor acceptance, stale/replacement behavior, and exact Assessment/School authorization.
 - End-to-end tests for atomic creator assignment, ESAO Admin assignment/reassignment/revocation, single-active-Auditor enforcement, fieldwork, management response, finding modification, finalization, result acceptance, post-completion denial, final audit report, authorized ESAO summary, and corrective-action re-test without canonical-record mutation.
-- Authorization regression tests for zero-or-one active School Director, denial of every Director-required command when no holder exists, and rejection of ESAO Admin, System Admin, SESAO Auditor, Policy Publisher, Finance Officer, or any other substitute actor.
+- Authorization regression tests for zero-or-one active School Director; deterministic Effective Director Authority precedence and one-holder maximum; denial on overlap, stale/ambiguous evidence, invalid scope, expiry, or missing evidence; and rejection of ESAO Admin, System Admin, SESAO Auditor, Policy Publisher, Finance Officer, or any other unlisted substitute actor.
 
 ### Audit acceptance fixtures
 
@@ -817,7 +819,7 @@ Maintain deterministic fixtures for at least:
 - An incomplete workpaper pack, unresolved required finding, or missing policy result band that blocks audit finalization.
 - Two comparable finalized audit cycles with a policy-defined tie/rank outcome, plus an incompatible checklist or out-of-scope school excluded from the ESAO ranking view.
 - A post-finalization financial correction or verified finding update that marks the affected audit report and summary Stale and produces an explicit replacement.
-- A School with no active Director where payment, Official Advance, Daily Balance approval, month close, verifier grant/revoke, and Privileged Correction approval all fail closed until ESAO Admin assigns an active School Director.
+- A School with no valid Effective Director Authority where payment, Official Advance, Daily Balance approval, month close, verifier grant/revoke, and Privileged Correction approval fail closed; a valid substitute may affect only the P0-04 permitted command set, while a missing `BLK-011` evidence rule keeps all substitute paths denied.
 
 ### Definition of done for a financial feature
 
@@ -930,7 +932,7 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - PostgreSQL through Prisma is the persistence layer; financial commands run in serializable transactions with database-enforced relations and constraints.
 - NextAuth is the authentication layer, while authoritative authorization is enforced server-side from active memberships.
 - Public registration creates a pending application only; ESAO Admin membership approval within the permitted organizational boundary is required before access, while System Admin remains limited to platform account/registration lifecycle.
-- Each School has zero or one active School Director; no Temporary or Acting Director capability exists in the initial pilot, and Director-required commands deny without an active holder.
+- Each School has zero or one active School Director. Product Owner Decision 12 permits separately recorded Acting/Temporary authority only for P0-04's enumerated command scope, with deterministic one-holder resolution; `BLK-011` keeps those paths execution-denied until the authoritative evidence rule is supplied.
 - The repository School Directory seed contains the supplied 17 schools with unique SMIS and MOE codes.
 
 ### Resolve before P0-GATE permits Phase 1 to begin

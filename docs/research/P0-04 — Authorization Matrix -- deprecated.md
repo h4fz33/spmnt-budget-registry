@@ -1,8 +1,8 @@
 # P0-04 — Authorization Matrix
 ## SchoolBanchee
 
-**Status:** Proposed for SESAO Narathiwat Product Owner / Accountable Reviewer approval  
-**Effective date:** To be approved  
+**Status:** Historical/deprecated working draft; not a live authorization source. Superseded by the canonical P0-04 Matrix and, for the former Director-only assumption, by Product Owner Decision 12 effective 2026-08-15.
+**Effective date:** Historical draft; not effective
 **Scope:** All 17 pilot Schools under SESAO Narathiwat  
 **Parent organization:** SESAO Narathiwat (`1000960001`)  
 **External Governing Policy Authority:** OBEC  
