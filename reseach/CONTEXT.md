@@ -51,16 +51,20 @@ Thai UI: `ผู้อำนวยการสถานศึกษา`
 The single authority holder resolved for one School, permitted command, and time: an able active School Director, otherwise a valid Acting Substitute Director Authority, otherwise a valid Temporary Substitute Director Authority, else none. It is not a role, membership, generic delegation, or a way to widen a command's approved scope.
 _Avoid_: Fallback role, delegated Director, parallel approver
 
+**Active Director Availability**:
+The auditable availability state of the active School Director for the permitted substitute commands. Unavailability persists independently of any Acting record and ends only through explicit authenticated return/resumption or termination of that active-Director assignment.
+_Avoid_: Login-derived availability, Acting-record existence, automatic return
+
 **Acting Substitute Director Authority**:
-A named, time-bounded authority record for a distinct named substitute when the active School Director is unable. The record identifies both the unavailable active Director and the distinct Acting substitute; it is not an additional active School Director, a membership, or a generic delegation.
+A named authority record for a distinct same-School substitute when the active School Director is unable. While in force it prevents that Director from executing the permitted substitute commands until explicit return; it ends permanently through return, active-Director removal/replacement, or subject-eligibility loss and is not a role, membership, or generic delegation.
 _Avoid_: Acting Director role, temporary role, automatic fallback
 
 **Temporary Substitute Director Authority**:
-A named, time-bounded authority record for a permitted command scope when documented basis shows the Active/Acting resolution cannot supply an effective holder, including a School with zero active Director. It is not an additional active School Director, a membership, or a generic delegation.
+A named authority record for an eligible authenticated Finance Officer or School Admin of the same School when documented basis shows the Active/Acting resolution cannot supply an effective holder, including a School with zero active Director. Subject-eligibility loss permanently invalidates it; it is not an additional active School Director, membership, or generic delegation.
 _Avoid_: Temporary Director role, broad delegation, emergency override
 
 **Substitute Director Authority Record**:
-The attributable evidence-backed record that identifies an Acting or Temporary subject, School, time boundary, command scope, basis, status, and lifecycle history. For Acting it identifies the unavailable active Director and distinct Acting substitute; for Temporary it identifies the basis that Active/Acting resolution cannot supply a holder. It does not create authority when its required evidence is incomplete, invalid, stale, or ambiguous.
+The attributable record that identifies an Acting or Temporary subject, School, effective boundary, command scope, basis, status, and immutable lifecycle history. Replacement and correction are atomic supersessions, all underlying person-level segregation of duties remains binding, and an in-force record grants executable authority only when the Effective Director Authority resolver selects it.
 _Avoid_: Informal handover, role grant, undocumented delegation
 
 **Director Approval**:
