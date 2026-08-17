@@ -5,6 +5,7 @@
 **Blocker:** BLK-011  
 **Decision authority:** Private Business / Product Owner  
 **Decision date:** 2026-08-16  
+**Reconciliation grilling date:** 2026-08-17
 **Decision method:** Interactive grilling session with Product Owner  
 **Purpose:** Define the exact authoritative appointment/organizational evidence type and validation rules for Acting and Temporary Substitute Director Authority
 
@@ -189,6 +190,12 @@ For commands `AUTH-09`, `AUTH-11`, `AUTH-12`, `AUTH-18` only:
 3. Otherwise, valid Temporary Director Authority (ESAO-created via `AUTH-14/TEMP`) → Temporary subject executes via `AUTH-15`
 4. Otherwise, **deny**
 
+**Active Director Availability creation:**
+- `AUTH-14/DIRECTOR` atomically records the appointing active Director as unavailable from the Acting effective start and creates the Acting record
+- `AUTH-14/ESAO` atomically records the named active Director as unavailable and creates the Acting record
+- `AUTH-14/TEMP` may atomically record the named active Director as unavailable and create Temporary authority when no valid Acting holder exists; a School with zero active Director needs no availability record
+- System Admin cannot create, modify, or end Active Director Availability
+
 **Validation rules:**
 - At most one active Director per school (zero or one)
 - At most one effective Acting holder per school/command/time
@@ -222,7 +229,7 @@ For commands `AUTH-19`, `AUTH-21`, `AUTH-34`, `AUTH-35`, `AUTH-38`, and all othe
 - Command scope (fixed: `AUTH-09/11/12/18`)
 - Effective start timestamp
 - Expiry/revocation timestamp (when applicable)
-- Status (active, revoked, expired)
+- Status from the fixed `SCHEDULED`, `IN_FORCE`, `REVOKED`, `EXPIRED`, `SUPERSEDED`, `INVALIDATED`, `ENDED_ON_RETURN`, or `CONVERTED` lifecycle
 - Integrity digest of the immutable authorization record fields and revision
 - Active Director Availability reference for Acting and for Temporary when an active Director exists but remains unavailable
 
@@ -237,6 +244,8 @@ For commands `AUTH-19`, `AUTH-21`, `AUTH-34`, `AUTH-35`, `AUTH-38`, and all othe
 - **System validation:** Same-school check, duplicate/overlap detection, command scope enforcement, expiry check
 - **Eligibility validation:** Membership/account status, School, and eligible-role loss permanently invalidate the authority; restored eligibility does not reactivate the old record
 - **Availability validation:** Acting expiry/revocation/supersession does not imply Director return; a separately audited explicit return/resumption event is required before the active Director becomes executable
+
+**Authentication and audit controls:** Every `AUTH-14` variant and every return/resumption, revocation, replacement, correction, renewal, eligibility invalidation, and conversion requires fresh reauthentication, structured reason, authorization-revision update, integrity digest, and immutable audit event. `AUTH-15` inherits the underlying command's authentication, evidence, and person-level SoD controls.
 - **Actor validation:** Active Director authority verified before Director-path appointment; ESAO Admin authority verified before ESAO-path appointment
 - **Completeness validation:** Required reason field present; optional evidence reference recorded if uploaded
 
@@ -266,6 +275,18 @@ For commands `AUTH-19`, `AUTH-21`, `AUTH-34`, `AUTH-35`, `AUTH-38`, and all othe
 - Expired authority cannot be used; `AUTH-15` execution denies
 - Must create new appointment (new record) to restore authority
 - No grace period or automatic extension
+
+### Authority Record Statuses
+- `SCHEDULED`: valid future-effective record not yet executable
+- `IN_FORCE`: record is within its effective boundary and eligible for resolution
+- `REVOKED`: ended prospectively by an authorized revocation
+- `EXPIRED`: ended automatically at its expiry timestamp
+- `SUPERSEDED`: atomically replaced or corrected by a newer immutable revision
+- `INVALIDATED`: permanently ended by eligibility or integrity failure
+- `ENDED_ON_RETURN`: Acting record permanently ended by explicit Director return/resumption
+- `CONVERTED`: Temporary record ended atomically when separate `AUTH-05` created the active Director assignment
+
+Denied or failed attempts are immutable audit outcomes, not authority-record statuses.
 
 ---
 
@@ -410,6 +431,12 @@ effective_director_authority_resolution:
     4: deny
   active_director_availability:
     separately_audited: true
+    creation:
+      AUTH-14/DIRECTOR: atomic_with_acting_creation_by_active_director
+      AUTH-14/ESAO: atomic_with_acting_creation_by_esao_admin
+      AUTH-14/TEMP: atomic_with_temporary_creation_when_active_director_exists_and_no_acting_holder
+      zero_active_director: no_availability_record_required
+      system_admin: prohibited
     acting_end_does_not_restore_availability: true
     restoration: explicit_authenticated_return_or_resumption_event
   overlap:
@@ -467,19 +494,36 @@ renewal_and_expiry:
     - AUTH-15_execution_denies
     - must_create_new_appointment
     - no_grace_period
+
+authority_record_statuses:
+  - SCHEDULED
+  - IN_FORCE
+  - REVOKED
+  - EXPIRED
+  - SUPERSEDED
+  - INVALIDATED
+  - ENDED_ON_RETURN
+  - CONVERTED
+failed_or_denied_attempts: audit_outcomes_not_record_statuses
+
+authentication_and_audit:
+  lifecycle_actions:
+    fresh_reauthentication: required
+    structured_reason: required
+    authorization_revision_update: required
+    integrity_digest: required
+    immutable_audit_event: required
+  AUTH-15: inherits_underlying_command_authentication_evidence_and_sod
 ```
 
 ---
 
 ## Implementation Impact
 
-### Unblocked Tasks
-- `P0-04` - Authorization matrix can be completed with Acting/Temporary evidence specifications
-- `P0-10` - Registration policy can proceed (no Acting/Temporary blocking)
-- `P0-GATE` - Phase 0 gate can close with complete authority model
-- `P1-04` - Prisma models can include Acting/Temporary authority records
-- `P1-06` - Authorization services can implement `AUTH-14`/`AUTH-15` resolution
-- `P1-16` - ESAO Admin queues can include Acting/Temporary lifecycle management
+### Tasks Potentially Unblocked After Governance Reconciliation
+- `P0-04` may complete only after the canonical Matrix and full closure audit reconcile this approved model
+- `P0-10` and `P0-GATE` may remove the BLK-011 dependency only after that reconciliation is durably verified
+- `P1-04`, `P1-06`, and `P1-16` may incorporate the model only through separately claimed implementation tasks after their governance dependencies are complete
 
 ### Required Implementation Work
 1. Update P0-04 Authorization Matrix to define `AUTH-14/DIRECTOR`, `AUTH-14/ESAO`, and `AUTH-14/TEMP` actor-specific variants within the existing `AUTH-14` row
@@ -526,6 +570,10 @@ BLK-011 required the following decisions, now resolved:
 | Cross-tier overlap | Permitted only when precedence resolves exactly one effective holder; same-tier duplicates, contradictory state, or multiple effective holders deny |
 | Correction | Atomically supersedes the prior record with a new immutable revision; failure leaves the prior record unchanged |
 | P0-07 category | `INTERNAL-AUTHORIZATION` is fixed for records and optional attachments as a downstream reconciliation requirement; P0-07 is not reopened or completed here |
+| Availability actor | Active Director or ESAO Admin records unavailability atomically through the applicable `AUTH-14` variant; System Admin is prohibited |
+| Lifecycle statuses | `SCHEDULED`, `IN_FORCE`, `REVOKED`, `EXPIRED`, `SUPERSEDED`, `INVALIDATED`, `ENDED_ON_RETURN`, `CONVERTED`; denied attempts are audit outcomes |
+| Authentication/audit | Every lifecycle action requires fresh reauthentication, structured reason, revision update, integrity digest, and immutable audit event |
+| Closure boundary | Separately claimed governance reconciliation and full P0-04 closure audit are required before completion; no code implementation is authorized here |
 
 ---
 
@@ -535,7 +583,7 @@ BLK-011 required the following decisions, now resolved:
 
 The exact authoritative appointment/organizational evidence type and validation rules have been specified. The hybrid model amends Decision 12 to allow School Director self-service appointment of Acting Director Authority with ESAO Admin passive oversight, while preserving ESAO Admin-only Temporary Director Authority management.
 
-`AUTH-14`/`AUTH-15` can now be implemented with known evidence contracts.
+The evidence and lifecycle decisions are complete, but `AUTH-14`/`AUTH-15` implementation remains unauthorized until a separately claimed governance task reconciles the Matrix, Blueprint, glossary, ADR, checklist, research, and downstream contracts and the P0-04 closure audit passes.
 
 ---
 
@@ -552,14 +600,16 @@ The exact authoritative appointment/organizational evidence type and validation 
 
 ## Next Actions
 
-1. **Codex session 019fea82-49ed-7ae2-a8fd-8614817b0871** will proceed with:
+1. **A separately claimed governance reconciliation task** must:
    - Update P0-04 Authorization Matrix with `AUTH-14/DIRECTOR`, `AUTH-14/ESAO`, and `AUTH-14/TEMP` variants under the stable canonical `AUTH-14` command
    - Mark BLK-011 as RESOLVED in DEVELOPMENT-CHECKLIST.md
    - Update or create new ADR documenting the hybrid model amendment
    - Create session note for BLK-011 resolution
-   - Unblock P0-04, P0-10, P0-GATE
+   - Run the full P0-04 closure audit and update P0-04/P0-10/P0-GATE status only from durable verification evidence
 
 2. **Future implementation tasks** (not part of BLK-011 resolution):
    - Design Prisma schema for Acting/Temporary authority records (P1-04)
    - Implement authorization resolution services (P1-06)
    - Build ESAO Admin and Director UIs for lifecycle management (P1-16)
+
+No RBAC, schema, application, provider, configuration, or production implementation is authorized by this resolution or grilling session.

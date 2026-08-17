@@ -92,10 +92,10 @@ Every catalogue rule requires these fields before activation:
 ## Authorization And SoD Rules
 
 - `AUTH-10` routine financial events require active Finance Officer membership and own-School scope.
-- `AUTH-11` payment and remittance commands require the valid explicitly scoped Effective Director Authority holder where the Matrix row requires approval; the substitute path remains fail closed pending `BLK-011`.
-- `AUTH-12` Official Advance issue requires the valid explicitly scoped Effective Director Authority holder and prior-unsettled checks; the substitute path remains fail closed pending `BLK-011`.
+- `AUTH-11` payment and remittance commands require the valid explicitly scoped Effective Director Authority holder where the Matrix row requires approval; Acting/Temporary authority is permitted only under the resolved `AUTH-14/15` contract.
+- `AUTH-12` Official Advance issue requires the valid explicitly scoped Effective Director Authority holder and prior-unsettled checks; Acting/Temporary authority is permitted only under the resolved `AUTH-14/15` contract.
 - `AUTH-34` is the only transfer command. It is not a generic privilege and cannot cross School or Fund boundaries.
-- `AUTH-14` and `AUTH-15` have an approved limited model but remain execution-denied pending `BLK-011`; only the Matrix's explicitly permitted command scope may ever use them.
+- `AUTH-14` and `AUTH-15` use the resolved hybrid model and only the Matrix's explicit `AUTH-09`, `AUTH-11`, `AUTH-12`, and `AUTH-18` command scope. Unsupported subjects, commands, reasons/bases, state combinations, or multiple effective holders deny.
 - No delegation, shared account, self-approval, source mutation, silent re-parenting, or unsupported command is permitted.
 
 ## Resolution And Activation
@@ -107,7 +107,7 @@ For each Financial Event, resolve exactly one active Policy Version by organizat
 - Every rule has scope, effective-date fields, source citation, publisher, validation behavior, and expected example.
 - All 14 P0-03 flows are represented; `FF-12/13` share the atomic settlement rule and `FF-07/08`, `FF-09/10` remain distinct child models.
 - `AUTH-34` is the only FF-14 command boundary and has no generic transfer path.
-- Director-required commands fail closed without a valid Effective Director Authority holder. `AUTH-14/15` remain execution-denied pending `BLK-011`; `AUTH-34` and all unlisted commands remain active-School-Director-only or denied as the Matrix requires.
+- Director-required commands fail closed without a valid authorized holder. Acting/Temporary Effective Director Authority is limited to `AUTH-09/11/12/18`; `AUTH-19`, `AUTH-21`, `AUTH-34`, `AUTH-35`, `AUTH-38`, and all unlisted commands remain active-School-Director-only or denied as the Matrix requires.
 - Unsupported variants, tied policy resolution, missing evidence, cross-scope access, and source mutation fail closed.
 - Historical policy resolution is immutable; later activation supersedes only future events.
 

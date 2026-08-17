@@ -33,7 +33,7 @@ _Avoid_: District when referring to the formal OBEC organization, Policy Publish
 Thai UI: `สำนักงานเขตพื้นที่การศึกษา (สพท.)`
 
 **School Admin**:
-A School Role Assignment for permitted school-level governance actions that may coexist with Finance Officer on the same Approved Membership. It does not approve, activate, or assign memberships and does not imply Daily Balance Verifier.
+A School Role Assignment for permitted school-level governance actions that may coexist with Finance Officer on the same Approved Membership. It may submit a same-School synthetic Finance Officer account request but does not verify, approve, activate, or assign memberships and does not imply Daily Balance Verifier.
 _Avoid_: Finance officer, system admin
 Thai UI: `ผู้ดูแลระบบระดับสถานศึกษา`
 
@@ -52,7 +52,7 @@ The single authority holder resolved for one School, permitted command, and time
 _Avoid_: Fallback role, delegated Director, parallel approver
 
 **Active Director Availability**:
-The auditable availability state of the active School Director for the permitted substitute commands. Unavailability persists independently of any Acting record and ends only through explicit authenticated return/resumption or termination of that active-Director assignment.
+The auditable availability state of the active School Director for the permitted substitute commands, created atomically by an authorized Director or ESAO Admin lifecycle action; System Admin cannot change it. Unavailability persists independently of any substitute record and ends only through explicit authenticated return/resumption or termination of that active-Director assignment.
 _Avoid_: Login-derived availability, Acting-record existence, automatic return
 
 **Acting Substitute Director Authority**:
@@ -88,7 +88,7 @@ A status for an audited action that requires school follow-up before normal comp
 _Avoid_: Informational warning
 
 **System Admin**:
-A platform operations and identity-governance role that owns platform account and registration lifecycle, diagnostics, support, and the sealed Initial Authorization Bootstrap. Outside that allowlisted bootstrap, it cannot decide or originate organization authority and may technically apply only exact approved appointment or designation records without selection, scope, or self-grant discretion.
+A platform operations and identity-governance role that owns platform account and registration lifecycle, diagnostics, support, sealed Initial Authorization Bootstrap, and exact ESAO-approved credential recovery/bootstrap execution. Outside those allowlisted technical paths, it cannot decide or originate organization authority and may technically apply only exact approved records without selection, scope, or self-grant discretion.
 _Avoid_: Organization membership administrator, school admin, finance officer
 Thai UI: `ผู้ดูแลระบบส่วนกลาง`
 
@@ -97,7 +97,7 @@ An Education Service Area Office user authorized to administer organization memb
 _Avoid_: System admin, school admin, policy publisher
 
 **Initial Authorization Bootstrap**:
-The sealed one-time application configuration that binds named authenticated identities to the approved initial role and organizational-scope allowlist. It creates application authority and an immutable configuration history but is not an external governmental appointment or organizational evidence verification.
+The sealed one-time application configuration that binds named authenticated identities to the approved initial role and organizational-scope allowlist. The separate initial School Admin bootstrap has exactly one synthetic School Admin row per active School and requires exact ESAO Admin approval before System Admin technical execution. It creates application authority and immutable configuration history but is not an external governmental appointment or organizational evidence verification.
 _Avoid_: Appointment, generic System Admin grant, reusable privilege bootstrap
 
 **Privileged Appointment Evidence**:
@@ -125,20 +125,24 @@ The single effective link between one SESAO Auditor and one Audit Assessment tha
 _Avoid_: Auditor team, reviewer assignment, concurrent Auditor access
 
 **School Directory**:
-The controlled list of Schools eligible for registration, identified by official SMIS and Ministry of Education codes.
-_Avoid_: Free-text school list, applicant-created school
+The controlled list of Schools eligible for School Account Requests, identified by official SMIS and Ministry of Education codes.
+_Avoid_: Free-text school list, applicant-created school, cross-School request
 
 **Registration Applicant**:
-A person who has submitted a Registration Application but has no SchoolBanchee membership or application access.
-_Avoid_: Active user, school member
+A historical pre-2026-08-17 term for an unauthenticated public-registration submitter. The synthetic private pilot has no public registration route.
+_Avoid_: Active user, current onboarding actor
 
 **Registration Application**:
-A request from a Registration Applicant for Finance Officer membership at one specific School. No other role is publicly requestable in the initial pilot.
-_Avoid_: User account, Approved Membership
+A historical pre-2026-08-17 public Finance Officer request. The current synthetic private pilot uses a School Account Request instead.
+_Avoid_: Current onboarding command, User account, Approved Membership
+
+**School Account Request**:
+A request from an active School Admin for one synthetic Finance Officer identity at that School. Submission grants no session, membership, role, or financial access; ESAO Admin alone verifies and decides it.
+_Avoid_: Public registration, membership grant, School Admin approval
 
 **Membership Approval**:
-An authenticated ESAO Admin decision within the permitted organizational boundary that assigns an approved role and organization boundary to a Registration Application. System Admin platform authority cannot bypass this boundary.
-_Avoid_: Email verification, self-assigned role
+An authenticated ESAO Admin decision within the permitted organizational boundary that assigns an approved role and organization boundary to a School Account Request. System Admin platform authority cannot bypass this boundary.
+_Avoid_: Email verification, School Admin approval, self-assigned role
 
 **Approved Membership**:
 A scoped active authorization linking a user identity to one School, Education Service Area Office, or platform-operations boundary with one or more effective Role Assignments. School Role Assignments may be additive but remain subject to person-level segregation of duties.

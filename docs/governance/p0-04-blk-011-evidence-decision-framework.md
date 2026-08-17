@@ -1,10 +1,10 @@
 # BLK-011 Evidence Decision Framework
 # Substitute School Director Authority - Evidence Type Specification
 
-**Status:** DECISION REQUIRED  
+**Status:** HISTORICAL / SUPERSEDED 2026-08-16 by [BLK-011 Resolution Record](./blk-011-resolution-record.md)
 **Blocker:** BLK-011  
 **Decision authority:** Private Business / Product Owner  
-**Purpose:** Define the exact authoritative appointment/organizational evidence type and validation rules for Acting and Temporary Substitute Director Authority
+**Purpose:** Preserve the pre-decision framework that informed BLK-011. It is not current authorization policy and must not be used as an implementation contract.
 
 ---
 
@@ -291,4 +291,3 @@ Before making final decisions, consider:
 3. What level of formality is appropriate for the 17-school pilot vs. future expansion?
 4. Should the evidence requirements be strict (detailed validation) or flexible (trust ESAO Admin judgment)?
 5. Are there examples of past acting/temporary assignments we can reference?
-
