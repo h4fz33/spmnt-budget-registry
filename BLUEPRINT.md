@@ -936,14 +936,20 @@ Execution status, task ownership, dependencies, phase gates, and session handoff
 - Each School has zero or one active School Director. Resolved BLK-011 permits separately recorded Acting/Temporary authority only for `AUTH-09/11/12/18`, with stable `AUTH-14` variants, explicit Active Director Availability, immutable evidence/lifecycle history, and deterministic one-holder resolution.
 - The repository School Directory seed contains the supplied 17 schools with unique SMIS and MOE codes.
 
-### Resolve before P0-GATE permits Phase 1 to begin
+### Phase 0 Gate Resolution And Downstream Conditions
 
-- Activate `POL-GAP-08-SAR-001` through `AUTH-22` before enabling runtime SAR behavior; the source contract, Product Owner decisions, and P0-04 amendment are resolved.
-- Evidence storage location, retention period, maximum file size, and external-document reference format.
-- PostgreSQL hosting boundary, encryption/key ownership, backup service, and recovery objectives approved by the Private Business accountable Product/Infrastructure Owner with named operations and security acceptance.
-- Registration identity-proof requirements, email-verification exclusion, ESAO-verified/System-Admin-executed recovery, bcrypt password policy, and the School Admin/ESAO request boundary are resolved by P0-10.
-- Which section 3 audit criteria, workpaper templates, weights, topic-to-score-category mapping, result-level cutoffs, ranking cohort/tie rules, signatures, and finding-response deadlines are currently applicable to SESAO schools.
-- Whether the pilot needs offline capture or can require a connected deployment.
+`P0-GATE-01`, as amended by the Product Owner on 2026-08-17, accepts the Phase
+0 governance foundation effective `2026-08-18T00:00:00+07:00`. P0-07 D07
+remains independently effective `2026-08-20T00:00:00+07:00`. Its evidence and
+Phase 1 release boundary are in
+[`docs/governance/p0-gate-phase-0-acceptance.md`](./docs/governance/p0-gate-phase-0-acceptance.md).
+
+- `POL-GAP-08-SAR-001` remains a resolved structural contract. Runtime SAR behavior still requires its own `AUTH-22` activation and implementation task.
+- P0-07 resolves the synthetic-scope evidence boundary, including `DB-STRUCTURED`, disabled `OBJECT-PRIVATE`, the 10 MiB per-artifact limit, external-controlled reference format, privacy/export controls, and interim no-destructive-disposal rule. Its D07 coverage is effective 2026-08-20; object upload remains disabled.
+- P0-08 resolves the connected-only hosting/recovery decision boundary and bounded selected-provider proof. Provider backup/PITR, encryption, restore, recovery drill, SLA, production, and real-data capability remain separately unverified and unauthorized.
+- P0-10 resolves the synthetic School Admin/ESAO request boundary, no-personal-ID/no-email-verification policy, ESAO-verified/System-Admin-executed recovery, and bcrypt credential baseline. Its implementation remains separately assigned to Phase 1.
+- `BLK-004` remains a Phase 4 audit-instrument policy gate for section 3 criteria, workpapers, weights, scoring/ranking rules, signatures, and deadlines. It does not block Phase 1 or activate any audit runtime behavior.
+- P0-08 D03 requires a connected deployment: offline business-data reads, queued writes, local persistence, and synchronization remain prohibited.
 
 ## 21. Traceability Rule
 
