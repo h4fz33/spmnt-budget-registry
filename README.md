@@ -21,7 +21,13 @@ The application is a [Next.js](https://nextjs.org/) project bootstrapped with [`
 - Public registration remains pending until an authorized ESAO Admin approves the organization membership; System Admin owns platform account/registration lifecycle only and cannot bypass that boundary.
 - The initial 17-school directory is stored in [`data/schools.csv`](./data/schools.csv).
 
-Runtime secrets and database selection belong in `.env.local` using [`.env.example`](./.env.example) as the contract. Never commit the real PostgreSQL connection URL or NextAuth secret.
+Runtime secrets and database selection belong in `.env.local`. Start from the
+matching [development](./.env.development.example),
+[test](./.env.test.example), or
+[production](./.env.production.example) template, using
+[`.env.example`](./.env.example) as the shared contract. Never commit the real
+PostgreSQL connection URL or NextAuth secret. `npm run dev`, `npm run build`,
+and `npm run start` validate required server configuration before startup.
 
 ## Getting Started
 
@@ -37,9 +43,9 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:6000](http://localhost:6000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 

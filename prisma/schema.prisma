@@ -1,0 +1,23 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Infrastructure-only probe for P1-03 migration, seed, and retry verification.
+// Domain models belong to P1-04 and later tasks.
+model DatabaseBootstrap {
+  id                  String   @id @default("p1-03")
+  seedMarker          String   @unique
+  serializableCounter Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}

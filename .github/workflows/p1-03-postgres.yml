@@ -1,0 +1,71 @@
+name: P1-03 PostgreSQL foundation
+
+on:
+  push:
+    paths:
+      - "prisma/**"
+      - "prisma.config.ts"
+      - "scripts/db-*.mjs"
+      - "scripts/load-env.mjs"
+      - "scripts/run-db-test.mjs"
+      - "scripts/verify-p1-03.mjs"
+      - "config/runtime-env.mjs"
+      - "src/lib/database/**"
+      - "tests/integration/**"
+      - "compose.postgres.yaml"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/p1-03-postgres.yml"
+  pull_request:
+    paths:
+      - "prisma/**"
+      - "prisma.config.ts"
+      - "scripts/db-*.mjs"
+      - "scripts/load-env.mjs"
+      - "scripts/run-db-test.mjs"
+      - "scripts/verify-p1-03.mjs"
+      - "config/runtime-env.mjs"
+      - "src/lib/database/**"
+      - "tests/integration/**"
+      - "compose.postgres.yaml"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/p1-03-postgres.yml"
+
+jobs:
+  postgres-foundation:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: schoolbanchee_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d schoolbanchee_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      APP_ENV: test
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/schoolbanchee_test?schema=public
+      NEXTAUTH_URL: http://localhost:6000
+      NEXTAUTH_SECRET: synthetic-ci-secret-for-p1-03-verification-only
+      SCHOOL_SEED_ESAO_CODE: 1000960001
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+      - run: npm run db:migrate:test
+      - run: npm run db:seed:test
+      - run: npm run db:seed:test
+      - run: npm run verify:p1-03
+      - run: npm run test:integration
