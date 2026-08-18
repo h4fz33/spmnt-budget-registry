@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -12,12 +7,282 @@ datasource db {
   provider = "postgresql"
 }
 
-// Infrastructure-only probe for P1-03 migration, seed, and retry verification.
-// Domain models belong to P1-04 and later tasks.
+enum OrganizationType {
+  PLATFORM
+  ESAO
+  SCHOOL
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AccountStatus {
+  PENDING
+  ACTIVE
+  DISABLED
+}
+
+enum MembershipStatus {
+  ACTIVE
+  SUSPENDED
+  REVOKED
+}
+
+enum SchoolRole {
+  FINANCE_OFFICER
+  SCHOOL_ADMIN
+  SCHOOL_DIRECTOR
+}
+
+enum RoleAssignmentStatus {
+  SCHEDULED
+  ACTIVE
+  REVOKED
+  SUPERSEDED
+  INVALIDATED
+}
+
+enum FiscalYearStatus {
+  OPEN
+  CLOSED
+}
+
+enum ActingReasonCode {
+  MEDICAL_LEAVE
+  OFFICIAL_TRAVEL
+  PERSONAL_LEAVE
+  OTHER
+}
+
+enum SubstituteDirectorAuthorityVariant {
+  ACTING_DIRECTOR
+  ACTING_ESAO
+  TEMPORARY
+}
+
+enum SubstituteDirectorAuthorityStatus {
+  SCHEDULED
+  IN_FORCE
+  REVOKED
+  EXPIRED
+  SUPERSEDED
+  INVALIDATED
+  ENDED_ON_RETURN
+  CONVERTED
+}
+
+enum DirectorAvailabilityStatus {
+  UNAVAILABLE
+  RESUMED
+  DIRECTOR_ASSIGNMENT_ENDED
+}
+
+// P1-03 bootstrap probe remains synthetic infrastructure used by its migration,
+// reset, and serializable-retry verification. P1-04 adds the domain foundation
+// below without treating this record as domain data.
 model DatabaseBootstrap {
   id                  String   @id @default("p1-03")
   seedMarker          String   @unique
   serializableCounter Int      @default(0)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
+}
+
+model Organization {
+  id                   String             @id @default(uuid()) @db.Uuid
+  type                 OrganizationType
+  status               OrganizationStatus @default(ACTIVE)
+  nameTh               String
+  nameEn               String?
+  parentOrganizationId String?            @db.Uuid
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  parent      Organization?        @relation("OrganizationHierarchy", fields: [parentOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  children    Organization[]       @relation("OrganizationHierarchy")
+  school      School?
+  memberships ApprovedMembership[]
+
+  @@index([parentOrganizationId])
+}
+
+// School is the school-specific extension of an Organization. It makes every
+// School-scoped foreign key distinguishable from an ESAO or platform boundary.
+model School {
+  organizationId    String   @id @db.Uuid
+  smisCode          String   @unique @db.VarChar(32)
+  moeCode           String   @unique @db.VarChar(32)
+  directoryIsActive Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  organization           Organization                  @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  roleAssignments        SchoolRoleAssignment[]
+  fiscalYears            FiscalYear[]
+  directorAvailabilities ActiveDirectorAvailability[]
+  substituteAuthorities  SubstituteDirectorAuthority[]
+}
+
+model AuthenticatedIdentity {
+  id                   String        @id @default(uuid()) @db.Uuid
+  accountIdentifier    String        @unique @db.VarChar(320)
+  displayName          String
+  accountStatus        AccountStatus @default(PENDING)
+  passwordHash         String?       @db.VarChar(60)
+  passwordChangedAt    DateTime?
+  authorizationVersion Int           @default(1)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  memberships              ApprovedMembership[]                   @relation("MembershipIdentity")
+  approvedMemberships      ApprovedMembership[]                   @relation("MembershipApprover")
+  grantedRoleAssignments   SchoolRoleAssignment[]                 @relation("RoleGrantor")
+  appointedAuthorities     SubstituteDirectorAuthority[]          @relation("AuthorityAppointer")
+  recordedAvailabilities   ActiveDirectorAvailability[]           @relation("AvailabilityRecorder")
+  authorityLifecycleEvents SubstituteDirectorAuthorityLifecycle[] @relation("AuthorityLifecycleActor")
+}
+
+// An Approved Membership is an organizational boundary. School roles are
+// attached separately, so Finance Officer and School Admin can be additive
+// only inside the same School membership.
+model ApprovedMembership {
+  id                   String           @id @default(uuid()) @db.Uuid
+  identityId           String           @db.Uuid
+  organizationId       String           @db.Uuid
+  status               MembershipStatus @default(ACTIVE)
+  effectiveFrom        DateTime         @default(now())
+  effectiveTo          DateTime?
+  approvedByIdentityId String?          @db.Uuid
+  authorizationVersion Int              @default(1)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  identity        AuthenticatedIdentity  @relation("MembershipIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  organization    Organization           @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  approvedBy      AuthenticatedIdentity? @relation("MembershipApprover", fields: [approvedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  roleAssignments SchoolRoleAssignment[] @relation("MembershipRoles")
+
+  @@unique([id, organizationId])
+  @@index([identityId, organizationId])
+  @@index([organizationId, status])
+}
+
+model SchoolRoleAssignment {
+  id                  String               @id @default(uuid()) @db.Uuid
+  membershipId        String               @db.Uuid
+  schoolId            String               @db.Uuid
+  role                SchoolRole
+  status              RoleAssignmentStatus @default(ACTIVE)
+  effectiveFrom       DateTime             @default(now())
+  effectiveTo         DateTime?
+  grantReason         String
+  evidenceReference   String?
+  grantedByIdentityId String?              @db.Uuid
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  membership             ApprovedMembership            @relation("MembershipRoles", fields: [membershipId, schoolId], references: [id, organizationId], onDelete: Restrict, onUpdate: Restrict)
+  school                 School                        @relation(fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+  grantedBy              AuthenticatedIdentity?        @relation("RoleGrantor", fields: [grantedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  subjectAuthorities     SubstituteDirectorAuthority[] @relation("AuthoritySubject")
+  directorAvailabilities ActiveDirectorAvailability[]  @relation("AvailabilityDirectorAssignment")
+
+  @@unique([id, schoolId])
+  @@index([membershipId, schoolId, role, status])
+  @@index([schoolId, role, status])
+}
+
+model FiscalYear {
+  id           String           @id @default(uuid()) @db.Uuid
+  schoolId     String           @db.Uuid
+  buddhistYear Int
+  startsOn     DateTime         @db.Date
+  endsOn       DateTime         @db.Date
+  status       FiscalYearStatus @default(OPEN)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  school School @relation(fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([schoolId, buddhistYear])
+  @@index([schoolId, startsOn, endsOn])
+}
+
+// This state is intentionally independent of substitute authority. Ending an
+// Acting record cannot silently make the active Director available again.
+model ActiveDirectorAvailability {
+  id                       String                     @id @default(uuid()) @db.Uuid
+  schoolId                 String                     @db.Uuid
+  directorRoleAssignmentId String                     @db.Uuid
+  status                   DirectorAvailabilityStatus @default(UNAVAILABLE)
+  unavailableFrom          DateTime
+  resumedAt                DateTime?
+  recordedByIdentityId     String                     @db.Uuid
+  createdAt                DateTime                   @default(now())
+  updatedAt                DateTime                   @updatedAt
+
+  school                 School                        @relation(fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+  directorRoleAssignment SchoolRoleAssignment          @relation("AvailabilityDirectorAssignment", fields: [directorRoleAssignmentId, schoolId], references: [id, schoolId], onDelete: Restrict, onUpdate: Restrict)
+  recordedBy             AuthenticatedIdentity         @relation("AvailabilityRecorder", fields: [recordedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  substituteAuthorities  SubstituteDirectorAuthority[] @relation("AuthorityAvailability")
+
+  @@unique([id, schoolId])
+  @@index([schoolId, status])
+}
+
+// A substitute authority is an exact, scope-limited authority record. It is
+// not a role or a second School Director assignment. Lifecycle evidence is
+// appended in SubstituteDirectorAuthorityLifecycle.
+model SubstituteDirectorAuthority {
+  id                      String                             @id @default(uuid()) @db.Uuid
+  schoolId                String                             @db.Uuid
+  variant                 SubstituteDirectorAuthorityVariant
+  status                  SubstituteDirectorAuthorityStatus
+  appointingIdentityId    String                             @db.Uuid
+  subjectRoleAssignmentId String                             @db.Uuid
+  availabilityId          String?                            @db.Uuid
+  actingReasonCode        ActingReasonCode?
+  reasonDetail            String?
+  temporaryBasis          String?
+  commandScope            String[]                           @default(["AUTH-09", "AUTH-11", "AUTH-12", "AUTH-18"])
+  effectiveFrom           DateTime
+  expiresAt               DateTime?
+  recordVersion           Int                                @default(1)
+  supersedesId            String?                            @unique @db.Uuid
+  integrityDigest         String                             @db.Char(64)
+  evidenceReference       String?
+  evidenceContentHash     String?                            @db.Char(64)
+  createdAt               DateTime                           @default(now())
+  updatedAt               DateTime                           @updatedAt
+
+  school                School                                 @relation(fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+  appointingIdentity    AuthenticatedIdentity                  @relation("AuthorityAppointer", fields: [appointingIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  subjectRoleAssignment SchoolRoleAssignment                   @relation("AuthoritySubject", fields: [subjectRoleAssignmentId, schoolId], references: [id, schoolId], onDelete: Restrict, onUpdate: Restrict)
+  availability          ActiveDirectorAvailability?            @relation("AuthorityAvailability", fields: [availabilityId, schoolId], references: [id, schoolId], onDelete: Restrict, onUpdate: Restrict)
+  supersedes            SubstituteDirectorAuthority?           @relation("AuthoritySupersession", fields: [supersedesId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  supersededBy          SubstituteDirectorAuthority[]          @relation("AuthoritySupersession")
+  lifecycleEvents       SubstituteDirectorAuthorityLifecycle[]
+
+  @@index([schoolId, variant, status, effectiveFrom, expiresAt])
+  @@index([subjectRoleAssignmentId, schoolId])
+}
+
+model SubstituteDirectorAuthorityLifecycle {
+  id              String                            @id @default(uuid()) @db.Uuid
+  authorityId     String                            @db.Uuid
+  revision        Int
+  status          SubstituteDirectorAuthorityStatus
+  occurredAt      DateTime
+  actorIdentityId String?                           @db.Uuid
+  reason          String
+  integrityDigest String                            @db.Char(64)
+  createdAt       DateTime                          @default(now())
+
+  authority SubstituteDirectorAuthority @relation(fields: [authorityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  actor     AuthenticatedIdentity?      @relation("AuthorityLifecycleActor", fields: [actorIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([authorityId, revision])
+  @@index([authorityId, occurredAt])
 }
