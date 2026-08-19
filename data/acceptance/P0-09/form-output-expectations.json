@@ -46,7 +46,7 @@
     {
       "contractId": "GAP-06",
       "sourceStructure": "Receipt Book Control Register and annual use report",
-      "output": "One FY 2569 receipt-book control projection",
+      "output": "One FY 2568 receipt-book control projection",
       "expected": { "serialRange": "000101-000110", "issuedReceiptCount": 3, "voidReceiptCount": 1, "unusedReceiptCount": 6 },
       "documentarySignatureSlots": ["custodian", "handover", "correction or void"],
       "applicationAuthority": "AUTH-13 only; custody signatures create no additional approver"

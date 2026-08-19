@@ -2,6 +2,11 @@
   "schema": "schoolbanchee/p0-09-expected-results/v1",
   "fixtureId": "P0-09-ACCEPTANCE-001",
   "moneyUnit": "satang",
+  "fiscalPeriod": {
+    "fiscalYearBE": 2568,
+    "reportingDate": "2026-08-31",
+    "timezone": "Asia/Bangkok"
+  },
   "policyInputs": {
     "fundFlowMatrix": "docs/governance/p0-03-fund-flow-record-matrix.md",
     "financialPolicyVersion": "POL-INITIAL-PILOT-001",

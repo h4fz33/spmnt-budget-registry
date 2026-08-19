@@ -12,8 +12,9 @@ account, receipt, or external-document identifier.
 ## Inputs
 
 - P0-03 Fund Flow and record matrix: financial behavior and linked controls.
-- Active `POL-INITIAL-PILOT-001`: applicable financial policy for this FY 2569
-  fixture.
+- Active `POL-INITIAL-PILOT-001`: applicable financial policy for this FY 2568
+  fixture. The August 2026 reporting date and all events are in the fiscal year
+  beginning 1 October 2025, per the P1-04/P1-10 fiscal-year contract.
 - P0-05 form/report register: authoritative structures and documentary fields.
 - GAP-08 only for static 2515-1/2515-2/2515-3 structural expectations. It
   does not activate or exercise SAR runtime behavior.
@@ -30,6 +31,9 @@ account, receipt, or external-document identifier.
   attributable Private Business / Product Owner identity, timestamp, and
   evidence reference; SESAO domain review is advisory evidence only and cannot
   satisfy this private-product acceptance gate.
+- `history/2026-08-15-policy-owner-approval.json`: preserved superseded
+  approval record for the former BE 2569 label. It cannot approve the corrected
+  BE 2568 payload.
 
 ## Verification
 

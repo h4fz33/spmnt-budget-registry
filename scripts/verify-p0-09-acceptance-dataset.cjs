@@ -66,6 +66,24 @@ function sumObjectEffects(events, property, keys) {
   return totals;
 }
 
+function fiscalYearForGregorianDate(value, label) {
+  const match = typeof value === 'string' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(value) : null;
+  if (!match) {
+    errors.push(`${label} must be a Gregorian YYYY-MM-DD date`);
+    return null;
+  }
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const isLeapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+  if (!Number.isInteger(year) || month < 1 || month > 12 || day < 1 || day > daysInMonth) {
+    errors.push(`${label} is not a valid Gregorian date`);
+    return null;
+  }
+  return year + 543 - (month < 10 ? 1 : 0);
+}
+
 const fixturePath = 'data/acceptance/P0-09/fixture.json';
 const expectedPath = 'data/acceptance/P0-09/expected-results.json';
 const formsPath = 'data/acceptance/P0-09/form-output-expectations.json';
@@ -90,6 +108,11 @@ assertEqual(fixture.fixtureId, forms.fixtureId, 'fixture and form-output ID');
 assertEqual(fixture.fixtureId, approval.fixtureId, 'fixture and approval ID');
 assertEqual(fixture.moneyUnit, 'satang', 'fixture money unit');
 assertEqual(expected.moneyUnit, 'satang', 'expected-results money unit');
+const fixtureFiscalYear = fiscalYearForGregorianDate(fixture.fiscalPeriod?.reportingDate, 'fixture reporting date');
+assertEqual(fixture.fiscalPeriod?.fiscalYearBE, fixtureFiscalYear, 'fixture fiscal-year label');
+assertEqual(expected.fiscalPeriod?.fiscalYearBE, fixture.fiscalPeriod?.fiscalYearBE, 'expected-results fiscal-year label');
+assertEqual(expected.fiscalPeriod?.reportingDate, fixture.fiscalPeriod?.reportingDate, 'expected-results reporting date');
+assertEqual(expected.fiscalPeriod?.timezone, fixture.fiscalPeriod?.timezone, 'expected-results reporting timezone');
 assert(fixture.anonymization.isAnonymized === true, 'fixture must be marked anonymized');
 assert(fixture.anonymization.mappingRetainedInRepository === false, 'fixture cannot retain an anonymization mapping in the repository');
 assert(fixture.actors.every((actor) => actor.isPseudonym === true), 'all fixture actors must be pseudonymous');
@@ -115,6 +138,7 @@ fixture.financialEvents.forEach((event) => {
   eventByFlow.set(event.fundFlow, event);
   assert(matrix.includes(`\`${event.fundFlow}\``), `${event.fundFlow} is absent from P0-03 matrix`);
   assert(event.eventDate >= financialPolicyStartDate, `${event.eventId} predates active POL-INITIAL-PILOT-001`);
+  assertEqual(fiscalYearForGregorianDate(event.eventDate, `${event.eventId} event date`), fixture.fiscalPeriod.fiscalYearBE, `${event.eventId} fiscal-year label`);
 });
 assertEqual(eventByFlow.size, requiredFundFlows.length, 'P0-03 Fund Flow coverage count');
 requiredFundFlows.forEach((fundFlow) => assert(eventByFlow.has(fundFlow), `fixture is missing ${fundFlow}`));
@@ -288,6 +312,7 @@ const coveredReportContracts = forms.reportAndRegisterCoverage.map((coverage) =>
 requiredReportContracts.forEach((contractId) => assert(coveredReportContracts.includes(contractId), `form-output expectations are missing ${contractId}`));
 
 const formCoverageById = new Map(forms.p0_05Coverage.map((coverage) => [coverage.contractId, coverage]));
+assert(formCoverageById.get('GAP-06').output.includes(`FY ${fixture.fiscalPeriod.fiscalYearBE}`), 'GAP-06 fiscal-year projection label');
 assertEqual(formCoverageById.get('GAP-07').expected.totalSatang, reports.dailyBalanceReport.totalSatang, 'GAP-07 Daily Balance total');
 assertEqual(formCoverageById.get('GAP-08').expected.totalScorePointsX100, reports.annualSelfAssessment2515_2.totalPointsX100, 'GAP-08 2515-2 structural total');
 assertEqual(formCoverageById.get('GAP-08').expected.aggregateRequiredSchoolCount, reports.schoolbanchee2515_3Aggregate.requiredSubmittedSchoolCount, 'GAP-08 2515-3 required School count');
