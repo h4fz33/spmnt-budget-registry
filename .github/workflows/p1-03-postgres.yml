@@ -1,40 +1,60 @@
-name: P1-03 PostgreSQL foundation
+name: CI
 
 on:
   push:
-    paths:
-      - "prisma/**"
-      - "prisma.config.ts"
-      - "scripts/db-*.mjs"
-      - "scripts/load-env.mjs"
-      - "scripts/run-db-test.mjs"
-      - "scripts/verify-p1-03.mjs"
-      - "config/runtime-env.mjs"
-      - "src/lib/database/**"
-      - "tests/integration/**"
-      - "compose.postgres.yaml"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/p1-03-postgres.yml"
   pull_request:
-    paths:
-      - "prisma/**"
-      - "prisma.config.ts"
-      - "scripts/db-*.mjs"
-      - "scripts/load-env.mjs"
-      - "scripts/run-db-test.mjs"
-      - "scripts/verify-p1-03.mjs"
-      - "config/runtime-env.mjs"
-      - "src/lib/database/**"
-      - "tests/integration/**"
-      - "compose.postgres.yaml"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/p1-03-postgres.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
 
 jobs:
-  postgres-foundation:
+  quality:
+    name: Quality
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_ENV: test
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/schoolbanchee_test?schema=public
+      NEXTAUTH_URL: http://localhost:6000
+      NEXTAUTH_SECRET: synthetic-ci-secret-for-quality-verification-only
+      SCHOOL_SEED_ESAO_CODE: "1000960001"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Run configuration verification
+        run: npm run verify:env
+      - name: Run unit tests
+        run: node --experimental-strip-types --test tests/unit/*.test.ts
+      - name: Check Prisma formatting
+        run: npx prisma format --check
+      - name: Validate Prisma schema
+        run: npx prisma validate
+      - name: Generate Prisma Client
+        run: npm run db:generate
+      - name: Lint
+        run: npm run lint
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Verify deterministic acceptance fixtures
+        run: npm run verify:p0-09
+
+  postgres-integration:
+    name: PostgreSQL integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       postgres:
         image: postgres:16
@@ -54,8 +74,8 @@ jobs:
       NODE_ENV: test
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/schoolbanchee_test?schema=public
       NEXTAUTH_URL: http://localhost:6000
-      NEXTAUTH_SECRET: synthetic-ci-secret-for-p1-03-verification-only
-      SCHOOL_SEED_ESAO_CODE: 1000960001
+      NEXTAUTH_SECRET: synthetic-ci-secret-for-postgres-verification-only
+      SCHOOL_SEED_ESAO_CODE: "1000960001"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -67,5 +87,32 @@ jobs:
       - run: npm run db:migrate:test
       - run: npm run db:seed:test
       - run: npm run db:seed:test
-      - run: npm run verify:p1-03
-      - run: npm run test:integration
+      - name: Run PostgreSQL structural verifiers
+        run: |
+          for verifier in scripts/verify-p1-*.mjs; do
+            node scripts/run-db-test.mjs node --conditions=react-server --experimental-strip-types "$verifier"
+          done
+      - name: Run PostgreSQL integration tests
+        run: node scripts/run-db-test.mjs node --conditions=react-server --experimental-strip-types --test tests/integration/*.test.ts
+
+  production-build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_ENV: production
+      NODE_ENV: production
+      DATABASE_URL: postgresql://ci:ci@db.invalid:5432/schoolbanchee_ci?schema=public
+      NEXTAUTH_URL: https://schoolbanchee.example.invalid
+      NEXTAUTH_SECRET: synthetic-ci-secret-for-production-build-verification-only
+      SCHOOL_SEED_ESAO_CODE: "1000960001"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Generate Prisma Client
+        run: npm run db:generate
+      - run: npm run build

@@ -82,7 +82,7 @@ const optionalSchoolCodeSchema = z
 const optionalEmailSchema = z
   .string()
   .optional()
-  .transform((value) => value?.trim() || undefined)
+  .transform((value) => value?.trim().toLowerCase() || undefined)
   .refine((value) => value === undefined || z.string().email().safeParse(value).success, {
     message: "BOOTSTRAP_ADMIN_EMAIL must be a valid email address when supplied",
   })

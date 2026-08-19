@@ -5,6 +5,10 @@ export type DatabaseRuntime = Readonly<{
   databaseName: string
   databaseUrl: string
   hostname: string
+  testDatabaseSelector?: Readonly<{
+    databaseId: string
+    secretId: string
+  }>
 }>
 
 export declare function createDatabaseClient(options?: {
@@ -13,4 +17,3 @@ export declare function createDatabaseClient(options?: {
   client: PrismaClient
   runtime: DatabaseRuntime
 }
-

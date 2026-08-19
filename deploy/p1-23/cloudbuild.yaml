@@ -1,0 +1,13 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --file
+      - deploy/p1-23/Dockerfile
+      - --tag
+      - asia-southeast3-docker.pkg.dev/$PROJECT_ID/p1-23-verification/p1-23-db-verifier:${_IMAGE_TAG}
+      - .
+images:
+  - asia-southeast3-docker.pkg.dev/$PROJECT_ID/p1-23-verification/p1-23-db-verifier:${_IMAGE_TAG}
+options:
+  logging: CLOUD_LOGGING_ONLY

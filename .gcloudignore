@@ -1,0 +1,14 @@
+# Never submit local credentials, generated output, or development state to the
+# Cloud Build context used by the synthetic database verification runner.
+.gcloudignore
+.git
+.gitignore
+.next
+generated
+node_modules
+tmp
+.env
+.env.*
+!*.example
+*.tsbuildinfo
+

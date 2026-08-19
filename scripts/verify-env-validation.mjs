@@ -28,10 +28,15 @@ function expectConfigurationFailure(environment, expectedIssue, requestedMode) {
 assert.equal(loadServerEnvironment(makeEnvironment("development")).mode, "development")
 assert.equal(loadServerEnvironment(makeEnvironment("test")).mode, "test")
 assert.equal(loadServerEnvironment(makeEnvironment("production")).mode, "production")
+assert.equal(
+  loadServerEnvironment(makeEnvironment("test", { BOOTSTRAP_ADMIN_EMAIL: "  ADMIN@SYNTHETIC.TEST  " })).bootstrapAdminEmail,
+  "admin@synthetic.test",
+)
 
 expectConfigurationFailure(makeEnvironment("development", { DATABASE_URL: undefined }), "DATABASE_URL")
 expectConfigurationFailure(makeEnvironment("development", { DATABASE_URL: "sqlite://local" }), "postgres://")
 expectConfigurationFailure(makeEnvironment("development", { NEXTAUTH_SECRET: "too-short" }), "32 characters")
+expectConfigurationFailure(makeEnvironment("development", { BOOTSTRAP_ADMIN_EMAIL: "not-an-email" }), "BOOTSTRAP_ADMIN_EMAIL")
 expectConfigurationFailure(makeEnvironment("production", { NEXTAUTH_URL: "http://schoolbanchee.example.invalid" }), "HTTPS")
 expectConfigurationFailure(makeEnvironment("production", { DATABASE_URL: "postgresql://example:example@localhost:5432/school_banchee" }), "loopback")
 expectConfigurationFailure(makeEnvironment("development", { APP_ENV: "test" }), "must match")

@@ -1,16 +1,31 @@
-import Image from "next/image";
+import {
+  ApplicationShell,
+  NoWorkspaceState,
+  SessionRequiredState,
+  UnavailableWorkspaceState,
+} from "@/components/app-shell/application-shell"
+import { getActiveSession } from "@/lib/auth/server-session"
+import { loadCurrentSchoolWorkspaces } from "./_data/workspaces"
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-            <p className="text-sm text-muted-foreground">
-              SESAO NARATHIWAT สำนักงานเขตพื้นที่การศึกษามัธยมศึกษานราธิวาส
-            </p>
-      </footer>
-    </div>
-  );
+export default async function Home() {
+  try {
+    const session = await getActiveSession()
+    if (!session?.user) {
+      return <SessionRequiredState />
+    }
+
+    const principal = {
+      displayName: session.user.name?.trim() || "ผู้ใช้ที่ได้รับอนุมัติ",
+    }
+    const workspaces = await loadCurrentSchoolWorkspaces(session.user.id)
+
+    if (workspaces.length === 0) {
+      return <NoWorkspaceState principal={principal} />
+    }
+
+    return <ApplicationShell principal={principal} workspaces={workspaces} />
+  } catch {
+    // Session and workspace resolution must fail closed at the application boundary.
+    return <UnavailableWorkspaceState />
+  }
 }

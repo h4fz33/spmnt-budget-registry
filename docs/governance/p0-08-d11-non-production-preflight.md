@@ -50,6 +50,65 @@ GCS service-account JSON, or expose a secret to chat, source, logs, or a
 developer workstation. No provider configuration or capability is accepted by
 this amendment.
 
+## Product Owner Amendment - 2026-08-18 P1-23
+
+The Product Owner authorizes a separate dedicated non-production Cloud Run Job
+for synthetic PostgreSQL verification. This narrowly supersedes the preceding
+database-URI prohibition only for that new job: its distinct runtime service
+account may receive `SPMNT-ACC-AUDIT_PRISMA-POSTGRES-URI` as the `DATABASE_URL`
+environment variable through Secret Manager injection. It must never retrieve
+the payload by CLI, print it, write it to source/logs, or expose it to a
+developer workstation or chat.
+
+The existing `d11-prisma-runner` remains unchanged and retains its API-token
+only boundary. The P1-23 job may run only test-mode migration deployment,
+idempotent seed, and named focused verification commands against the required
+`schoolbanchee_test` database. It must emit only the named command result and
+overall status. No reset, provider-capability claim, production access,
+real-School data, backup/PITR, encryption, recovery, or storage operation is
+authorized by this amendment.
+
+## Product Owner Selector Amendment - 2026-08-19 P1-23
+
+For the P1-23 runner only, `TEST_DATABASE_ID` with the exact non-secret value
+`db_cmsywhp011xf62pdt4pmp50xk` is the authoritative synthetic Prisma database
+selector. `TEST_DATABASE_SECRET_ID` must exactly identify
+`SPMNT-ACC-AUDIT_PRISMA-POSTGRES-URI`, whose non-secret labels bind it to the
+same Prisma database ID and P1-23 synthetic-test purpose. The Secret Manager
+custodian must create the existing `DATABASE_URL` secret version from the
+direct PostgreSQL connection generated for that exact Prisma database. The
+runner receives both non-secret selector values as static configuration and
+the connection only through the existing secret injection; it must not
+retrieve, print, store, or inspect the URI.
+
+The exact database/secret selector pair, Secret Manager labels, and Cloud Run
+environment-to-secret mapping establish the P1-23 connection provenance. The
+direct TCP PostgreSQL URL may correctly use `/postgres`; it is not required to
+contain `schoolbanchee_test`. Ordinary local and CI test commands continue to
+require a database name containing `test`. The selector does not grant the
+runner a Prisma API token, Management API access, provider-operation authority,
+production access, or a reset permission. A successful sequence establishes
+only the approved synthetic test execution; it does not establish provider
+capability or production readiness.
+
+## Product Owner Rebaseline Amendment - 2026-08-19 P1-24
+
+The Product Owner approved `BLK-017`'s new controlled synthetic
+runtime/rebaseline path and selector-secret transition. The P1-23 runner's
+current authoritative selector is now
+`TEST_DATABASE_ID=db_ang2o4k2cs20d4xolyfwqiol` with the unchanged
+`TEST_DATABASE_SECRET_ID=SPMNT-ACC-AUDIT_PRISMA-POSTGRES-URI`. Secret Manager
+version `4` was created from the direct PostgreSQL URL generated for that exact
+new database and became the resource's `latest` version; the resource name,
+secret-delivery mechanism, and runner service account remain unchanged.
+
+The former selector `db_cmsywhp011xf62pdt4pmp50xk`, its corresponding secret
+versions, and that runtime's already-applied migration history are retained as
+historical P1-23 evidence. They are not reset, dropped, recreated, mutated, or
+used by the rebaselined runner. This amendment authorizes no production data,
+provider-capability claim, recovery operation, or change outside the bounded
+synthetic P1-23 verification purpose.
+
 ## Controlled-Secret Resource Mapping
 
 The following names were supplied by the Product Owner. No secret payload is

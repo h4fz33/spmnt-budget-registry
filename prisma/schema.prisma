@@ -36,6 +36,16 @@ enum SchoolRole {
   SCHOOL_DIRECTOR
 }
 
+enum SesaoAuditorConfigurationStatus {
+  ACTIVE
+  REVOKED
+}
+
+enum SesaoAuditorChangeAction {
+  APPOINT
+  REVOKE
+}
+
 enum RoleAssignmentStatus {
   SCHEDULED
   ACTIVE
@@ -79,6 +89,55 @@ enum DirectorAvailabilityStatus {
   DIRECTOR_ASSIGNMENT_ENDED
 }
 
+// A Policy Version is published for the complete approved School Directory of
+// one ESAO. Direct retirement is intentionally absent: a later publication
+// supersedes an earlier version prospectively.
+enum PolicyVersionStatus {
+  DRAFT
+  ACTIVE
+  SUPERSEDED
+}
+
+// The Matrix names one current Policy Publisher and one standby alternate.
+// The standby is recorded but cannot activate a Policy Version.
+enum PolicyPublisherDesignationStatus {
+  CURRENT
+  STANDBY
+  SUPERSEDED
+}
+
+// The P1-08 audit boundary stores only controlled action metadata. Audit
+// records never carry credentials, evidence content, or unrestricted payloads.
+enum AuditScopeKind {
+  PLATFORM
+  ORGANIZATION
+  SCHOOL
+}
+
+enum AuditOutcome {
+  SUCCESS
+  DENIED
+  FAILED
+}
+
+// A completed command result is retained under the caller's scoped key. The
+// command transaction writes this record only after its business work succeeds.
+enum OutboxMessageStatus {
+  PENDING
+  PROCESSING
+  DELIVERED
+  DEAD_LETTER
+}
+
+// Each invocation is recorded once after a worker either delivers the message,
+// schedules its deterministic retry, or sends it to the dead-letter state.
+enum OutboxDeliveryOutcome {
+  ABANDONED
+  DELIVERED
+  RETRY_SCHEDULED
+  DEAD_LETTERED
+}
+
 // P1-03 bootstrap probe remains synthetic infrastructure used by its migration,
 // reset, and serializable-retry verification. P1-04 adds the domain foundation
 // below without treating this record as domain data.
@@ -100,10 +159,18 @@ model Organization {
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
 
-  parent      Organization?        @relation("OrganizationHierarchy", fields: [parentOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  children    Organization[]       @relation("OrganizationHierarchy")
-  school      School?
-  memberships ApprovedMembership[]
+  parent                      Organization?                @relation("OrganizationHierarchy", fields: [parentOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  children                    Organization[]               @relation("OrganizationHierarchy")
+  school                      School?
+  memberships                 ApprovedMembership[]
+  auditEvents                 AuditLog[]                   @relation("AuditScopeOrganization")
+  policyPublisherDesignations PolicyPublisherDesignation[]
+  policyVersions              PolicyVersion[]
+  systemAdminBootstrap        SystemAdminBootstrap?        @relation("SystemAdminBootstrapPlatform")
+  sesaoAuditorBootstrap       SesaoAuditorBootstrap?       @relation("SesaoAuditorBootstrapEsao")
+  sesaoAuditorConfigurations  SesaoAuditorConfiguration[]  @relation("SesaoAuditorEsao")
+  idempotencyScopeRecords     CommandIdempotencyRecord[]   @relation("IdempotencyScopeOrganization")
+  sesaoAuditorProvenanceEsao  SesaoAuditorProvenance[]     @relation("SesaoAuditorProvenanceEsao")
 
   @@index([parentOrganizationId])
 }
@@ -118,11 +185,17 @@ model School {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  organization           Organization                  @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  roleAssignments        SchoolRoleAssignment[]
-  fiscalYears            FiscalYear[]
-  directorAvailabilities ActiveDirectorAvailability[]
-  substituteAuthorities  SubstituteDirectorAuthority[]
+  organization            Organization                  @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  roleAssignments         SchoolRoleAssignment[]
+  fiscalYears             FiscalYear[]
+  directorAvailabilities  ActiveDirectorAvailability[]
+  substituteAuthorities   SubstituteDirectorAuthority[]
+  auditEventsForScope     AuditLog[]                    @relation("AuditScopeSchool")
+  policyVersionScopes     PolicyVersionSchoolScope[]
+  policyResolutions       PolicyResolutionRecord[]
+  idempotencyScopeRecords CommandIdempotencyRecord[]    @relation("IdempotencyScopeSchool")
+  scopedNumberSequences   ScopedNumberSequence[]        @relation("ScopedNumberSequenceSchool")
+  sesaoAuditorScopes      SesaoAuditorSchoolScope[]
 }
 
 model AuthenticatedIdentity {
@@ -136,12 +209,20 @@ model AuthenticatedIdentity {
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
 
-  memberships              ApprovedMembership[]                   @relation("MembershipIdentity")
-  approvedMemberships      ApprovedMembership[]                   @relation("MembershipApprover")
-  grantedRoleAssignments   SchoolRoleAssignment[]                 @relation("RoleGrantor")
-  appointedAuthorities     SubstituteDirectorAuthority[]          @relation("AuthorityAppointer")
-  recordedAvailabilities   ActiveDirectorAvailability[]           @relation("AvailabilityRecorder")
-  authorityLifecycleEvents SubstituteDirectorAuthorityLifecycle[] @relation("AuthorityLifecycleActor")
+  memberships                 ApprovedMembership[]                   @relation("MembershipIdentity")
+  approvedMemberships         ApprovedMembership[]                   @relation("MembershipApprover")
+  grantedRoleAssignments      SchoolRoleAssignment[]                 @relation("RoleGrantor")
+  appointedAuthorities        SubstituteDirectorAuthority[]          @relation("AuthorityAppointer")
+  recordedAvailabilities      ActiveDirectorAvailability[]           @relation("AvailabilityRecorder")
+  authorityLifecycleEvents    SubstituteDirectorAuthorityLifecycle[] @relation("AuthorityLifecycleActor")
+  auditEvents                 AuditLog[]                             @relation("AuditActor")
+  policyPublisherDesignations PolicyPublisherDesignation[]           @relation("PolicyPublisherIdentity")
+  publishedPolicyVersions     PolicyVersion[]                        @relation("PolicyVersionPublisher")
+  systemAdminBootstrap        SystemAdminBootstrap?                  @relation("SystemAdminBootstrapIdentity")
+  sesaoAuditorConfigurations  SesaoAuditorConfiguration[]             @relation("SesaoAuditorIdentity")
+  sesaoAuditorProvenance      SesaoAuditorProvenance[]                 @relation("SesaoAuditorSubject")
+  sesaoAuditorExecutions      SesaoAuditorProvenance[]                 @relation("SesaoAuditorExecutor")
+  idempotencyRecords          CommandIdempotencyRecord[]             @relation("IdempotencyActor")
 }
 
 // An Approved Membership is an organizational boundary. School roles are
@@ -159,10 +240,14 @@ model ApprovedMembership {
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
 
-  identity        AuthenticatedIdentity  @relation("MembershipIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  organization    Organization           @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  approvedBy      AuthenticatedIdentity? @relation("MembershipApprover", fields: [approvedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  roleAssignments SchoolRoleAssignment[] @relation("MembershipRoles")
+  identity             AuthenticatedIdentity      @relation("MembershipIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  organization         Organization               @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  approvedBy           AuthenticatedIdentity?     @relation("MembershipApprover", fields: [approvedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  roleAssignments      SchoolRoleAssignment[]     @relation("MembershipRoles")
+  auditEvents          AuditLog[]                 @relation("AuditActorMembership")
+  systemAdminBootstrap SystemAdminBootstrap?      @relation("SystemAdminBootstrapMembership")
+  idempotencyRecords   CommandIdempotencyRecord[] @relation("IdempotencyActorMembership")
+  sesaoAuditorExecutions SesaoAuditorProvenance[] @relation("SesaoAuditorExecutorMembership")
 
   @@unique([id, organizationId])
   @@index([identityId, organizationId])
@@ -194,6 +279,100 @@ model SchoolRoleAssignment {
   @@index([schoolId, role, status])
 }
 
+// The first System Admin is a sealed singleton platform authority. It is not a
+// School Role Assignment and must never become a generic privilege-grant path.
+model SystemAdminBootstrap {
+  id                     String   @id @default("p1-17")
+  identityId             String   @unique @db.Uuid
+  membershipId           String   @unique @db.Uuid
+  platformOrganizationId String   @unique @db.Uuid
+  createdAt              DateTime @default(now())
+
+  identity             AuthenticatedIdentity @relation("SystemAdminBootstrapIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  membership           ApprovedMembership    @relation("SystemAdminBootstrapMembership", fields: [membershipId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  platformOrganization Organization          @relation("SystemAdminBootstrapPlatform", fields: [platformOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+}
+
+// P1-19 is a dedicated configured-Auditor capability boundary. It does not
+// create a School role or an Assessment assignment.
+model SesaoAuditorBootstrap {
+  id               String   @id @default("p1-19")
+  esaoOrganizationId String  @unique @db.Uuid
+  createdAt        DateTime @default(now())
+
+  esaoOrganization Organization               @relation("SesaoAuditorBootstrapEsao", fields: [esaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  configurations   SesaoAuditorConfiguration[]
+}
+
+model SesaoAuditorConfiguration {
+  id                  String                         @id @default(uuid()) @db.Uuid
+  bootstrapId         String?                        @db.VarChar(32)
+  identityId          String                         @db.Uuid
+  personNameSnapshot  String                         @db.VarChar(200)
+  roleCode            String                         @default("SESAO_AUDITOR") @db.VarChar(32)
+  esaoOrganizationId  String                         @db.Uuid
+  status              SesaoAuditorConfigurationStatus @default(ACTIVE)
+  effectiveFrom       DateTime                       @default(now())
+  revokedAt           DateTime?
+  configurationSource String                         @default("INITIAL_BOOTSTRAP") @db.VarChar(32)
+  integrityDigest     String                         @unique @db.Char(64)
+  createdAt           DateTime                       @default(now())
+  updatedAt           DateTime                       @updatedAt
+
+  bootstrap       SesaoAuditorBootstrap?       @relation(fields: [bootstrapId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  identity        AuthenticatedIdentity        @relation("SesaoAuditorIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  esaoOrganization Organization                 @relation("SesaoAuditorEsao", fields: [esaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  schoolScopes    SesaoAuditorSchoolScope[]
+  provenance      SesaoAuditorProvenance[]
+
+  @@index([identityId, status])
+  @@index([esaoOrganizationId, status])
+}
+
+model SesaoAuditorSchoolScope {
+  id              String @id @default(uuid()) @db.Uuid
+  configurationId String @db.Uuid
+  schoolId        String @db.Uuid
+  createdAt       DateTime @default(now())
+
+  configuration SesaoAuditorConfiguration @relation(fields: [configurationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  school        School                    @relation(fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([configurationId, schoolId])
+  @@index([schoolId, configurationId])
+}
+
+model SesaoAuditorProvenance {
+  id                         String                  @id @default(uuid()) @db.Uuid
+  configurationId            String                  @db.Uuid
+  action                     SesaoAuditorChangeAction
+  externalApprovalRecordId   String                  @db.VarChar(128)
+  approvalAuthorityLabel     String                  @db.VarChar(128)
+  approvalAuthorityIdentity  String                  @db.VarChar(320)
+  approvalEvidenceReference  String                  @db.VarChar(512)
+  approvalEvidenceHash       String                  @db.Char(64)
+  subjectIdentityId          String                  @db.Uuid
+  subjectAccountIdentifier   String                  @db.VarChar(320)
+  subjectPersonName          String                  @db.VarChar(200)
+  subjectRoleCode            String                  @db.VarChar(32)
+  subjectEsaoOrganizationId  String                  @db.Uuid
+  technicalExecutorIdentityId String                 @db.Uuid
+  technicalExecutorMembershipId String               @db.Uuid
+  executedAt                 DateTime
+  integrityDigest            String                  @unique @db.Char(64)
+  createdAt                  DateTime                @default(now())
+
+  configuration          SesaoAuditorConfiguration @relation(fields: [configurationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  subjectIdentity        AuthenticatedIdentity     @relation("SesaoAuditorSubject", fields: [subjectIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  subjectEsaoOrganization Organization             @relation("SesaoAuditorProvenanceEsao", fields: [subjectEsaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  technicalExecutor      AuthenticatedIdentity     @relation("SesaoAuditorExecutor", fields: [technicalExecutorIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  technicalExecutorMembership ApprovedMembership   @relation("SesaoAuditorExecutorMembership", fields: [technicalExecutorMembershipId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([externalApprovalRecordId, action])
+  @@unique([configurationId, action])
+  @@index([subjectIdentityId, action, executedAt])
+}
+
 model FiscalYear {
   id           String           @id @default(uuid()) @db.Uuid
   schoolId     String           @db.Uuid
@@ -206,8 +385,42 @@ model FiscalYear {
 
   school School @relation(fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
 
+  scopedNumberSequences ScopedNumberSequence[] @relation("FiscalYearScopedNumberSequences")
+
   @@unique([schoolId, buddhistYear])
   @@index([schoolId, startsOn, endsOn])
+}
+
+// Scoped numbers are durable within one School, fiscal year, and register.
+// Financial record models will own their allocations in Phase 2; this generic
+// allocation record already makes the number itself immutable and traceable.
+model ScopedNumberSequence {
+  id                 String   @id @default(uuid()) @db.Uuid
+  schoolId           String   @db.Uuid
+  buddhistFiscalYear Int
+  registerCode       String   @db.VarChar(32)
+  nextValue          BigInt   @default(1)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  school      School                   @relation("ScopedNumberSequenceSchool", fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+  fiscalYear  FiscalYear               @relation("FiscalYearScopedNumberSequences", fields: [schoolId, buddhistFiscalYear], references: [schoolId, buddhistYear], onDelete: Restrict, onUpdate: Restrict)
+  allocations ScopedNumberAllocation[]
+
+  @@unique([schoolId, buddhistFiscalYear, registerCode])
+  @@index([schoolId, buddhistFiscalYear])
+}
+
+model ScopedNumberAllocation {
+  id         String   @id @default(uuid()) @db.Uuid
+  sequenceId String   @db.Uuid
+  value      BigInt
+  createdAt  DateTime @default(now())
+
+  sequence ScopedNumberSequence @relation(fields: [sequenceId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([sequenceId, value])
+  @@index([sequenceId, createdAt])
 }
 
 // This state is intentionally independent of substitute authority. Ending an
@@ -285,4 +498,224 @@ model SubstituteDirectorAuthorityLifecycle {
 
   @@unique([authorityId, revision])
   @@index([authorityId, occurredAt])
+}
+
+// This is the stored P0-04/ADR-0011 designation evidence used by AUTH-22.
+// The Product Owner designation workflow is outside P1-07; this record only
+// preserves the approved current/standby state needed for publication.
+model PolicyPublisherDesignation {
+  id                String                           @id @default(uuid()) @db.Uuid
+  organizationId    String                           @db.Uuid
+  identityId        String                           @db.Uuid
+  status            PolicyPublisherDesignationStatus
+  officialPageUrl   String
+  retrievedAt       DateTime
+  namedPersonResult String
+  conflictOutcome   String
+  evidenceReference String
+  evidenceHash      String                           @db.Char(64)
+  effectiveFrom     DateTime
+  supersededAt      DateTime?
+  createdAt         DateTime                         @default(now())
+  updatedAt         DateTime                         @updatedAt
+
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  identity     AuthenticatedIdentity @relation("PolicyPublisherIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  versions     PolicyVersion[]       @relation("PolicyVersionPublisherDesignation")
+
+  @@index([organizationId, status, effectiveFrom])
+  @@index([identityId, status])
+}
+
+// PolicyVersionSourceEvidence keeps the unchanged OBEC source reference and
+// content hash separate from its application publication metadata.
+model PolicyVersion {
+  id                     String              @id @default(uuid()) @db.Uuid
+  policyVersionId        String              @unique @db.VarChar(128)
+  organizationId         String              @db.Uuid
+  status                 PolicyVersionStatus @default(DRAFT)
+  effectiveFrom          DateTime
+  effectiveTo            DateTime?
+  supersedesId           String?             @unique @db.Uuid
+  publisherDesignationId String              @db.Uuid
+  publisherIdentityId    String              @db.Uuid
+  sourceIntegrityDigest  String              @db.Char(64)
+  integrityDigest        String              @unique @db.Char(64)
+  activatedAt            DateTime?
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+
+  organization         Organization                  @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  publisherDesignation PolicyPublisherDesignation    @relation("PolicyVersionPublisherDesignation", fields: [publisherDesignationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  publisherIdentity    AuthenticatedIdentity         @relation("PolicyVersionPublisher", fields: [publisherIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  supersedes           PolicyVersion?                @relation("PolicyVersionSupersession", fields: [supersedesId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  supersededBy         PolicyVersion[]               @relation("PolicyVersionSupersession")
+  sourceEvidence       PolicyVersionSourceEvidence[]
+  schoolScopes         PolicyVersionSchoolScope[]
+  resolutionRecords    PolicyResolutionRecord[]
+
+  @@index([organizationId, status, effectiveFrom, effectiveTo])
+}
+
+model PolicyVersionSourceEvidence {
+  id              String   @id @default(uuid()) @db.Uuid
+  policyVersionId String   @db.Uuid
+  sourceReference String
+  sourceRevision  String?
+  contentHash     String   @db.Char(64)
+  recordedAt      DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  policyVersion PolicyVersion @relation(fields: [policyVersionId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([policyVersionId, sourceReference, contentHash])
+  @@index([policyVersionId])
+}
+
+// The scope is explicit so a published policy can prove it covered every
+// directory School, even if the directory changes later.
+model PolicyVersionSchoolScope {
+  policyVersionId String   @db.Uuid
+  schoolId        String   @db.Uuid
+  createdAt       DateTime @default(now())
+
+  policyVersion PolicyVersion @relation(fields: [policyVersionId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  school        School        @relation(fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+
+  @@id([policyVersionId, schoolId])
+  @@index([schoolId, policyVersionId])
+}
+
+// A business record resolves its Policy Version exactly once. Future changes
+// cannot reinterpret that historical business context.
+model PolicyResolutionRecord {
+  id              String   @id @default(uuid()) @db.Uuid
+  policyVersionId String   @db.Uuid
+  schoolId        String   @db.Uuid
+  subjectCode     String   @db.VarChar(64)
+  targetType      String   @db.VarChar(64)
+  targetId        String   @db.VarChar(128)
+  effectiveAt     DateTime
+  resolvedAt      DateTime @default(now())
+  integrityDigest String   @unique @db.Char(64)
+  createdAt       DateTime @default(now())
+
+  policyVersion PolicyVersion @relation(fields: [policyVersionId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  school        School        @relation(fields: [schoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([targetType, targetId])
+  @@index([schoolId, subjectCode, effectiveAt])
+  @@index([policyVersionId, resolvedAt])
+}
+
+// AuditLog is an append-only, globally chained integrity record. The service
+// derives actor authorization versions at write time; the database rejects
+// rewrites, deletes, malformed scope, and broken predecessor links.
+model AuditLog {
+  id                                  String         @id @default(uuid()) @db.Uuid
+  sequence                            BigInt         @unique
+  actorIdentityId                     String         @db.Uuid
+  actorMembershipId                   String         @db.Uuid
+  actorAuthorizationVersion           Int
+  actorMembershipAuthorizationVersion Int
+  scopeKind                           AuditScopeKind
+  scopeOrganizationId                 String?        @db.Uuid
+  scopeSchoolId                       String?        @db.Uuid
+  commandCode                         String         @db.VarChar(64)
+  targetType                          String         @db.VarChar(64)
+  targetId                            String         @db.VarChar(128)
+  outcome                             AuditOutcome
+  reasonCode                          String         @db.VarChar(128)
+  correlationId                       String?        @db.VarChar(128)
+  occurredAt                          DateTime
+  previousIntegrityDigest             String?        @db.Char(64)
+  integrityDigest                     String         @unique @db.Char(64)
+  createdAt                           DateTime       @default(now())
+
+  actorIdentity     AuthenticatedIdentity @relation("AuditActor", fields: [actorIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  actorMembership   ApprovedMembership    @relation("AuditActorMembership", fields: [actorMembershipId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  scopeOrganization Organization?         @relation("AuditScopeOrganization", fields: [scopeOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  scopeSchool       School?               @relation("AuditScopeSchool", fields: [scopeSchoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([scopeKind, scopeOrganizationId, scopeSchoolId, sequence])
+  @@index([actorIdentityId, sequence])
+  @@index([targetType, targetId, sequence])
+}
+
+// A successful command stores only its integrity-bound response, never the
+// request body. Its composite key scopes a caller-provided idempotency key to
+// the authenticated actor, command, and exact platform/organization/School
+// boundary.
+model CommandIdempotencyRecord {
+  id                     String         @id @default(uuid()) @db.Uuid
+  actorIdentityId        String         @db.Uuid
+  actorMembershipId      String         @db.Uuid
+  scopeKind              AuditScopeKind
+  scopeOrganizationId    String?        @db.Uuid
+  scopeSchoolId          String?        @db.Uuid
+  scopeKey               String         @db.VarChar(160)
+  commandCode            String         @db.VarChar(64)
+  idempotencyKey         String         @db.VarChar(128)
+  requestIntegrityDigest String         @db.Char(64)
+  responseBody           Json
+  completedAt            DateTime
+  createdAt              DateTime       @default(now())
+
+  actorIdentity     AuthenticatedIdentity @relation("IdempotencyActor", fields: [actorIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  actorMembership   ApprovedMembership    @relation("IdempotencyActorMembership", fields: [actorMembershipId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  scopeOrganization Organization?         @relation("IdempotencyScopeOrganization", fields: [scopeOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  scopeSchool       School?               @relation("IdempotencyScopeSchool", fields: [scopeSchoolId], references: [organizationId], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([actorIdentityId, scopeKey, commandCode, idempotencyKey])
+  @@index([actorMembershipId, completedAt])
+  @@index([scopeKey, completedAt])
+}
+
+// The transactional outbox is the post-commit boundary for notifications and
+// long-running work. Payload and delivery identity are immutable; only its
+// lease and lifecycle state advance through the worker conventions.
+model OutboxMessage {
+  id                     String              @id @default(uuid()) @db.Uuid
+  messageType            String              @db.VarChar(64)
+  aggregateType          String              @db.VarChar(64)
+  aggregateId            String              @db.VarChar(128)
+  payload                Json
+  payloadIntegrityDigest String              @db.Char(64)
+  deduplicationKey       String              @unique @db.VarChar(128)
+  status                 OutboxMessageStatus @default(PENDING)
+  availableAt            DateTime            @default(now())
+  leaseOwner             String?             @db.VarChar(128)
+  leasedAt               DateTime?
+  leaseExpiresAt         DateTime?
+  deliveryAttempts       Int                 @default(0)
+  deliveredAt            DateTime?
+  deadLetteredAt         DateTime?
+  lastFailureCode        String?             @db.VarChar(128)
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+
+  deliveryAttemptRecords OutboxDeliveryAttempt[]
+
+  @@index([status, availableAt, leaseExpiresAt])
+  @@index([aggregateType, aggregateId, createdAt])
+}
+
+// Delivery attempts are immutable operational evidence. A retry always adds a
+// new row and never rewrites the outcome or error classification of an earlier
+// invocation.
+model OutboxDeliveryAttempt {
+  id              String                @id @default(uuid()) @db.Uuid
+  messageId       String                @db.Uuid
+  attemptNumber   Int
+  workerId        String                @db.VarChar(128)
+  outcome         OutboxDeliveryOutcome
+  failureCode     String?               @db.VarChar(128)
+  occurredAt      DateTime
+  nextAvailableAt DateTime?
+  createdAt       DateTime              @default(now())
+
+  message OutboxMessage @relation(fields: [messageId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@unique([messageId, attemptNumber])
+  @@index([messageId, occurredAt])
 }

@@ -1,10 +1,12 @@
 import "./load-env.mjs"
 
 const supportedModes = new Set(["development", "test"])
+const P1_23_TEST_DATABASE_ID = "db_ang2o4k2cs20d4xolyfwqiol"
+const P1_23_TEST_DATABASE_SECRET_ID = "SPMNT-ACC-AUDIT_PRISMA-POSTGRES-URI"
 
-function readMode(requestedMode) {
-  const applicationMode = process.env.APP_ENV?.trim()
-  const nodeMode = process.env.NODE_ENV?.trim()
+function readMode(source, requestedMode) {
+  const applicationMode = source.APP_ENV?.trim()
+  const nodeMode = source.NODE_ENV?.trim()
   const mode = requestedMode ?? applicationMode ?? nodeMode ?? "development"
 
   if (!supportedModes.has(mode)) {
@@ -26,9 +28,28 @@ function readMode(requestedMode) {
   return mode
 }
 
-export function getDatabaseRuntime({ requestedMode } = {}) {
-  const mode = readMode(requestedMode)
-  const value = process.env.DATABASE_URL?.trim()
+function readTestDatabaseId(source, mode) {
+  const databaseId = source.TEST_DATABASE_ID?.trim()
+  const secretId = source.TEST_DATABASE_SECRET_ID?.trim()
+
+  if (!databaseId && !secretId) {
+    return undefined
+  }
+
+  if (
+    mode !== "test" ||
+    databaseId !== P1_23_TEST_DATABASE_ID ||
+    secretId !== P1_23_TEST_DATABASE_SECRET_ID
+  ) {
+    throw new Error("TEST_DATABASE_ID and TEST_DATABASE_SECRET_ID do not select the approved P1-23 test connection")
+  }
+
+  return Object.freeze({ databaseId, secretId })
+}
+
+export function getDatabaseRuntime({ requestedMode, source = process.env } = {}) {
+  const mode = readMode(source, requestedMode)
+  const value = source.DATABASE_URL?.trim()
 
   if (!value) {
     throw new Error("DATABASE_URL is required for database commands")
@@ -59,6 +80,7 @@ export function getDatabaseRuntime({ requestedMode } = {}) {
     databaseName,
     databaseUrl: value,
     hostname: url.hostname,
+    testDatabaseSelector: readTestDatabaseId(source, mode),
   })
 
   if (mode === "test") {
@@ -71,6 +93,17 @@ export function getDatabaseRuntime({ requestedMode } = {}) {
 export function assertTestDatabase(runtime) {
   if (runtime.mode !== "test") {
     throw new Error("Test database operations require APP_ENV=test and NODE_ENV=test")
+  }
+
+  if (
+    runtime.testDatabaseSelector?.databaseId === P1_23_TEST_DATABASE_ID &&
+    runtime.testDatabaseSelector.secretId === P1_23_TEST_DATABASE_SECRET_ID
+  ) {
+    return
+  }
+
+  if (runtime.testDatabaseSelector) {
+    throw new Error("TEST_DATABASE_ID and TEST_DATABASE_SECRET_ID do not select the approved P1-23 test connection")
   }
 
   if (!runtime.databaseName.toLowerCase().includes("test")) {
