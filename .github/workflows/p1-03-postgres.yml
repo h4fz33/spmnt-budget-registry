@@ -87,6 +87,11 @@ jobs:
       - run: npm run db:migrate:test
       - run: npm run db:seed:test
       - run: npm run db:seed:test
+      - name: Create synthetic System Admin bootstrap for structural verification
+        env:
+          BOOTSTRAP_ADMIN_EMAIL: p1-17-ci@synthetic.test
+          BOOTSTRAP_ADMIN_PASSWORD: Synthetic-P1-17-Initial-Password
+        run: node --conditions=react-server --experimental-strip-types scripts/bootstrap-first-system-admin.mjs
       - name: Run PostgreSQL structural verifiers
         run: |
           for verifier in scripts/verify-p1-*.mjs; do
@@ -112,7 +117,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - run: npm ci --include=dev
       - name: Generate Prisma Client
         run: npm run db:generate
       - run: npm run build

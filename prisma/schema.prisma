@@ -219,9 +219,9 @@ model AuthenticatedIdentity {
   policyPublisherDesignations PolicyPublisherDesignation[]           @relation("PolicyPublisherIdentity")
   publishedPolicyVersions     PolicyVersion[]                        @relation("PolicyVersionPublisher")
   systemAdminBootstrap        SystemAdminBootstrap?                  @relation("SystemAdminBootstrapIdentity")
-  sesaoAuditorConfigurations  SesaoAuditorConfiguration[]             @relation("SesaoAuditorIdentity")
-  sesaoAuditorProvenance      SesaoAuditorProvenance[]                 @relation("SesaoAuditorSubject")
-  sesaoAuditorExecutions      SesaoAuditorProvenance[]                 @relation("SesaoAuditorExecutor")
+  sesaoAuditorConfigurations  SesaoAuditorConfiguration[]            @relation("SesaoAuditorIdentity")
+  sesaoAuditorProvenance      SesaoAuditorProvenance[]               @relation("SesaoAuditorSubject")
+  sesaoAuditorExecutions      SesaoAuditorProvenance[]               @relation("SesaoAuditorExecutor")
   idempotencyRecords          CommandIdempotencyRecord[]             @relation("IdempotencyActor")
 }
 
@@ -240,14 +240,14 @@ model ApprovedMembership {
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
 
-  identity             AuthenticatedIdentity      @relation("MembershipIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  organization         Organization               @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  approvedBy           AuthenticatedIdentity?     @relation("MembershipApprover", fields: [approvedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  roleAssignments      SchoolRoleAssignment[]     @relation("MembershipRoles")
-  auditEvents          AuditLog[]                 @relation("AuditActorMembership")
-  systemAdminBootstrap SystemAdminBootstrap?      @relation("SystemAdminBootstrapMembership")
-  idempotencyRecords   CommandIdempotencyRecord[] @relation("IdempotencyActorMembership")
-  sesaoAuditorExecutions SesaoAuditorProvenance[] @relation("SesaoAuditorExecutorMembership")
+  identity               AuthenticatedIdentity      @relation("MembershipIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  organization           Organization               @relation(fields: [organizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  approvedBy             AuthenticatedIdentity?     @relation("MembershipApprover", fields: [approvedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  roleAssignments        SchoolRoleAssignment[]     @relation("MembershipRoles")
+  auditEvents            AuditLog[]                 @relation("AuditActorMembership")
+  systemAdminBootstrap   SystemAdminBootstrap?      @relation("SystemAdminBootstrapMembership")
+  idempotencyRecords     CommandIdempotencyRecord[] @relation("IdempotencyActorMembership")
+  sesaoAuditorExecutions SesaoAuditorProvenance[]   @relation("SesaoAuditorExecutorMembership")
 
   @@unique([id, organizationId])
   @@index([identityId, organizationId])
@@ -296,43 +296,43 @@ model SystemAdminBootstrap {
 // P1-19 is a dedicated configured-Auditor capability boundary. It does not
 // create a School role or an Assessment assignment.
 model SesaoAuditorBootstrap {
-  id               String   @id @default("p1-19")
-  esaoOrganizationId String  @unique @db.Uuid
-  createdAt        DateTime @default(now())
+  id                 String   @id @default("p1-19")
+  esaoOrganizationId String   @unique @db.Uuid
+  createdAt          DateTime @default(now())
 
-  esaoOrganization Organization               @relation("SesaoAuditorBootstrapEsao", fields: [esaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  esaoOrganization Organization                @relation("SesaoAuditorBootstrapEsao", fields: [esaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   configurations   SesaoAuditorConfiguration[]
 }
 
 model SesaoAuditorConfiguration {
-  id                  String                         @id @default(uuid()) @db.Uuid
-  bootstrapId         String?                        @db.VarChar(32)
-  identityId          String                         @db.Uuid
-  personNameSnapshot  String                         @db.VarChar(200)
-  roleCode            String                         @default("SESAO_AUDITOR") @db.VarChar(32)
-  esaoOrganizationId  String                         @db.Uuid
+  id                  String                          @id @default(uuid()) @db.Uuid
+  bootstrapId         String?                         @db.VarChar(32)
+  identityId          String                          @db.Uuid
+  personNameSnapshot  String                          @db.VarChar(200)
+  roleCode            String                          @default("SESAO_AUDITOR") @db.VarChar(32)
+  esaoOrganizationId  String                          @db.Uuid
   status              SesaoAuditorConfigurationStatus @default(ACTIVE)
-  effectiveFrom       DateTime                       @default(now())
+  effectiveFrom       DateTime                        @default(now())
   revokedAt           DateTime?
-  configurationSource String                         @default("INITIAL_BOOTSTRAP") @db.VarChar(32)
-  integrityDigest     String                         @unique @db.Char(64)
-  createdAt           DateTime                       @default(now())
-  updatedAt           DateTime                       @updatedAt
+  configurationSource String                          @default("INITIAL_BOOTSTRAP") @db.VarChar(32)
+  integrityDigest     String                          @unique @db.Char(64)
+  createdAt           DateTime                        @default(now())
+  updatedAt           DateTime                        @updatedAt
 
-  bootstrap       SesaoAuditorBootstrap?       @relation(fields: [bootstrapId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  identity        AuthenticatedIdentity        @relation("SesaoAuditorIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  esaoOrganization Organization                 @relation("SesaoAuditorEsao", fields: [esaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  schoolScopes    SesaoAuditorSchoolScope[]
-  provenance      SesaoAuditorProvenance[]
+  bootstrap        SesaoAuditorBootstrap?    @relation(fields: [bootstrapId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  identity         AuthenticatedIdentity     @relation("SesaoAuditorIdentity", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  esaoOrganization Organization              @relation("SesaoAuditorEsao", fields: [esaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  schoolScopes     SesaoAuditorSchoolScope[]
+  provenance       SesaoAuditorProvenance[]
 
   @@index([identityId, status])
   @@index([esaoOrganizationId, status])
 }
 
 model SesaoAuditorSchoolScope {
-  id              String @id @default(uuid()) @db.Uuid
-  configurationId String @db.Uuid
-  schoolId        String @db.Uuid
+  id              String   @id @default(uuid()) @db.Uuid
+  configurationId String   @db.Uuid
+  schoolId        String   @db.Uuid
   createdAt       DateTime @default(now())
 
   configuration SesaoAuditorConfiguration @relation(fields: [configurationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
@@ -343,30 +343,30 @@ model SesaoAuditorSchoolScope {
 }
 
 model SesaoAuditorProvenance {
-  id                         String                  @id @default(uuid()) @db.Uuid
-  configurationId            String                  @db.Uuid
-  action                     SesaoAuditorChangeAction
-  externalApprovalRecordId   String                  @db.VarChar(128)
-  approvalAuthorityLabel     String                  @db.VarChar(128)
-  approvalAuthorityIdentity  String                  @db.VarChar(320)
-  approvalEvidenceReference  String                  @db.VarChar(512)
-  approvalEvidenceHash       String                  @db.Char(64)
-  subjectIdentityId          String                  @db.Uuid
-  subjectAccountIdentifier   String                  @db.VarChar(320)
-  subjectPersonName          String                  @db.VarChar(200)
-  subjectRoleCode            String                  @db.VarChar(32)
-  subjectEsaoOrganizationId  String                  @db.Uuid
-  technicalExecutorIdentityId String                 @db.Uuid
-  technicalExecutorMembershipId String               @db.Uuid
-  executedAt                 DateTime
-  integrityDigest            String                  @unique @db.Char(64)
-  createdAt                  DateTime                @default(now())
+  id                            String                   @id @default(uuid()) @db.Uuid
+  configurationId               String                   @db.Uuid
+  action                        SesaoAuditorChangeAction
+  externalApprovalRecordId      String                   @db.VarChar(128)
+  approvalAuthorityLabel        String                   @db.VarChar(128)
+  approvalAuthorityIdentity     String                   @db.VarChar(320)
+  approvalEvidenceReference     String                   @db.VarChar(512)
+  approvalEvidenceHash          String                   @db.Char(64)
+  subjectIdentityId             String                   @db.Uuid
+  subjectAccountIdentifier      String                   @db.VarChar(320)
+  subjectPersonName             String                   @db.VarChar(200)
+  subjectRoleCode               String                   @db.VarChar(32)
+  subjectEsaoOrganizationId     String                   @db.Uuid
+  technicalExecutorIdentityId   String                   @db.Uuid
+  technicalExecutorMembershipId String                   @db.Uuid
+  executedAt                    DateTime
+  integrityDigest               String                   @unique @db.Char(64)
+  createdAt                     DateTime                 @default(now())
 
-  configuration          SesaoAuditorConfiguration @relation(fields: [configurationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  subjectIdentity        AuthenticatedIdentity     @relation("SesaoAuditorSubject", fields: [subjectIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  subjectEsaoOrganization Organization             @relation("SesaoAuditorProvenanceEsao", fields: [subjectEsaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  technicalExecutor      AuthenticatedIdentity     @relation("SesaoAuditorExecutor", fields: [technicalExecutorIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  technicalExecutorMembership ApprovedMembership   @relation("SesaoAuditorExecutorMembership", fields: [technicalExecutorMembershipId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  configuration               SesaoAuditorConfiguration @relation(fields: [configurationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  subjectIdentity             AuthenticatedIdentity     @relation("SesaoAuditorSubject", fields: [subjectIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  subjectEsaoOrganization     Organization              @relation("SesaoAuditorProvenanceEsao", fields: [subjectEsaoOrganizationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  technicalExecutor           AuthenticatedIdentity     @relation("SesaoAuditorExecutor", fields: [technicalExecutorIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  technicalExecutorMembership ApprovedMembership        @relation("SesaoAuditorExecutorMembership", fields: [technicalExecutorMembershipId], references: [id], onDelete: Restrict, onUpdate: Restrict)
 
   @@unique([externalApprovalRecordId, action])
   @@unique([configurationId, action])
