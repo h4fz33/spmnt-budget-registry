@@ -4,6 +4,8 @@ import { test } from "node:test"
 
 import { PILOT_ESAO, seedSchoolDirectory } from "../../prisma/school-directory-seed.mjs"
 import { createDatabaseClient } from "../../scripts/db-client.mjs"
+import { bootstrapFirstSystemAdmin } from "../../src/lib/bootstrap/first-system-admin.ts"
+import { applyPolicyPublisherDesignation } from "../../src/lib/authorization/policy-publisher.ts"
 import {
   PolicyPublicationDeniedError,
   PolicyResolutionDeniedError,
@@ -82,9 +84,9 @@ test("P1-07 publishes a complete directory scope, rejects ambiguity, and preserv
 
   try {
     await seedSchoolDirectory(client, { esaoCode: PILOT_ESAO.code })
-    const now = new Date()
+    let now = new Date()
     const organizationId = PILOT_ESAO.organizationId
-    const publisher = await resolveCurrentPublisher(client, organizationId, now, suffix)
+    let publisher = await resolveCurrentPublisher(client, organizationId, now, suffix)
     const existingActive = await client.policyVersion.findFirst({
       where: { organizationId, status: "ACTIVE" },
       orderBy: { effectiveFrom: "desc" },
@@ -96,6 +98,104 @@ test("P1-07 publishes a complete directory scope, rejects ambiguity, and preserv
     const secondEffectiveAt = addMilliseconds(firstEffectiveAt, 24 * 60 * 60 * 1000)
     const firstPolicyId = `POL-P107-${policySuffix}-A`
     const secondPolicyId = `POL-P107-${policySuffix}-B`
+
+    const existingProvenance = await client.policyPublisherDesignationProvenance.findFirst({
+      where: { currentDesignationId: publisher.designation.id, organizationId },
+      select: { id: true },
+    })
+    if (!existingProvenance) {
+      await assert.rejects(
+        () => publishPolicyVersion(client, {
+          policyVersionId: `POL-P107-${policySuffix}-UNPROVENANCED`,
+          organizationId,
+          actorIdentityId: publisher.designation.identityId,
+          actorMembershipId: publisher.membership.id,
+          freshAuthenticatedAt: addMilliseconds(now, -60_000),
+          effectiveFrom: firstEffectiveAt,
+          sources: [{ sourceReference: `synthetic://p1-07/${suffix}/unprovenanced`, contentHash: hash("0") }],
+          supersedesPolicyVersionId: existingActive?.policyVersionId ?? null,
+          occurredAt: now,
+        }),
+        (error: unknown) =>
+          error instanceof PolicyPublicationDeniedError && error.code === "CURRENT_POLICY_PUBLISHER_PROVENANCE_REQUIRED",
+      )
+
+      let systemAdmin = await client.systemAdminBootstrap.findUnique({
+        where: { id: "p1-17" },
+        include: { identity: true, membership: true },
+      })
+      if (!systemAdmin) {
+        await bootstrapFirstSystemAdmin(client, {
+          accountIdentifier: `p107-system-admin-${suffix}@synthetic.test`,
+          password: "P1-07-System-Admin-Password",
+        })
+        systemAdmin = await client.systemAdminBootstrap.findUniqueOrThrow({
+          where: { id: "p1-17" },
+          include: { identity: true, membership: true },
+        })
+      }
+      now = new Date()
+      const standbyIdentity = await client.authenticatedIdentity.create({
+        data: {
+          accountIdentifier: `p107-provenanced-standby-${suffix}@synthetic.test`,
+          displayName: `P1-07 provenanced standby ${suffix}`,
+          accountStatus: "ACTIVE",
+          memberships: { create: { organizationId, status: "ACTIVE", effectiveFrom: addMilliseconds(now, -60_000) } },
+        },
+      })
+      await applyPolicyPublisherDesignation(client, {
+        action: "DESIGNATE",
+        actor: {
+          identityId: systemAdmin.identityId,
+          membershipId: systemAdmin.membershipId,
+          accountIdentifier: systemAdmin.identity.accountIdentifier,
+          authorizationVersion: systemAdmin.identity.authorizationVersion,
+          membershipAuthorizationVersion: systemAdmin.membership.authorizationVersion,
+          authenticatedAt: now.getTime(),
+        },
+        approval: {
+          externalApprovalRecordId: `PO-P1-07-${suffix}`,
+          approvalAuthorityLabel: "Private Business / Product Owner",
+          approvalAuthorityIdentity: "synthetic-product-owner@synthetic.test",
+          approvalEvidenceReference: `synthetic://p1-07/${suffix}/approval`,
+          approvalEvidenceHash: hash("1"),
+          scopeEvidenceReference: `synthetic://p1-07/${suffix}/scope`,
+          scopeEvidenceHash: hash("2"),
+        },
+        current: {
+          identityId: publisher.designation.identityId,
+          accountIdentifier: publisher.designation.identity.accountIdentifier,
+          personName: publisher.designation.identity.displayName,
+          currentStatusEvidence: {
+            officialPageUrl: "https://www.sesaonara.go.th/internal-audit/",
+            retrievedAt: addMilliseconds(now, -30_000),
+            namedPersonResult: `Synthetic current-status check confirms ${publisher.designation.identity.displayName}`,
+            conflictOutcome: "NO_CONFLICT",
+            evidenceReference: `synthetic://p1-07/${suffix}/current-status`,
+            evidenceHash: hash("3"),
+          },
+        },
+        standby: {
+          identityId: standbyIdentity.id,
+          accountIdentifier: standbyIdentity.accountIdentifier,
+          personName: standbyIdentity.displayName,
+          currentStatusEvidence: {
+            officialPageUrl: "https://www.sesaonara.go.th/internal-audit/",
+            retrievedAt: addMilliseconds(now, -30_000),
+            namedPersonResult: `Synthetic current-status check confirms ${standbyIdentity.displayName}`,
+            conflictOutcome: "NO_CONFLICT",
+            evidenceReference: `synthetic://p1-07/${suffix}/standby-status`,
+            evidenceHash: hash("4"),
+          },
+        },
+        effectiveFrom: now,
+      }, now)
+      const provenancedDesignation = await client.policyPublisherDesignation.findFirstOrThrow({
+        where: { organizationId, identityId: publisher.designation.identityId, status: "CURRENT" },
+        include: { identity: true },
+      })
+      publisher = { designation: provenancedDesignation, membership: publisher.membership }
+    }
 
     const firstPublication = await publishPolicyVersion(client, {
       policyVersionId: firstPolicyId,

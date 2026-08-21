@@ -247,6 +247,17 @@ async function resolvePublicationActor(
     throw new PolicyPublicationDeniedError("CURRENT_POLICY_PUBLISHER_REQUIRED")
   }
 
+  const provenance = await transaction.policyPublisherDesignationProvenance.findFirst({
+    where: {
+      organizationId: input.organizationId,
+      currentDesignationId: designation.id,
+    },
+    select: { id: true },
+  })
+  if (!provenance) {
+    throw new PolicyPublicationDeniedError("CURRENT_POLICY_PUBLISHER_PROVENANCE_REQUIRED")
+  }
+
   return Object.freeze({
     identityId: membership.identityId,
     membershipId: membership.id,
