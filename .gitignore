@@ -41,5 +41,6 @@ next-env.d.ts
 
 #tmp
 /tmp
+/.tmp-p1-12/
 
 /generated/prisma

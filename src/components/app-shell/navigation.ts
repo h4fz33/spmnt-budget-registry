@@ -14,7 +14,7 @@ export type SchoolWorkspace = Readonly<{
 }>
 
 export type ShellNavigationItem = Readonly<{
-  id: "overview"
+  id: "overview" | "director-controls"
   label: string
   href: string
 }>
@@ -31,6 +31,12 @@ const shellNavigation: readonly ShellNavigationItem[] = [
     href: "/",
   },
 ]
+
+const directorNavigation: ShellNavigationItem = {
+  id: "director-controls",
+  label: "ควบคุมอำนาจผู้อำนวยการ",
+  href: "/director/authority",
+}
 
 const deferredCapabilities: readonly DeferredCapability[] = [
   {
@@ -54,14 +60,14 @@ function hasRequiredRole(
   return requiredRoles.some((role) => roles.includes(role))
 }
 
-export function navigationForWorkspace(_workspace: SchoolWorkspace) {
-  // The Phase 1 shell exposes only routes that exist today. Role-specific
-  // commands remain out of navigation until their owning feature is complete.
-  return shellNavigation
+export function navigationForWorkspace(workspace: SchoolWorkspace) {
+  return workspace.roles.includes("SCHOOL_DIRECTOR")
+    ? [...shellNavigation, directorNavigation]
+    : shellNavigation
 }
 
 export function deferredCapabilitiesForWorkspace(workspace: SchoolWorkspace) {
-  return deferredCapabilities.filter((capability) => hasRequiredRole(workspace.roles, capability.requiredRoles))
+  return deferredCapabilities.filter((capability) => capability.id !== "director-controls" && hasRequiredRole(workspace.roles, capability.requiredRoles))
 }
 
 export function canSelectWorkspace(workspaces: readonly SchoolWorkspace[], workspaceId: string) {

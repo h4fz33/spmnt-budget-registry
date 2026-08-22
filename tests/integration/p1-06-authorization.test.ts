@@ -8,6 +8,7 @@ import {
   resolveEffectiveDirectorAuthority,
   type AuthorizationSession,
 } from "../../src/lib/authorization/school-authorization.ts"
+import { bootstrapFirstSystemAdmin } from "../../src/lib/bootstrap/first-system-admin.ts"
 
 const now = new Date("2026-10-20T08:00:00.000Z")
 const effectiveFrom = new Date("2026-10-01T00:00:00.000Z")
@@ -248,6 +249,12 @@ test("P1-06 resolves Active, Acting, and Temporary authority in order without wi
   const suffix = randomUUID().replaceAll("-", "").slice(0, 12)
 
   try {
+    if (!(await client.systemAdminBootstrap.findUnique({ where: { id: "p1-17" }, select: { id: true } }))) {
+      await bootstrapFirstSystemAdmin(client, {
+        accountIdentifier: `p106-system-${suffix}@synthetic.test`,
+        password: "P1-06-System-Admin-Password",
+      })
+    }
     const actingSchool = await createSchool(client, `${suffix}a`)
     const director = await createIdentity(client, `${suffix}-director`)
     const actingSubject = await createIdentity(client, `${suffix}-acting`)
@@ -367,7 +374,7 @@ test("P1-06 resolves Active, Acting, and Temporary authority in order without wi
       "FINANCE_OFFICER",
       `${suffix}-expired`,
     )
-    await createAuthority(client, {
+    const expiredAuthorityRecord = await createAuthority(client, {
       schoolId: expiredSchool.organizationId,
       variant: "TEMPORARY",
       appointingIdentityId: director.id,
@@ -381,7 +388,8 @@ test("P1-06 resolves Active, Acting, and Temporary authority in order without wi
       now,
     })
     assert.equal(expiredAuthority.allowed, false)
-    assert.equal(expiredAuthority.reason, "INVALID_TEMPORARY_AUTHORITY")
+    assert.equal(expiredAuthority.reason, "NO_EFFECTIVE_DIRECTOR_AUTHORITY")
+    assert.equal((await client.substituteDirectorAuthority.findUniqueOrThrow({ where: { id: expiredAuthorityRecord.id } })).status, "EXPIRED")
   } finally {
     await client.$disconnect()
   }

@@ -1,4 +1,10 @@
 import type { PrismaClient } from "../../../generated/prisma/client"
+import { randomUUID } from "node:crypto"
+
+import { calculateJsonIntegrityDigest } from "../reliability/contract.ts"
+import { withSerializableRetry } from "../database/with-serializable-retry.ts"
+import { recordAuditEventInTransaction } from "../audit/core.ts"
+import { SYSTEM_ADMIN_BOOTSTRAP_ID } from "../bootstrap/constants.ts"
 
 import {
   ACTIVE_DIRECTOR_ONLY_COMMANDS,
@@ -88,7 +94,7 @@ type InForceAuthority = Readonly<{
   id: string
   schoolId: string
   variant: "ACTING_DIRECTOR" | "ACTING_ESAO" | "TEMPORARY"
-  status: "IN_FORCE"
+  status: "SCHEDULED" | "IN_FORCE"
   subjectRoleAssignmentId: string
   availabilityId: string | null
   actingReasonCode: "MEDICAL_LEAVE" | "OFFICIAL_TRAVEL" | "PERSONAL_LEAVE" | "OTHER" | null
@@ -296,6 +302,86 @@ async function loadActiveDirectors(database: PrismaClient, schoolId: string, now
   }) as Promise<DirectorAssignment[]>
 }
 
+async function synchronizeAuthorityStatuses(database: PrismaClient, schoolId: string, now: Date) {
+  await withSerializableRetry(() => database.$transaction(async (transaction) => {
+    const bootstrap = await transaction.systemAdminBootstrap.findUnique({
+      where: { id: SYSTEM_ADMIN_BOOTSTRAP_ID },
+      select: {
+        identityId: true,
+        membershipId: true,
+        identity: { select: { accountStatus: true } },
+        membership: { select: { status: true, effectiveFrom: true, effectiveTo: true, organization: { select: { type: true, status: true } } } },
+      },
+    })
+    if (
+      !bootstrap ||
+      bootstrap.identity.accountStatus !== "ACTIVE" ||
+      bootstrap.membership.status !== "ACTIVE" ||
+      bootstrap.membership.effectiveFrom > now ||
+      bootstrap.membership.effectiveTo !== null && bootstrap.membership.effectiveTo <= now ||
+      bootstrap.membership.organization.type !== "PLATFORM" ||
+      bootstrap.membership.organization.status !== "ACTIVE"
+    ) return
+    const due = await transaction.substituteDirectorAuthority.findMany({
+      where: {
+        schoolId,
+        OR: [
+          { status: "SCHEDULED", effectiveFrom: { lte: now } },
+          { status: "IN_FORCE", expiresAt: { lte: now } },
+        ],
+      },
+      select: { id: true, status: true, expiresAt: true },
+    })
+    for (const authority of due) {
+      const nextStatus = authority.status === "SCHEDULED" && (authority.expiresAt === null || authority.expiresAt > now) ? "IN_FORCE" : "EXPIRED"
+      const latestLifecycle = await transaction.substituteDirectorAuthorityLifecycle.findFirst({
+        where: { authorityId: authority.id },
+        orderBy: { revision: "desc" },
+        select: { revision: true },
+      })
+      const revision = (latestLifecycle?.revision ?? 0) + 1
+      await transaction.substituteDirectorAuthority.update({
+        where: { id: authority.id },
+        data: { status: nextStatus, recordVersion: revision, updatedAt: now },
+      })
+      const lifecycleId = randomUUID()
+      await transaction.substituteDirectorAuthorityLifecycle.create({
+        data: {
+          id: lifecycleId,
+          authorityId: authority.id,
+          revision,
+          status: nextStatus,
+          occurredAt: now,
+          actorIdentityId: null,
+          reason: nextStatus === "IN_FORCE" ? "SYSTEM_EFFECTIVE:Future effective start reached" : "SYSTEM_EXPIRY:Authority expiry reached",
+          integrityDigest: calculateJsonIntegrityDigest({
+            version: 1,
+            id: lifecycleId,
+            authorityId: authority.id,
+            revision,
+            status: nextStatus,
+            actorIdentityId: null,
+            reason: nextStatus === "IN_FORCE" ? { code: "SYSTEM_EFFECTIVE", detail: "Future effective start reached" } : { code: "SYSTEM_EXPIRY", detail: "Authority expiry reached" },
+            occurredAt: now.toISOString(),
+          }),
+        },
+      })
+      await recordAuditEventInTransaction(transaction, {
+        actorIdentityId: bootstrap.identityId,
+        actorMembershipId: bootstrap.membershipId,
+        scope: { kind: "PLATFORM" },
+        commandCode: "AUTH-14",
+        targetType: "SubstituteDirectorAuthority",
+        targetId: authority.id,
+        outcome: "SUCCESS",
+        reasonCode: nextStatus === "IN_FORCE" ? "SYSTEM_EFFECTIVE" : "SYSTEM_EXPIRY",
+        correlationId: authority.id,
+        occurredAt: now,
+      })
+    }
+  }, { isolationLevel: "Serializable" }), { operationKey: "P1-16-SYNCHRONIZE-AUTHORITY-STATUS" })
+}
+
 async function loadInForceAuthorities(database: PrismaClient, schoolId: string) {
   return database.substituteDirectorAuthority.findMany({
     where: { schoolId, status: "IN_FORCE" },
@@ -370,7 +456,7 @@ function validateAuthority(
   })
   const subject = authority.subjectRoleAssignment
   const membership = subject.membership
-  const lifecycle = authority.lifecycleEvents.filter((event) => event.revision === authority.recordVersion)
+  const lifecycle = authority.lifecycleEvents.filter((event) => event.occurredAt <= now).sort((left, right) => right.revision - left.revision).slice(0, 1)
 
   if (
     authority.schoolId !== schoolId ||
@@ -385,8 +471,7 @@ function validateAuthority(
     !authority.commandScope.includes(command) ||
     lifecycle.length !== 1 ||
     lifecycle[0].status !== "IN_FORCE" ||
-    lifecycle[0].occurredAt > now ||
-    lifecycle[0].integrityDigest !== authority.integrityDigest ||
+    !hashPattern.test(lifecycle[0].integrityDigest) ||
     subject.id !== authority.subjectRoleAssignmentId ||
     subject.schoolId !== schoolId ||
     (subject.role !== "FINANCE_OFFICER" && subject.role !== "SCHOOL_ADMIN") ||
@@ -482,6 +567,8 @@ export async function resolveEffectiveDirectorAuthority(
     return decision(request.command, request.schoolId, principal)
   }
 
+  await synchronizeAuthorityStatuses(database, request.schoolId, now)
+
   if (request.command === "AUTH-21") {
     return resolveActiveDirectorOnly(database, principal, request.command, request.schoolId, now)
   }
@@ -509,9 +596,8 @@ export async function resolveEffectiveDirectorAuthority(
     : []
   const currentAvailability = availability.filter((entry) => entry.unavailableFrom <= now)
 
-  if (availability.some((entry) => entry.unavailableFrom > now)) {
-    return decision(request.command, request.schoolId, "INVALID_DIRECTOR_AVAILABILITY")
-  }
+  // A future availability record belongs to a scheduled authority. It must
+  // not deny the active Director before that authority's effective start.
   if (currentAvailability.length > 1) {
     return decision(request.command, request.schoolId, "AMBIGUOUS_DIRECTOR_AVAILABILITY")
   }

@@ -30,7 +30,7 @@ test("P1-11 exposes only implemented shell navigation for every workspace", () =
   )
   assert.deepEqual(
     navigationForWorkspace(adminDirectorWorkspace).map((item) => item.id),
-    ["overview"],
+    ["overview", "director-controls"],
   )
 })
 
@@ -41,7 +41,7 @@ test("P1-11 keeps role-specific commands out of navigation until their owning fe
   )
   assert.deepEqual(
     deferredCapabilitiesForWorkspace(adminDirectorWorkspace).map((capability) => capability.id),
-    ["school-account-request", "director-controls"],
+    ["school-account-request"],
   )
 })
 
