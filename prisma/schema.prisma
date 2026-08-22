@@ -24,6 +24,24 @@ enum AccountStatus {
   DISABLED
 }
 
+enum CredentialOperationType {
+  ACTIVATION
+  RECOVERY
+}
+
+enum CredentialOperationStatus {
+  ISSUED
+  CONSUMED
+  EXPIRED
+  REVOKED
+}
+
+enum CredentialRecoveryApprovalStatus {
+  APPROVED
+  CONSUMED
+  REVOKED
+}
+
 enum MembershipStatus {
   ACTIVE
   SUSPENDED
@@ -295,6 +313,10 @@ model AuthenticatedIdentity {
   schoolAccountRequestHistoryActors    SchoolAccountRequestHistory[]          @relation("SchoolAccountRequestHistoryActor")
   schoolAccountRequestHistoryTargets   SchoolAccountRequestHistory[]          @relation("SchoolAccountRequestHistoryTarget")
   schoolAccountRequestRateLimits       SchoolAccountRequestRateLimit[]        @relation("SchoolAccountRequestRateLimitIdentity")
+  credentialOperations                 CredentialOperation[]                  @relation("CredentialOperationTarget")
+  issuedCredentialOperations           CredentialOperation[]                  @relation("CredentialOperationIssuer")
+  recoveryApprovals                    CredentialRecoveryApproval[]           @relation("CredentialRecoveryTarget")
+  approvedRecoveryApprovals            CredentialRecoveryApproval[]           @relation("CredentialRecoveryApprover")
 }
 
 // An Approved Membership is an organizational boundary. School roles are
@@ -327,10 +349,58 @@ model ApprovedMembership {
   schoolAdminBootstrapRows             SchoolAdminBootstrapManifestRow[]      @relation("SchoolAdminBootstrapRowMembership")
   schoolAccountRequestsSubmitted       SchoolAccountRequest[]                 @relation("SchoolAccountRequestRequesterMembership")
   schoolAccountRequestHistoryActors    SchoolAccountRequestHistory[]          @relation("SchoolAccountRequestHistoryActorMembership")
+  credentialRecoveryApprovals          CredentialRecoveryApproval[]           @relation("CredentialRecoveryApproverMembership")
 
   @@unique([id, organizationId])
   @@index([identityId, organizationId])
   @@index([organizationId, status])
+}
+
+// Credential material is never retained. The operation stores only a
+// one-time token hash and its lifecycle metadata; the plaintext is returned
+// exactly once to the controlled technical executor boundary.
+model CredentialOperation {
+  id                 String                    @id @default(uuid()) @db.Uuid
+  identityId         String                    @db.Uuid
+  operationType      CredentialOperationType
+  status             CredentialOperationStatus @default(ISSUED)
+  tokenHash          String                    @unique @db.Char(64)
+  issuedByIdentityId String                    @db.Uuid
+  recoveryApprovalId String?                   @db.Uuid
+  expiresAt          DateTime
+  consumedAt         DateTime?
+  createdAt          DateTime                  @default(now())
+  updatedAt          DateTime                  @updatedAt
+
+  identity         AuthenticatedIdentity       @relation("CredentialOperationTarget", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  issuedBy         AuthenticatedIdentity       @relation("CredentialOperationIssuer", fields: [issuedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  recoveryApproval CredentialRecoveryApproval? @relation(fields: [recoveryApprovalId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([identityId, operationType, status, expiresAt])
+}
+
+// Recovery is an ESAO Admin decision and a System Admin technical execution.
+// Keeping the approval separate prevents the platform executor from inventing
+// organization authority or changing a membership while issuing a credential.
+model CredentialRecoveryApproval {
+  id                     String                           @id @default(uuid()) @db.Uuid
+  identityId             String                           @db.Uuid
+  approvedByIdentityId   String                           @db.Uuid
+  approvedByMembershipId String                           @db.Uuid
+  status                 CredentialRecoveryApprovalStatus @default(APPROVED)
+  reasonCode             String                           @db.VarChar(64)
+  reasonDetail           String                           @db.VarChar(2000)
+  approvalReference      String                           @db.VarChar(512)
+  integrityDigest        String                           @unique @db.Char(64)
+  createdAt              DateTime                         @default(now())
+  consumedAt             DateTime?
+
+  identity           AuthenticatedIdentity @relation("CredentialRecoveryTarget", fields: [identityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  approvedBy         AuthenticatedIdentity @relation("CredentialRecoveryApprover", fields: [approvedByIdentityId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  approvedMembership ApprovedMembership    @relation("CredentialRecoveryApproverMembership", fields: [approvedByMembershipId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  operations         CredentialOperation[]
+
+  @@index([identityId, status, createdAt])
 }
 
 model SchoolRoleAssignment {

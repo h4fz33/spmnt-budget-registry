@@ -10,6 +10,7 @@ import {
   RefreshCwIcon,
   ShieldCheckIcon,
   UserRoundIcon,
+  UserRoundCogIcon,
 } from "lucide-react"
 
 import {
@@ -147,7 +148,7 @@ function WorkspaceSidebar({
                     isActive
                     tooltip={item.label}
                     render={<Link href={item.href} aria-current="page" />}>
-                    <LayoutDashboardIcon />
+                    {item.id === "director-controls" ? <UserRoundCogIcon /> : <LayoutDashboardIcon />}
                     <span>{item.label}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -218,6 +219,9 @@ function WorkspaceOverview({ activeWorkspace }: Readonly<{ activeWorkspace: Scho
             <p className="mt-1 text-sm text-muted-foreground">หน้านี้แสดงเฉพาะพื้นที่ทำงานที่ได้รับอนุญาตในขณะนี้</p>
           </div>
         </div>
+        <Link href="/admin/organization" className="mt-4 inline-flex min-h-9 items-center rounded-md border border-border px-3 text-sm font-medium hover:bg-muted">
+          จัดการวงจรชีวิตองค์กร
+        </Link>
       </section>
     </div>
   )

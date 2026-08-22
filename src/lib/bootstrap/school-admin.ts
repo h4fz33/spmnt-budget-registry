@@ -245,6 +245,7 @@ async function requireApprovedEsaoAdmin(
     !configuration ||
     configuration.identityId !== approval.actor.identityId ||
     configuration.status !== "ACTIVE" ||
+    configuration.effectiveFrom > now ||
     configuration.roleCode !== "ESAO_ADMIN" ||
     configuration.configurationSource !== "APPROVED_APPOINTMENT" ||
     configuration.esaoOrganizationId !== PILOT_ESAO_ORGANIZATION_ID ||

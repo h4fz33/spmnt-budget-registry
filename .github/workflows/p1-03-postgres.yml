@@ -87,36 +87,31 @@ jobs:
       - run: npm run db:migrate:test
       - run: npm run db:seed:test
       - run: npm run db:seed:test
-      - name: Create synthetic System Admin bootstrap for structural verification
-        env:
-          BOOTSTRAP_ADMIN_EMAIL: p1-17-ci@synthetic.test
-          BOOTSTRAP_ADMIN_PASSWORD: Synthetic-P1-17-Initial-Password
-        run: node --conditions=react-server --experimental-strip-types scripts/bootstrap-first-system-admin.mjs
-      - name: Create synthetic SESAO Auditor bootstrap for structural verification
+      - name: Create isolated P1-20 database
         run: |
-          node --conditions=react-server --experimental-strip-types --input-type=module -e '
-            import { bootstrapSesaoAuditors } from "./src/lib/bootstrap/sesao-auditor.ts"
-            import { createDatabaseClient } from "./scripts/db-client.mjs"
-            const database = createDatabaseClient({ requestedMode: "test" })
-            try {
-              await bootstrapSesaoAuditors(database.client, {
-                accounts: [{
-                  accountIdentifier: "p1-19-ci@synthetic.test",
-                  password: "Synthetic-P1-19-Initial-Password",
-                  personName: "P1-19 CI Auditor",
-                }],
-              })
-            } finally {
-              await database.client.$disconnect()
-            }
-          '
+          PGPASSWORD=postgres createdb --host=localhost --port=5432 --username=postgres schoolbanchee_p1_20_test
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/schoolbanchee_p1_20_test?schema=public npm run db:migrate:test
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/schoolbanchee_p1_20_test?schema=public npm run db:seed:test
+      - name: Run isolated P1-20 integration and verification
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/schoolbanchee_p1_20_test?schema=public
+        run: |
+          npm run test:p1-20
+          npm run verify:p1-20
+      - name: Run pre-lifecycle PostgreSQL integration fixtures
+        run: npm run test:integration:ci:pre
+      - name: Verify P1-15 before credential lifecycle execution
+        run: npm run verify:p1-15
+      - name: Run lifecycle PostgreSQL integration fixtures
+        run: npm run test:integration:ci:post
       - name: Run PostgreSQL structural verifiers
         run: |
           for verifier in scripts/verify-p1-*.mjs; do
+            if [ "$verifier" = "scripts/verify-p1-15.mjs" ] || [ "$verifier" = "scripts/verify-p1-20.mjs" ]; then
+              continue
+            fi
             node scripts/run-db-test.mjs node --conditions=react-server --experimental-strip-types "$verifier"
           done
-      - name: Run PostgreSQL integration tests
-        run: node scripts/run-db-test.mjs node --conditions=react-server --experimental-strip-types --test tests/integration/*.test.ts
 
   production-build:
     name: Production build

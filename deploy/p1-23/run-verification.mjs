@@ -27,6 +27,8 @@ const checks = [
   ["P1_21_VERIFY", ["run", "verify:p1-21"]],
   ["P1_15_TEST", ["run", "test:p1-15"]],
   ["P1_15_VERIFY", ["run", "verify:p1-15"]],
+  ["P1_16_TEST", ["run", "test:p1-16"]],
+  ["P1_16_VERIFY", ["run", "verify:p1-16"]],
 ]
 
 function failureReason(result) {

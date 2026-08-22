@@ -364,6 +364,7 @@ export async function revokeEsaoAdminConfiguration(
         if (
           !configuration ||
           configuration.status !== "ACTIVE" ||
+          configuration.effectiveFrom > now ||
           configuration.identityId !== subject.id ||
           configuration.identity.accountIdentifier !== value.subject.subjectAccountIdentifier ||
           configuration.personNameSnapshot !== value.subject.subjectPersonName ||
@@ -495,11 +496,20 @@ export async function resolveActiveEsaoAdmin(
       esaoOrganization: { select: { type: true, status: true } },
     },
   })
+  const expectedSchools = await database.school.findMany({
+    where: {
+      directoryIsActive: true,
+      organization: { parentOrganizationId: PILOT_ESAO_ORGANIZATION_ID, type: "SCHOOL", status: "ACTIVE" },
+    },
+    select: { organizationId: true },
+    orderBy: { organizationId: "asc" },
+  })
+  const exactScope = expectedSchools.length === 17 && configuration?.schoolScopes.length === 17 && expectedSchools.every((school, index) => school.organizationId === configuration.schoolScopes[index]?.schoolId)
   if (
     !configuration ||
     configuration.roleCode !== ESAO_ADMIN_ROLE ||
     configuration.configurationSource !== "APPROVED_APPOINTMENT" ||
-    configuration.schoolScopes.length !== 17 ||
+    !exactScope ||
     configuration.esaoOrganization.type !== "ESAO" ||
     configuration.esaoOrganization.status !== "ACTIVE" ||
     !hasOnlyActiveEsaoMembership(configuration.identity.memberships, now)

@@ -259,6 +259,7 @@ async function requireEsaoAdmin(transaction: Transaction, actor: Actor, schoolId
       configurationSource: "APPROVED_APPOINTMENT",
       status: "ACTIVE",
       effectiveFrom: { lte: now },
+      revokedAt: null,
       identity: {
         accountStatus: "ACTIVE",
         accountIdentifier: normalizeAccountIdentifier(actor.accountIdentifier),
